@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/">
+<head>
+  <title>${entry.title}</title>
+</head>
+<body>
+
+<div id="content">
+  <div class="entry">
+
+    <h3 class="entrytitle" id="post-${entry.id}"><a href="${entry.permalink()}" rel="bookmark">${entry.title}</a></h3>
+
+    <div class="entrymeta">
+      Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
+	  <py:if test="entry.categories">
+	    in ${', '.join(entry.categories)}
+	  </py:if>
+    </div>
+	  
+    <div class="entrybody">
+      ${Markup(entry.body)}
+	  <p py:if="entry.tags">
+	    <img src="${BASE_URL}/templates/images/tag_blue.png" alt="Tags:" /> ${', '.join(entry.tags)}
+	  </p>
+    </div>
+
+  </div>
+
+  <div id="commentblock" py:if="entry.has_comments()">
+    <ol class="commentlist" id="commentlist">
+      <li py:for="comment in entry.comments()"
+          class="(comment.id % 2) and 'alt' or 'standard'"
+          id="comment-${comment.id}">
+        <div class="commentmeta">
+          ${comment.author_link()}
+          on ${comment.date.strftime(str('F j, Y'))}
+        </div>
+        <div class="commentbody">
+          ${comment.body}
+        </div>
+      </li>
+    </ol>
+  </div>
+</div>
+
+</body>
+</html>
