@@ -3,7 +3,7 @@ from datetime import datetime
 import markdown
 
 
-BASE_DIR = '.'
+ENTRIES_DIR = os.path.join(os.path.dirname(__file__), 'entries')
 BASE_URL = ''
 
 
@@ -30,7 +30,7 @@ class Entry(object):
 
 	def __init__(self, id):
 		self.id = id
-		self.dir = os.path.join(BASE_DIR, id)
+		self.dir = os.path.join(ENTRIES_DIR, id)
 		self.comments_dir = os.path.join(self.dir, 'comments')
 
 		if not os.path.exists(self.dir):

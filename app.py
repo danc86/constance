@@ -4,9 +4,11 @@ from colubrid import RegexApplication, HttpResponse, execute
 from colubrid.exceptions import PageNotFound, HttpFound
 from colubrid.server import StaticExports
 
-from blog import BASE_DIR, Entry
+from blog import Entry
 
-template_loader = TemplateLoader(os.path.join(BASE_DIR, 'templates'), auto_reload=True)
+template_loader = TemplateLoader(
+		os.path.join(os.path.dirname(__file__), 'templates'), 
+		auto_reload=True)
 
 class BlogApplication(RegexApplication):
 
@@ -23,7 +25,7 @@ class BlogApplication(RegexApplication):
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 
 app = BlogApplication
-app = StaticExports(app, {'/static': os.path.join(BASE_DIR, 'static')})
+app = StaticExports(app, {'/static': os.path.join(os.path.dirname(__file__), 'static')})
 
 if __name__ == '__main__':
 	execute(app)
