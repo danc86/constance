@@ -4,7 +4,7 @@ import markdown
 
 
 BASE_DIR = '.'
-BASE_URL = '/blog'
+BASE_URL = ''
 
 
 def cleanup_metadata(meta):

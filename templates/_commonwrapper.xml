@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:py="http://genshi.edgewall.org/"
+     xmlns:xi="http://www.w3.org/2001/XInclude"
+     py:strip="True">
+
+<?python
+from blog import BASE_URL
+?>
+
+<py:match path="head">
+	<head profile="http://gmpg.org/xfn/11" py:attrs="select('@*')">
+		${select('./*[local-name() != "title"]')}
+        <title>${select('title[1]/text()')} - djc</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="Dan’s blogging engine" />
+        <link rel="stylesheet" type="text/css" href="${BASE_URL}/static/css/common.css" />
+		<link rel="alternate" type="application/atom+xml" title="Atom feed" href="${BASE_URL}/feed?format=atom" />
+	</head>
+</py:match>
+
+<py:match path="body">
+	<body py:attrs="select('@*')">
+		<div id="leftwrap">
+			<div class="navwidth">
+				<ul class="navigation">
+					<li><a href="${BASE_URL}/">djc</a></li>
+				</ul>
+			</div>
+			<div id="sidebar"><ul>
+				<li id="feeds">
+					<h2>Feeds</h2>
+					<ul id="feed">
+						<li><a href="${BASE_URL}/feed?format=atom" title="Atom feed for posts">Atom posts</a></li>
+					</ul>
+				</li>
+				<li class="categories">
+					<h2>Categories</h2>
+					XXX TODO
+				</li>
+				<li id="archives">
+					<h2>Archives</h2>
+					XXX TODO
+				</li>
+				<li class="linkcat">
+					<h2>Egomania</h2>
+					<ul>
+						<li><a href="http://www.librarything.com/profile/danc86" rel="me" title="My library">Books</a></li>
+						<li><a href="http://www.imdb.com/mymovies/list?l=1447320&amp;s=reverse_uservote" rel="me" title="My IMDB voting history">Movies</a></li>
+						<li><a href="http://www.last.fm/user/danc86" rel="me" title="My last.fm profile">Music</a></li>
+						<li><a href="http://flickr.com/photos/danc86" rel="me" title="My Flickr account">Photos</a></li>
+					</ul>
+				</li>
+				<li class="linkcat">
+					<h2>Randoms</h2>
+					<ul>
+						<li><a href="http://www.houseofzeus.com/notblog/" rel="friend met">flash</a></li>
+						<li><a href="http://protiotype.net/" rel="friend met">io</a></li>
+						<li><a href="http://www.sjkingston.com/" rel="friend met crush">Kingo</a></li>
+						<li><a href="http://mondodev.net/" rel="friend met">mondo</a></li>
+						<li><a href="http://myspace.com/nath520" rel="friend met" title="Fellow SPLC loser">Nath</a></li>
+						<li><a href="http://myspace.com/reesb" rel="friend met">ReesB</a></li>
+						<li><a href="http://www.train-meditations.com/" rel="friend met">Shaun</a></li>
+						<li><a href="http://koffein.net/" rel="friend met crush">stl</a></li>
+						<li><a href="http://myspace.com/heartfelt4ever" rel="friend met">Zeke</a></li>
+					</ul>
+				</li>
+				<li class="linkcat">
+					<h2>Recommended reading</h2>
+					<ul>
+						<li><a href="http://www.aaronsw.com/weblog/">Aaron Swartz</a></li>
+						<li><a href="http://aussielicious.blogspot.com/">aussielicious</a></li>
+						<li><a href="http://www.boingboing.net/">Boing Boing</a></li>
+						<li><a href="http://www.qwantz.com/">Dinosaur Comics</a></li>
+						<li><a href="http://untoward.livejournal.com/">Joey Comeau</a></li>
+						<li><a href="http://reversecowgirlblog.blogspot.com/">Reverse Cowgirl</a></li>
+						<li><a href="http://xkcd.com/">xkcd</a></li>
+					</ul>
+				</li>
+			</ul></div>
+		</div>
+		<div id="content">
+			${select('./*')}
+		</div>
+		<div id="footer">
+			<p>Design derived from <a href="http://www.wpzone.net/">Elite by Stephen Reinhardt</a></p>
+		</div>
+	</body>
+</py:match>
+
+</div>
+

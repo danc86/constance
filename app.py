@@ -11,6 +11,7 @@ template_loader = TemplateLoader(os.path.join(BASE_DIR, 'templates'), auto_reloa
 class BlogApplication(RegexApplication):
 
 	urls = [(r'^$', 'index'), 
+			(r'^feed$', 'feed'), 
 			(r'^([^/]+)/?$', 'post')]
 	charset = 'utf-8'
 
@@ -22,7 +23,7 @@ class BlogApplication(RegexApplication):
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 
 app = BlogApplication
-app = StaticExports(app, {'static': os.path.join(BASE_DIR, 'static')})
+app = StaticExports(app, {'/static': os.path.join(BASE_DIR, 'static')})
 
 if __name__ == '__main__':
 	execute(app)

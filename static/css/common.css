@@ -1,0 +1,432 @@
+*
+{
+	margin: 0;
+	padding: 0;
+}
+body
+{
+	border-top:10px solid #0D0F10;
+	background: #282C2F url(../images/bg.gif) repeat-y left;
+	color: #fff;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Tahoma, Helvetica, Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+p {
+	margin: 1.1em 0;
+}
+div.comment-number {
+	float: right;
+	color: #999;
+	width: 40px;
+	text-align: right;
+}
+.class_comment1 { background: #E9E9EA; border: 1px solid #E0DEDE; }
+.class_comment2 { background: #F4F3F3; border: 1px solid #E0DEDE; }
+#leftwrap
+{
+	background-color: #202326;
+	display: inline;
+	float: left;
+	margin: 0;
+	width: 250px;
+	padding: 20px;
+	overflow: hidden;
+	position: relative;
+	text-align: right;
+	font-size: smaller;
+}
+.navwidth
+{
+	overflow: hidden;
+}
+#adsense
+{
+	padding: 0 0 10px;
+}
+h1#blogname
+{
+	color: #C7FF68;
+	font-size: 2em;
+}
+
+#content
+{
+	background: #282C2F;
+	color: #fff;
+	display: inline;
+	float: left;
+	padding: 1.5em;
+	max-width: 40em;
+	width: auto !important;
+	width: 40em;
+	line-height: 2.7ex;
+}
+.alert
+{
+	background: #FFF6BF;
+	border-bottom: 2px solid #FFD324;
+	border-top: 2px solid #FFD324;
+	margin: 10px auto;
+	padding: 5px 20px 5px 20px;
+}
+#sidebar
+{
+	width: 250px;
+	display: inline;
+	float: left;
+	margin-top: 15px;
+	text-align: right;
+}
+#footer
+{
+	clear: both;
+	margin: 0 auto;
+	background:#0D0F10;
+	padding: 1.75em;
+	text-align: center;
+}
+
+h1, h2, h3, h4 {
+	line-height: 2.3ex;
+}
+h2
+{
+	color: #C7FF68;
+}
+h4
+{
+	color: #C7FF68;
+}
+.themes
+{
+	padding: 25px 0;
+}
+ol#commentlist
+{
+	list-style: none;
+	padding: 0;
+}
+.commenttext
+{
+	background: #303538 url(../images/comm.gif) no-repeat left top;
+	min-height: 90px;
+}
+.commenttext .authorcomment
+{
+	background: #202326;
+	margin-top: 3px;
+	min-height: 90px;
+	padding: 10px;
+}
+* html .commenttext
+{
+	height: 90px;
+	overflow: visible;
+}
+.commentp
+{
+	margin-left: 5px;
+	padding: 21px 12px 10px 10px;
+}
+.commenttext p
+{
+	margin: 0 0 15px;
+	padding: 0;
+}
+#commentblock ol li
+{
+	margin-bottom: 30px;
+}
+.gravatar
+{
+	background:#202326;
+	display: inline;
+	float: left;
+	height: 40px;
+	margin: 24px 0 0 9px;
+	padding: 5px;
+	width: 40px;
+}
+
+#commentsform p
+{
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+a img
+{
+	border: 0;
+}
+h3.entrytitle,h3
+{
+	color: #fff;
+	display: block;
+	font-size: 1.75em;
+	font-weight: 400;
+	margin: 0;
+	padding-bottom: 3px;
+}
+h3.entrytitle a,h3.entrytitle a:visited,h3 a
+{
+	color: #fff;
+	font-weight: 400;
+	text-decoration: none;
+}
+h3.entrytitle a:hover,h3 a:hover
+{
+	color: #C7FF68;
+	text-decoration: none;
+}
+.entry
+{
+	padding: 1em 0 0 0;
+}
+.readinglog h3.entrytitle {
+	font-size: 1.25em;
+}
+.readinglog h3.entrytitle a {
+	font-style: italic;
+}
+.entrybody img
+{
+
+}
+.entrybody p
+{
+	text-align: left;
+}
+.entrybody
+{
+	border-bottom: 1px solid #202326;
+}
+
+.entrymeta
+{
+	color: #737B81;
+	margin: 0.2em 0;
+}
+.entrymeta-single
+{
+	color: #737B81;
+	margin: 0.5em 0;
+}
+h2.archives
+{
+	color: #737B81;
+	font-style: italic;
+	margin-bottom: 1em;
+	text-align: left;
+}
+#sidebar ul#feed
+{
+	list-style: none;
+	margin: 15px 0;
+	padding: 0;
+}
+#sidebar ul#feed li
+{
+	padding-bottom: 3px;
+	padding-top: 3px;
+}
+#sidebar ul#feed li a
+{
+	background: url(../images/feed-icon-16x16.png) no-repeat left 50%;
+	border-style: none;
+	padding-left: 25px;
+}
+.entrybody ul,.entrybody ol
+{
+	margin-bottom: 10px;
+	margin-left: 30px;
+	margin-top: 10px;
+}
+#commentlink a:link, #commentlink a:visited {
+	color:#C7FF68;
+}
+
+.entrybody li
+{
+	padding-bottom: 2px;
+	padding-top: 2px;
+}
+.entrybody ul li
+{
+	list-style:square;
+}
+#sidebar h2
+{
+	color: #6CF;
+	font-size: 1em;
+	font-weight: normal;
+	margin: 0 0 5px 0;
+	text-transform: uppercase;
+}
+#sidebar h2 a
+{
+	color: #6CF;
+}
+.sidebarbg
+{
+	background-color: #eee;
+}
+#sidebar p
+{
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+#sidebar ul
+{
+	list-style: none;
+	margin: 0 0 20px 0;
+}
+#sidebar li
+{
+	list-style: none;
+}
+#sidebar li a:link, #sidebar li a:visited
+{
+color:#fff;
+}
+#sidebar li a:hover, #sidebar li a:active
+{
+color:#C7FF68;
+}
+
+
+
+#searchdiv
+{
+font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma, Helvetica, Verdana, sans-serif;
+	padding: 0;
+}
+
+#searchdiv input
+{
+background:#181B1C;
+font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma, Helvetica, Verdana, sans-serif;
+border:1px solid #181B1C;
+}
+
+.navigation
+{
+	padding-top: 1px;
+	text-transform:uppercase;
+	text-align: right;
+}
+.navigation a:link, .navigation a:visited
+{
+	color: #3E4449;
+	font-size: 1.5em;
+	list-style: none;
+	margin: 0;
+}
+.navigation a:hover
+{
+	color: #737B81;
+	list-style: none;
+	margin: 0;
+	padding: 2px 0;
+	text-decoration: none;
+}
+.current_page_item a:link,.current_page_item a:visited
+{
+	color: #C7FF68;
+	list-style: none;
+	margin: 0;
+	padding: 2px 0;
+	text-decoration: none;
+}
+.current_page_item a:hover
+{
+	list-style: none;
+	margin: 0;
+	padding: 2px 0;
+	text-decoration: none;
+}
+.navigation ul
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.navigation li
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+padding-bottom:2px;
+}
+blockquote
+{
+	border-left: 2px solid #535B61;
+	color: #535B61;
+	font-style: italic;
+	margin: 0 25px;
+	padding-left: 8px;
+}
+h1,h2,h3,h4,#comments
+{
+	font-weight: 400;
+}
+h3,#commentblock h2
+{
+	padding-bottom: 20px;
+}
+.entrybody a:link,.entrybody a:visited
+{
+	color: #6CF;
+	font-weight: 400;
+	text-decoration: none;
+}
+.entrybody a:active,.entrybody a:hover
+{
+	color: #6CF;
+	font-weight: 400;
+	text-decoration: underline;
+}
+a,a:visited,a:hover
+{
+	color: #6CF;
+	text-decoration: none;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}
+.subscribe img
+{
+	padding-bottom: 3px;
+	padding-right: 3px;
+}
+#rssicon
+{
+	padding-bottom: 10px;
+}
+.technorati {
+display:none;
+}
+
+ul.searchbg {
+background-color:#fff;
+}
+
+code {
+	font-family: monospace;
+}
+pre {
+	margin: 0 2em;
+	padding: 0.5em 1em;
+}
+
+p.UTWPrimaryTags {
+}
+p.UTWPrimaryTags img {
+	margin-right: 0.3em;
+}
+
+.readinglog h3 {
+	padding: 0 0 0 22px;
+	background: url(../images/book_open.png) no-repeat center left;
+}
