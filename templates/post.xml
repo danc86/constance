@@ -17,7 +17,13 @@
 	<div class="entrymeta">
 		Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
 		<py:if test="entry.categories">
-			in ${', '.join(entry.categories)}
+			in
+			<py:with vars="category = entry.categories[0]">
+				<a href="${BASE_URL}/+categories/${category}">${category}</a>
+			</py:with>
+			<py:for each="category in entry.categories[1:]">
+				, <a href="${BASE_URL}/+categories/${category}">${category}</a>
+			</py:for>
 		</py:if>
 	</div>
   
@@ -30,17 +36,22 @@
 
 </div>
 
-<div id="commentblock" py:if="entry.has_comments()">
+<div id="commentblock"
+	 py:if="entry.has_comments()"
+	 py:with="comments = sorted(entry.comments(), key=lambda c: c.date)">
+	<h2 id="comments">${len(comments) == 1 and '1 comment' or '%d comments' % len(comments)} so far</h2>
     <ol class="commentlist" id="commentlist">
-		<li py:for="comment in entry.comments()"
-			class="(comment.id % 2) and 'alt' or 'standard'"
+		<li py:for="n, comment in enumerate(comments)"
+			class="${(n % 2) and 'alt' or 'standard'}"
 			id="comment-${comment.id}">
-			<div class="commentmeta">
-				${comment.author_link()}
-				on ${comment.date.strftime(str('F j, Y'))}
+			<div class="commentname">
+				<a py:strip="not comment.author_url" href="${comment.author_url}">${comment.author_name()}</a>
+				on <a href="#comment-${comment.id}">${comment.date.strftime(str('%-1d %B %Y'))}</a>
 			</div>
-			<div class="commentbody">
-				${comment.body}
+			<div class="commenttext">
+				<div class="commentp">
+					${Markup(comment.body)}
+				</div>
 			</div>
 		</li>
 	</ol>

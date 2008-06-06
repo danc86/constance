@@ -61,6 +61,9 @@ class Entry(object):
 	def permalink(self):
 		return '%s/%s/' % (BASE_URL, self.id)
 
+	def comments(self):
+		return Comments(self.comments_dir)
+
 	def has_comments(self):
 		"""
 		Returns True if this Entry could *possibly* have comments, although it 
@@ -69,29 +72,43 @@ class Entry(object):
 		return os.path.isdir(self.comments_dir) and \
 				os.access(self.comments_dir, os.R_OK)
 
-	def comments(self):
-		for filename in sorted(os.listdir(self.comments_dir), key=int):
-			yield Comment(os.path.join(self.comments_dir, filename))
 
-	def comment(self, id):
-		return Comment(os.path.join(self.comments_dir, str(id)))
+class Comments(object):
+
+	def __init__(self, path):
+		self.path = path
+	
+	def __contains__(self, id):
+		return os.path.exists(os.path.join(self.path, id))
+	
+	def __getitem__(self, id):
+		return Comment(self.path, id)
+	
+	def __iter__(self):
+		return (Comment(self.path, filename) 
+				for filename in os.listdir(self.path)
+				if not filename.startswith('.'))
 
 
 class Comment(object):
 
-	def __init__(self, path):
+	def __init__(self, comments_dir, id):
+		path = os.path.join(comments_dir, id)
 		if not os.path.exists(path):
 			raise CommentNotFoundError()
 		if not os.access(path, os.R_OK):
 			raise CommentForbiddenError()
 
+		self.id = id
 		self.raw = open(path, 'r').read()
 		md = markdown.Markdown(extensions=['meta'])
 		self.body = md.convert(self.raw)
+		if not hasattr(md, 'Meta'): raise Exception(self.raw)
 		self.metadata = md.Meta
 		
 		self.author = self.metadata.get('from', None)
-		self.date = self.metadata['date']
+		self.author_url = self.metadata.get('author-url', None)
+		self.date = datetime.fromtimestamp(os.path.getmtime(path))
 
-	def author_link(self):
+	def author_name(self):
 		return self.author or u'Anonymous'
