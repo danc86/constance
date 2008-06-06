@@ -1,18 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-	  xmlns:xi="http://www.w3.org/2001/XInclude"
-	  lang="en-AU">
-<xi:include href="_commonwrapper.xml" />
-
-<head>
-  <title>${entry.title}</title>
-</head>
-<body>
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:py="http://genshi.edgewall.org/"
+	 py:strip="True"
+	 py:def="show_entry(entry, show_comments=True)">
 
 <div class="entry">
 
-	<h3 class="entrytitle" id="post-${entry.id}"><a href="${entry.permalink()}" rel="bookmark">${entry.title}</a></h3>
+	<h3 class="entrytitle" id="post-${entry.id}"><a href="${BASE_URL}/${entry.id}" rel="bookmark">${entry.title}</a></h3>
 
 	<div class="entrymeta">
 		Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
@@ -37,7 +31,7 @@
 </div>
 
 <div id="commentblock"
-	 py:if="entry.has_comments()"
+	 py:if="show_comments and entry.has_comments()"
 	 py:with="comments = sorted(entry.comments(), key=lambda c: c.date)">
 	<h2 id="comments">${len(comments) == 1 and '1 comment' or '%d comments' % len(comments)} so far</h2>
     <ol class="commentlist" id="commentlist">
@@ -57,5 +51,4 @@
 	</ol>
 </div>
 
-</body>
-</html>
+</div>

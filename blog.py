@@ -3,10 +3,6 @@ from datetime import datetime
 import markdown
 
 
-ENTRIES_DIR = os.path.join(os.path.dirname(__file__), 'entries')
-BASE_URL = ''
-
-
 def cleanup_metadata(meta):
 	cleaned = {}
 	for k, v in meta.iteritems():
@@ -26,11 +22,29 @@ class CommentNotFoundError(ValueError): pass
 class CommentForbiddenError(ValueError): pass
 
 
+class Entries(object):
+
+	def __init__(self, entries_dir):
+		self.entries_dir = entries_dir
+	
+	def __contains__(self, id):
+		return os.path.exists(os.path.join(self.entries_dir, id))
+	
+	def __getitem__(self, id):
+		return Entry(self.entries_dir, id)
+	
+	def __iter__(self):
+		return (Entry(self.entries_dir, filename) 
+				for filename in os.listdir(self.entries_dir)
+				if not filename.startswith('.'))
+
+
 class Entry(object):
 
-	def __init__(self, id):
+	def __init__(self, entries_dir, id):
+		assert isinstance(id, unicode), id
 		self.id = id
-		self.dir = os.path.join(ENTRIES_DIR, id)
+		self.dir = os.path.join(entries_dir, id)
 		self.comments_dir = os.path.join(self.dir, 'comments')
 
 		if not os.path.exists(self.dir):
@@ -38,7 +52,7 @@ class Entry(object):
 		if not os.access(self.dir, os.R_OK):
 			raise EntryForbiddenError()
 
-		self.raw = open(os.path.join(self.dir, 'content.txt'), 'r').read()
+		self.raw = open(os.path.join(self.dir, 'content.txt'), 'r').read().decode('utf-8')
 		md = markdown.Markdown(extensions=['meta'])
 		self.body = md.convert(self.raw)
 		self.metadata = cleanup_metadata(md.Meta)
@@ -57,9 +71,6 @@ class Entry(object):
 
 		self.modified_date = datetime.fromtimestamp(os.path.getmtime(os.path.join(self.dir, 'content.txt')))
 		self.publication_date = self.metadata.get('publication-date', None) or self.modified_date
-
-	def permalink(self):
-		return '%s/%s/' % (BASE_URL, self.id)
 
 	def comments(self):
 		return Comments(self.comments_dir)
@@ -100,7 +111,7 @@ class Comment(object):
 			raise CommentForbiddenError()
 
 		self.id = id
-		self.raw = open(path, 'r').read()
+		self.raw = open(path, 'r').read().decode('utf-8')
 		md = markdown.Markdown(extensions=['meta'])
 		self.body = md.convert(self.raw)
 		if not hasattr(md, 'Meta'): raise Exception(self.raw)

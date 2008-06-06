@@ -5,13 +5,14 @@
      py:strip="True">
 
 <?python
-from blog import BASE_URL
+from app import BASE_URL
 ?>
 
 <py:match path="head">
-	<head profile="http://gmpg.org/xfn/11" py:attrs="select('@*')">
+	<head profile="http://gmpg.org/xfn/11" py:attrs="select('@*')" py:with="title = unicode(select('title[1]/text()'))">
 		${select('./*[local-name() != "title"]')}
-        <title>${select('title[1]/text()')} - djc</title>
+        <title py:if="title">${title} - djc</title>
+		<title py:if="not title">djc</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="Dan’s blogging engine" />
         <link rel="stylesheet" type="text/css" href="${BASE_URL}/static/css/common.css" />
