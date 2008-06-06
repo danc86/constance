@@ -600,7 +600,7 @@ class PythonParser(object):
         text = StringIO(self.raw)
         try:
             tokenize.tokenize(text.readline, self)
-        except tokenize.TokenError:
+        except StandardError:
             pass
 
     def get_html_output(self):
