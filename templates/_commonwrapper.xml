@@ -25,7 +25,7 @@ from app import BASE_URL
 		<div id="leftwrap">
 			<div class="navwidth">
 				<ul class="navigation">
-					<li><a href="${BASE_URL}/">djc</a></li>
+					<li class="current_page_item"><a href="${BASE_URL}/">djc</a></li>
 				</ul>
 			</div>
 			<div id="sidebar"><ul>
