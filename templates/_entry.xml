@@ -5,7 +5,7 @@
 	 py:def="show_entry(entry, show_comments=True)">
 
 <?python
-from viewutils import mini_markdown
+from viewutils import mini_markdown, tag_list, category_list
 ?>
 
 <div class="entry" py:if="'Reading' not in entry.categories">
@@ -15,7 +15,7 @@ from viewutils import mini_markdown
 	<div class="entrymeta">
 		Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
 		<py:if test="entry.categories">
-			in <a py:for="category in entry.categories" href="${BASE_URL}/+categories/${category}">${category}</a>
+			in ${category_list(entry.categories)}
 		</py:if>
 		<py:if test="not show_comments and entry.has_comments()">
 			·
@@ -30,7 +30,7 @@ from viewutils import mini_markdown
 		${entry.body}
 		<p py:if="entry.tags">
 			<img src="${BASE_URL}/static/images/tag_blue.png" alt="Tags:" />
-			<a py:for="tag in entry.tags" rel="tag" href="${BASE_URL}/+tags/${tag}">${tag}</a>
+			${tag_list(entry.tags)}
 		</p>
 	</div>
 
