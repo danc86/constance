@@ -21,12 +21,6 @@ def cleanup_metadata(meta):
 		cleaned[k] = v
 	return cleaned
 
-def mini_markdown(s):
-	# XXX find a more efficient way to do this?
-	m = markdown.Markdown(extensions=['typography']).convert(s)
-	the_p, = re.match(u'<p>(.*)\n</p>', m).groups()	
-	return genshi.Markup(the_p)
-
 
 class EntryNotFoundError(ValueError): pass
 
@@ -103,7 +97,7 @@ class Entry(object):
 		md = markdown.Markdown(extensions=['meta', 'typography'])
 		self.body = genshi.Markup(md.convert(self.raw))
 		self.metadata = cleanup_metadata(md.Meta)
-		self.title = mini_markdown(self.metadata['title'])
+		self.title = self.metadata['title']
 
 		raw_cats = self.metadata.get('categories', '').strip()
 		if raw_cats:
@@ -134,7 +128,7 @@ class Entry(object):
 class ReadingLogEntry(object):
 
 	def __init__(self, yaml_dict):
-		self.title = mini_markdown(yaml_dict['Title'])
+		self.title = yaml_dict['Title']
 		self.author = yaml_dict['Author']
 		self.publication_date = self.modified_date = self.date = yaml_dict['Date']
 		self.url = yaml_dict.get('URL', None)

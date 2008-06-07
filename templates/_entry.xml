@@ -4,9 +4,13 @@
 	 py:strip="True"
 	 py:def="show_entry(entry, show_comments=True)">
 
+<?python
+from viewutils import mini_markdown
+?>
+
 <div class="entry" py:if="'Reading' not in entry.categories">
 
-	<h3 class="entrytitle" id="post-${entry.id}"><a href="${BASE_URL}/${entry.id}" rel="bookmark">${entry.title}</a></h3>
+	<h3 class="entrytitle" id="post-${entry.id}"><a href="${BASE_URL}/${entry.id}" rel="bookmark">${mini_markdown(entry.title)}</a></h3>
 
 	<div class="entrymeta">
 		Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
@@ -39,7 +43,7 @@
 
 <div class="entry readinglog" py:if="'Reading' in entry.categories">
 	<h3 class="entrytitle">
-		<a py:strip="not entry.url" href="${entry.url}">${entry.title}</a>
+		<a py:strip="not entry.url" href="${entry.url}">${mini_markdown(entry.title)}</a>
 		<py:if test="entry.author">
 			by ${entry.author}
 		</py:if>
