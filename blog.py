@@ -180,7 +180,7 @@ class Comment(object):
 		self.id = id
 		self.raw = open(path, 'r').read().decode('utf-8')
 		md = markdown.Markdown(extensions=['meta', 'typography'])
-		self.body = md.convert(self.raw)
+		self.body = genshi.Markup(md.convert(self.raw))
 		if not hasattr(md, 'Meta'): raise Exception(self.raw)
 		self.metadata = md.Meta
 		
