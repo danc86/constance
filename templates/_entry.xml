@@ -23,7 +23,7 @@
 	</div>
   
 	<div class="entrybody">
-		${Markup(entry.body)}
+		${entry.body}
 		<p py:if="entry.tags">
 			<img src="${BASE_URL}/static/images/tag_blue.png" alt="Tags:" />
 			<a py:for="tag in entry.tags" rel="tag" href="${BASE_URL}/+tags/${tag}">${tag}</a>
@@ -70,7 +70,7 @@
 			</div>
 			<div class="commenttext">
 				<div class="commentp">
-					${Markup(comment.body)}
+					${comment.body}
 				</div>
 			</div>
 		</li>
