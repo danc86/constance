@@ -35,7 +35,8 @@ class BlogApplication(RegexApplication):
 		rendered = template_loader.load('multiple.xml').generate(
 				title=None, 
 				all_categories=self.entries.categories(), 
-				entries=self.entries
+				entries=self.entries, 
+				offset=int(self.request.args.get('offset', 0))
 				).render('xhtml')
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 	
@@ -60,7 +61,8 @@ class BlogApplication(RegexApplication):
 		rendered = template_loader.load('multiple.xml').generate(
 				title=u'%s category' % category, 
 				all_categories=self.entries.categories(), 
-				entries=entries
+				entries=entries, 
+				offset=int(self.request.args.get('offset', 0))
 				).render('xhtml')
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 
@@ -73,7 +75,8 @@ class BlogApplication(RegexApplication):
 		rendered = template_loader.load('multiple.xml').generate(
 				title=u'“%s” tag' % tag, 
 				all_categories=self.entries.categories(), 
-				entries=entries
+				entries=entries, 
+				offset=int(self.request.args.get('offset', 0))
 				).render('xhtml')
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 

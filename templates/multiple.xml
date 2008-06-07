@@ -13,9 +13,18 @@
 
 <h2 class="archives" py:if="title">Archive for the ${title}</h2>
 
-<py:for each="entry in sorted(entries, key=lambda e: e.publication_date, reverse=True)[:20]">
-	${show_entry(entry, show_comments=False)}
-</py:for>
+<py:with vars="sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True);
+		show_prev = bool(offset);
+		show_next = len(sorted_entries) > offset + 20">
+	<py:for each="entry in sorted_entries[offset:offset + 20]">
+		${show_entry(entry, show_comments=False)}
+	</py:for>
+	<p py:if="show_prev or show_next">
+		<a py:if="show_prev" href="?offset=${max(0, offset - 20)}">« previous page</a>
+		<py:if test="show_prev and show_next">—</py:if>
+		<a py:if="show_next" href="?offset=${offset + 20}">next page »</a>
+	</p>
+</py:with>
 
 </body>
 </html>
