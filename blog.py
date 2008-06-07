@@ -93,7 +93,7 @@ class Entry(object):
 			raise EntryForbiddenError()
 
 		self.raw = open(os.path.join(self.dir, 'content.txt'), 'r').read().decode('utf-8')
-		md = markdown.Markdown(extensions=['meta'])
+		md = markdown.Markdown(extensions=['meta', 'typography'])
 		self.body = md.convert(self.raw)
 		self.metadata = cleanup_metadata(md.Meta)
 		self.title = self.metadata['title']
@@ -172,7 +172,7 @@ class Comment(object):
 
 		self.id = id
 		self.raw = open(path, 'r').read().decode('utf-8')
-		md = markdown.Markdown(extensions=['meta'])
+		md = markdown.Markdown(extensions=['meta', 'typography'])
 		self.body = md.convert(self.raw)
 		if not hasattr(md, 'Meta'): raise Exception(self.raw)
 		self.metadata = md.Meta
