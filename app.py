@@ -7,6 +7,7 @@ from colubrid.server import StaticExports
 import blog
 
 ENTRIES_DIR = os.path.join(os.path.dirname(__file__), u'entries')
+READINGLOG_FILE = os.path.join(os.path.dirname(__file__), u'reading_log')
 BASE_URL = ''
 
 template_loader = TemplateLoader(
@@ -25,7 +26,7 @@ class BlogApplication(RegexApplication):
 
 	def __init__(self, *args, **kwargs):
 		super(BlogApplication, self).__init__(*args, **kwargs)
-		self.entries = blog.Entries(ENTRIES_DIR)
+		self.entries = blog.Entries(ENTRIES_DIR, READINGLOG_FILE)
 
 	def index(self):
 		rendered = template_loader.load('index.xml').generate(

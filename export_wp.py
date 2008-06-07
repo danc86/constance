@@ -29,6 +29,9 @@ def export(base_dir):
 		subcur.execute('SELECT wp_terms.name FROM wp_term_relationships INNER JOIN wp_term_taxonomy ON wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id INNER JOIN wp_terms ON wp_term_taxonomy.term_id = wp_terms.term_id WHERE taxonomy = %s AND object_id = %s', ('post_tag', id,))
 		tags = [tag for tag, in subcur.fetchall()]
 
+		# XXX
+		if 'Reading' in categories: continue
+
 		os.mkdir(os.path.join(base_dir, post_name))
 		f = open(os.path.join(base_dir, post_name, 'content.txt'), 'w')
 		f.write('Title: %s\n' % post_title)

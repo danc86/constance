@@ -1,6 +1,8 @@
 import os
 from datetime import datetime
+from itertools import chain
 import markdown
+import yaml
 
 
 def count(iterable):
@@ -30,19 +32,25 @@ class CommentForbiddenError(ValueError): pass
 
 class Entries(object):
 
-	def __init__(self, entries_dir):
+	def __init__(self, entries_dir, readinglog_file):
 		self.entries_dir = entries_dir
+		self.readinglog_file = readinglog_file
 	
 	def __contains__(self, id):
 		return os.path.exists(os.path.join(self.entries_dir, id))
 	
 	def __getitem__(self, id):
+		# XXX reading log entries don't have a key
 		return Entry(self.entries_dir, id)
 	
 	def __iter__(self):
-		return (Entry(self.entries_dir, filename) 
-				for filename in os.listdir(self.entries_dir)
-				if not filename.startswith('.'))
+		return chain(
+				(Entry(self.entries_dir, filename) 
+				 for filename in os.listdir(self.entries_dir)
+				 if not filename.startswith('.')), 
+				(ReadingLogEntry(d)
+				 for d in yaml.load_all(open(self.readinglog_file, 'r')))
+				)
 
 	def by_category(self):
 		"""
@@ -114,6 +122,21 @@ class Entry(object):
 		"""
 		return os.path.isdir(self.comments_dir) and \
 				os.access(self.comments_dir, os.R_OK)
+
+
+class ReadingLogEntry(object):
+
+	def __init__(self, yaml_dict):
+		self.title = yaml_dict['Title']
+		self.author = yaml_dict['Author']
+		self.publication_date = self.modified_date = self.date = yaml_dict['Date']
+		self.url = yaml_dict.get('URL', None)
+		self.rating = yaml_dict.get('Rating', None)
+		self.categories = frozenset([u'Reading'])
+		self.tags = frozenset()
+
+	def has_comments(self):
+		return False
 
 
 class Comments(object):
