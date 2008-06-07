@@ -37,7 +37,9 @@ from app import BASE_URL
 				</li>
 				<li class="categories">
 					<h2>Categories</h2>
-					XXX TODO
+					<ul>
+						<li py:for="category in all_categories" class="cat-item"><a href="${BASE_URL}/+categories/${category}">${category}</a></li>
+					</ul>
 				</li>
 				<li id="archives">
 					<h2>Archives</h2>

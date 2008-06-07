@@ -7,9 +7,11 @@
 <xi:include href="_entry.xml" />
 
 <head>
-	<title>${tag} tag</title>
+	<title>“${tag}” tag</title>
 </head>
 <body>
+
+<h2 class="archives">Archive for the “${tag}” tag</h2>
 
 <py:for each="entry in sorted(entries, key=lambda e: e.publication_date, reverse=True)[:20]">
 	${show_entry(entry, show_comments=False)}

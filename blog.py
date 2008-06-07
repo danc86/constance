@@ -48,6 +48,15 @@ class Entries(object):
 				d.setdefault(category, set()).add(entry)
 		return d
 
+	def categories(self):
+		"""
+		Returns a frequency-ordered list of categories.
+		"""
+		by_category = self.by_category()
+		return sorted(by_category.iterkeys(), 
+				key=lambda c: len(by_category[c]), 
+				reverse=True)
+
 	def by_tag(self):
 		d = {}
 		for entry in self:

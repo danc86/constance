@@ -11,6 +11,8 @@
 </head>
 <body>
 
+<h2 class="archives">Archive for the ${category} category</h2>
+
 <py:for each="entry in sorted(entries, key=lambda e: e.publication_date, reverse=True)[:20]">
 	${show_entry(entry, show_comments=False)}
 </py:for>

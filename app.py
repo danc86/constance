@@ -28,14 +28,20 @@ class BlogApplication(RegexApplication):
 		self.entries = blog.Entries(ENTRIES_DIR)
 
 	def index(self):
-		rendered = template_loader.load('index.xml').generate(entries=self.entries).render('xhtml')
+		rendered = template_loader.load('index.xml').generate(
+				all_categories=self.entries.categories(), 
+				entries=self.entries
+				).render('xhtml')
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 	
 	def post(self, id):
 		id = id.decode(self.charset) # shouldn't Colubrid do this?
 		try:
 			entry = self.entries[id]
-			rendered = template_loader.load('single.xml').generate(entry=entry).render('xhtml')
+			rendered = template_loader.load('single.xml').generate(
+					all_categories=self.entries.categories(), 
+					entry=entry
+					).render('xhtml')
 			return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 		except blog.EntryNotFoundError:
 			raise PageNotFound()
@@ -47,7 +53,10 @@ class BlogApplication(RegexApplication):
 			raise PageNotFound()
 		entries = categories[category]
 		rendered = template_loader.load('category.xml').generate(
-				category=category, entries=entries).render('xhtml')
+				all_categories=self.entries.categories(), 
+				category=category, 
+				entries=entries
+				).render('xhtml')
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 
 	def tag(self, tag):
@@ -57,7 +66,10 @@ class BlogApplication(RegexApplication):
 			raise PageNotFound()
 		entries = by_tag[tag]
 		rendered = template_loader.load('tag.xml').generate(
-				tag=tag, entries=entries).render('xhtml')
+				all_categories=self.entries.categories(), 
+				tag=tag, 
+				entries=entries
+				).render('xhtml')
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 
 
