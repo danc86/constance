@@ -1,3 +1,6 @@
+
+# vim:encoding=utf-8
+
 import os
 from genshi.template import TemplateLoader
 from colubrid import RegexApplication, HttpResponse, execute
@@ -29,7 +32,8 @@ class BlogApplication(RegexApplication):
 		self.entries = blog.Entries(ENTRIES_DIR, READINGLOG_FILE)
 
 	def index(self):
-		rendered = template_loader.load('index.xml').generate(
+		rendered = template_loader.load('multiple.xml').generate(
+				title=None, 
 				all_categories=self.entries.categories(), 
 				entries=self.entries
 				).render('xhtml')
@@ -53,9 +57,9 @@ class BlogApplication(RegexApplication):
 		if category not in categories:
 			raise PageNotFound()
 		entries = categories[category]
-		rendered = template_loader.load('category.xml').generate(
+		rendered = template_loader.load('multiple.xml').generate(
+				title=u'%s category' % category, 
 				all_categories=self.entries.categories(), 
-				category=category, 
 				entries=entries
 				).render('xhtml')
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
@@ -66,9 +70,9 @@ class BlogApplication(RegexApplication):
 		if tag not in by_tag:
 			raise PageNotFound()
 		entries = by_tag[tag]
-		rendered = template_loader.load('tag.xml').generate(
+		rendered = template_loader.load('multiple.xml').generate(
+				title=u'“%s” tag' % tag, 
 				all_categories=self.entries.categories(), 
-				tag=tag, 
 				entries=entries
 				).render('xhtml')
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
