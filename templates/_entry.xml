@@ -13,6 +13,13 @@
 		<py:if test="entry.categories">
 			in <a py:for="category in entry.categories" href="${BASE_URL}/+categories/${category}">${category}</a>
 		</py:if>
+		<py:if test="not show_comments and entry.has_comments()">
+			·
+			<a href="${BASE_URL}/${entry.id}#comments">
+				Comments
+				<py:if test="len(entry.comments()) > 0">(${len(entry.comments())})</py:if>
+			</a>
+		</py:if>
 	</div>
   
 	<div class="entrybody">

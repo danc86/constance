@@ -3,6 +3,12 @@ from datetime import datetime
 import markdown
 
 
+def count(iterable):
+	count = 0
+	for _ in iterable:
+		count += 1
+	return count
+
 def cleanup_metadata(meta):
 	cleaned = {}
 	for k, v in meta.iteritems():
@@ -117,6 +123,11 @@ class Comments(object):
 	
 	def __contains__(self, id):
 		return os.path.exists(os.path.join(self.path, id))
+
+	def __len__(self):
+		return count(filename 
+				for filename in os.listdir(self.path) 
+				if not filename.startswith('.'))
 	
 	def __getitem__(self, id):
 		return Comment(self.path, id)
