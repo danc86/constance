@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+	  xmlns:xi="http://www.w3.org/2001/XInclude"
+	  lang="en-AU">
+<xi:include href="_commonwrapper.xml" />
+<xi:include href="_entry.xml" />
+
+<head>
+	<title>${category} category</title>
+</head>
+<body>
+
+<py:for each="entry in sorted(entries, key=lambda e: e.publication_date, reverse=True)[:20]">
+	${show_entry(entry, show_comments=False)}
+</py:for>
+
+</body>
+</html>

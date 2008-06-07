@@ -4,7 +4,7 @@ from colubrid import RegexApplication, HttpResponse, execute
 from colubrid.exceptions import PageNotFound, HttpFound
 from colubrid.server import StaticExports
 
-from blog import Entries
+import blog
 
 ENTRIES_DIR = os.path.join(os.path.dirname(__file__), u'entries')
 BASE_URL = ''
@@ -18,12 +18,14 @@ class BlogApplication(RegexApplication):
 
 	urls = [(r'^$', 'index'), 
 			(r'^feed$', 'feed'), 
-			(r'^([^/]+)/?$', 'post')]
+			(r'^\+categories/(.+)$', 'category'), 
+			(r'^\+tags/(.+)$', 'tag'), 
+			(r'^([^+/][^/]*)/?$', 'post')]
 	charset = 'utf-8'
 
 	def __init__(self, *args, **kwargs):
 		super(BlogApplication, self).__init__(*args, **kwargs)
-		self.entries = Entries(ENTRIES_DIR)
+		self.entries = blog.Entries(ENTRIES_DIR)
 
 	def index(self):
 		rendered = template_loader.load('index.xml').generate(entries=self.entries).render('xhtml')
@@ -31,9 +33,33 @@ class BlogApplication(RegexApplication):
 	
 	def post(self, id):
 		id = id.decode(self.charset) # shouldn't Colubrid do this?
-		entry = self.entries[id]
-		rendered = template_loader.load('single.xml').generate(entry=entry).render('xhtml')
+		try:
+			entry = self.entries[id]
+			rendered = template_loader.load('single.xml').generate(entry=entry).render('xhtml')
+			return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
+		except blog.EntryNotFoundError:
+			raise PageNotFound()
+
+	def category(self, category):
+		category = category.decode(self.charset)
+		categories = self.entries.by_category()
+		if category not in categories:
+			raise PageNotFound()
+		entries = categories[category]
+		rendered = template_loader.load('category.xml').generate(
+				category=category, entries=entries).render('xhtml')
 		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
+
+	def tag(self, tag):
+		tag = tag.decode(self.charset)
+		by_tag = self.entries.by_tag()
+		if tag not in by_tag:
+			raise PageNotFound()
+		entries = by_tag[tag]
+		rendered = template_loader.load('tag.xml').generate(
+				tag=tag, entries=entries).render('xhtml')
+		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
+
 
 app = BlogApplication
 app = StaticExports(app, {'/static': os.path.join(os.path.dirname(__file__), 'static')})

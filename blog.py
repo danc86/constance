@@ -38,6 +38,23 @@ class Entries(object):
 				for filename in os.listdir(self.entries_dir)
 				if not filename.startswith('.'))
 
+	def by_category(self):
+		"""
+		Returns a dict of (category -> set of entries).
+		"""
+		d = {}
+		for entry in self:
+			for category in entry.categories:
+				d.setdefault(category, set()).add(entry)
+		return d
+
+	def by_tag(self):
+		d = {}
+		for entry in self:
+			for tag in entry.tags:
+				d.setdefault(tag, set()).add(entry)
+		return d
+
 
 class Entry(object):
 
@@ -60,14 +77,14 @@ class Entry(object):
 
 		raw_cats = self.metadata.get('categories', '').strip()
 		if raw_cats:
-			self.categories = [cat.strip() for cat in raw_cats.split(',')]
+			self.categories = frozenset(cat.strip() for cat in raw_cats.split(','))
 		else:
-			self.categories = []
+			self.categories = frozenset()
 		raw_tags = self.metadata.get('tags', '').strip()
 		if raw_tags:
-			self.tags = [tag.strip() for tag in raw_tags.split(',')]
+			self.tags = frozenset(tag.strip() for tag in raw_tags.split(','))
 		else:
-			self.tags = []
+			self.tags = frozenset()
 
 		self.modified_date = datetime.fromtimestamp(os.path.getmtime(os.path.join(self.dir, 'content.txt')))
 		self.publication_date = self.metadata.get('publication-date', None) or self.modified_date
