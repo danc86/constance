@@ -1,0 +1,2 @@
+- handle absent readinglog
+- ignore pages in export_wp.py
