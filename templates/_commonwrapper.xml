@@ -16,7 +16,7 @@ from app import BASE_URL
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="Dan’s blogging engine" />
         <link rel="stylesheet" type="text/css" href="${BASE_URL}/static/css/common.css" />
-		<link rel="alternate" type="application/atom+xml" title="Atom feed" href="${BASE_URL}/feed?format=atom" />
+		<link rel="alternate" type="application/atom+xml" title="Atom feed" href="?format=atom" />
 	</head>
 </py:match>
 
@@ -32,7 +32,7 @@ from app import BASE_URL
 				<li id="feeds">
 					<h2>Feeds</h2>
 					<ul id="feed">
-						<li><a href="${BASE_URL}/feed?format=atom" title="Atom feed for posts">Atom posts</a></li>
+						<li><a rel="alternate" type="application/atom+xml" href="${BASE_URL}/?format=atom" title="Atom feed for posts">Atom posts</a></li>
 					</ul>
 				</li>
 				<li class="categories">

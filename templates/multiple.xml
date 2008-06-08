@@ -13,10 +13,8 @@
 
 <h2 class="archives" py:if="title">Archive for the ${title}</h2>
 
-<py:with vars="sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True);
-		show_prev = bool(offset);
-		show_next = len(sorted_entries) > offset + 20">
-	<py:for each="entry in sorted_entries[offset:offset + 20]">
+<py:with vars="show_prev = bool(offset); show_next = len(sorted_entries) > offset + 20">
+	<py:for each="entry in sorted_entries">
 		${show_entry(entry, show_comments=False)}
 	</py:for>
 	<p py:if="show_prev or show_next">

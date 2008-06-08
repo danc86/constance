@@ -21,6 +21,14 @@ def cleanup_metadata(meta):
 		cleaned[k] = v
 	return cleaned
 
+IDIFY_WHITESPACE_PATT = re.compile(r'(?u)\s+')
+IDIFY_ACCEPT_PATT = re.compile(r'(?u)\w|[-_]')
+def idify(s):
+	# http://www.w3.org/TR/REC-xml/#NT-Name
+	s = s.lower()
+	s = IDIFY_WHITESPACE_PATT.sub(u'-', s)
+	return u''.join(c for c in s if IDIFY_ACCEPT_PATT.match(c))
+
 
 class EntryNotFoundError(ValueError): pass
 
@@ -112,6 +120,7 @@ class Entry(object):
 
 		self.modified_date = datetime.fromtimestamp(os.path.getmtime(os.path.join(self.dir, 'content.txt')))
 		self.publication_date = self.metadata.get('publication-date', None) or self.modified_date
+		self._guid = self.metadata.get('guid', None)
 
 	def comments(self):
 		return Comments(self.comments_dir)
@@ -124,20 +133,28 @@ class Entry(object):
 		return os.path.isdir(self.comments_dir) and \
 				os.access(self.comments_dir, os.R_OK)
 
+	def guid(self):
+		return self._guid or u'http://www.djc.id.au%s/%s' % (BASE_URL, self.id)
+
 
 class ReadingLogEntry(object):
 
 	def __init__(self, yaml_dict):
 		self.title = yaml_dict['Title']
+		self.id = idify(self.title)
 		self.author = yaml_dict['Author']
 		self.publication_date = self.modified_date = self.date = yaml_dict['Date']
 		self.url = yaml_dict.get('URL', None)
 		self.rating = yaml_dict.get('Rating', None)
 		self.categories = frozenset([u'Reading'])
 		self.tags = frozenset()
+		self._guid = yaml_dict.get('GUID', None)
 
 	def has_comments(self):
 		return False
+
+	def guid(self):
+		return self._guid or u'http://www.djc.id.au%s/#post-%s' % (BASE_URL, self.id)
 
 
 class Comments(object):
@@ -184,3 +201,6 @@ class Comment(object):
 
 	def author_name(self):
 		return self.author or u'Anonymous'
+
+
+from app import BASE_URL # XXX

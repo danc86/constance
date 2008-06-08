@@ -42,7 +42,7 @@ from viewutils import mini_markdown, tag_list, category_list
 </span>
 
 <div class="entry readinglog" py:if="'Reading' in entry.categories">
-	<h3 class="entrytitle">
+	<h3 class="entrytitle" id="post-${entry.id}">
 		<a py:strip="not entry.url" href="${entry.url}">${mini_markdown(entry.title)}</a>
 		<py:if test="entry.author">
 			by ${entry.author}
