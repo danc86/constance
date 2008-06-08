@@ -1,2 +1,6 @@
 - handle absent readinglog
 - ignore pages in export_wp.py
+- feeds everywhere else
+- monthly archives
+- comment submission
+...
