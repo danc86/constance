@@ -10,7 +10,7 @@ from viewutils import mini_markdown, tag_list, category_list
 
 <div class="entry" py:if="'Reading' not in entry.categories">
 
-	<h3 class="entrytitle" id="post-${entry.id}"><a href="${config.RELATIVE_BASE_URL}/${entry.id}" rel="bookmark">${mini_markdown(entry.title)}</a></h3>
+	<h3 class="entrytitle" id="post-${entry.id}"><a href="${config.REL_BASE}/${entry.id}" rel="bookmark">${mini_markdown(entry.title)}</a></h3>
 
 	<div class="entrymeta">
 		Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
@@ -19,7 +19,7 @@ from viewutils import mini_markdown, tag_list, category_list
 		</py:if>
 		<py:if test="not show_comments and entry.has_comments()">
 			·
-			<a href="${config.RELATIVE_BASE_URL}/${entry.id}#comments">
+			<a href="${config.REL_BASE}/${entry.id}#comments">
 				Comments
 				<py:if test="len(entry.comments()) > 0">(${len(entry.comments())})</py:if>
 			</a>
@@ -29,7 +29,7 @@ from viewutils import mini_markdown, tag_list, category_list
 	<div class="entrybody">
 		${entry.body}
 		<p py:if="entry.tags">
-			<img src="${config.RELATIVE_BASE_URL}/static/images/tag_blue.png" alt="Tags:" />
+			<img src="${config.REL_BASE}/static/images/tag_blue.png" alt="Tags:" />
 			${tag_list(entry.tags)}
 		</p>
 	</div>
@@ -37,8 +37,8 @@ from viewutils import mini_markdown, tag_list, category_list
 </div>
 
 <span py:def="stars(rating)" py:strip="True">
-	<img src="${config.RELATIVE_BASE_URL}/static/images/star.png" alt="[star]" py:for="_ in range(int(rating))" />
-	<img src="${config.RELATIVE_BASE_URL}/static/images/halfstar.png" alt="[half-star]" py:if="rating > int(rating)" />
+	<img src="${config.REL_BASE}/static/images/star.png" alt="[star]" py:for="_ in range(int(rating))" />
+	<img src="${config.REL_BASE}/static/images/halfstar.png" alt="[half-star]" py:if="rating > int(rating)" />
 </span>
 
 <div class="entry readinglog" py:if="'Reading' in entry.categories">
@@ -51,7 +51,7 @@ from viewutils import mini_markdown, tag_list, category_list
 	<div class="entrymeta">
 		Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
 		<py:if test="entry.categories">
-			in <a py:for="category in entry.categories" href="${config.RELATIVE_BASE_URL}/+categories/${category}">${category}</a>
+			in <a py:for="category in entry.categories" href="${config.REL_BASE}/+categories/${category}">${category}</a>
 		</py:if>
 		<py:if test="entry.rating">
 			· ${stars(entry.rating)}

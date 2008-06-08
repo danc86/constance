@@ -15,7 +15,7 @@ import config
 		<title py:if="not title">djc</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="Dan’s blogging engine" />
-        <link rel="stylesheet" type="text/css" href="${config.RELATIVE_BASE_URL}/static/css/common.css" />
+        <link rel="stylesheet" type="text/css" href="${config.REL_BASE}/static/css/common.css" />
 		<link rel="alternate" type="application/atom+xml" title="Atom feed" href="?format=atom" />
 	</head>
 </py:match>
@@ -25,20 +25,20 @@ import config
 		<div id="leftwrap">
 			<div class="navwidth">
 				<ul class="navigation">
-					<li class="current_page_item"><a href="${config.RELATIVE_BASE_URL}/">djc</a></li>
+					<li class="current_page_item"><a href="${config.REL_BASE}/">djc</a></li>
 				</ul>
 			</div>
 			<div id="sidebar"><ul>
 				<li id="feeds">
 					<h2>Feeds</h2>
 					<ul id="feed">
-						<li><a rel="alternate" type="application/atom+xml" href="${config.RELATIVE_BASE_URL}/?format=atom" title="Atom feed for posts">Atom posts</a></li>
+						<li><a rel="alternate" type="application/atom+xml" href="${config.REL_BASE}/?format=atom" title="Atom feed for posts">Atom posts</a></li>
 					</ul>
 				</li>
 				<li class="categories">
 					<h2>Categories</h2>
 					<ul>
-						<li py:for="category in all_categories" class="cat-item"><a href="${config.RELATIVE_BASE_URL}/+categories/${category}">${category}</a></li>
+						<li py:for="category in all_categories" class="cat-item"><a href="${config.REL_BASE}/+categories/${category}">${category}</a></li>
 					</ul>
 				</li>
 				<li id="archives">

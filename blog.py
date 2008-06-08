@@ -136,7 +136,7 @@ class Entry(object):
 				os.access(self.comments_dir, os.R_OK)
 
 	def guid(self):
-		return self._guid or u'%s/%s' % (config.ABSOLUTE_BASE_URL, self.id)
+		return self._guid or u'%s/%s' % (config.ABS_BASE, self.id)
 
 
 class ReadingLogEntry(object):
@@ -156,7 +156,7 @@ class ReadingLogEntry(object):
 		return False
 
 	def guid(self):
-		return self._guid or u'%s/#post-%s' % (config.ABSOLUTE_BASE_URL, self.id)
+		return self._guid or u'%s/#post-%s' % (config.ABS_BASE, self.id)
 
 
 class Comments(object):

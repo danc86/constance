@@ -12,10 +12,10 @@ def mini_markdown(s):
 
 def category_list(categories):
 	return genshi.Markup(u', ').join(
-			genshi.Markup(u'<a href="%s/+categories/%s">%s</a>' % (config.RELATIVE_BASE_URL, category, category)) 
+			genshi.Markup(u'<a href="%s/+categories/%s">%s</a>' % (config.REL_BASE, category, category)) 
 			for category in categories)
 
 def tag_list(tags):
 	return genshi.Markup(u', ').join(
-			genshi.Markup(u'<a rel="tag" href="%s/+tags/%s">%s</a>' % (config.RELATIVE_BASE_URL, tag, tag)) 
+			genshi.Markup(u'<a rel="tag" href="%s/+tags/%s">%s</a>' % (config.REL_BASE, tag, tag)) 
 			for tag in tags)
