@@ -4,15 +4,15 @@
 	  xmlns:xi="http://www.w3.org/2001/XInclude">
 
 <?python
-from app import BASE_URL
+import config
 from viewutils import tag_list
 ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 ?>
 
-<id>http://www.djc.id.au${BASE_URL}/?format=atom</id>
-<title type="text">djc</title>
-<link rel="self" type="application/atom+xml" href="http://www.djc.id.au${BASE_URL}/?format=atom" />
-<link rel="alternate" href="http://www.djc.id.au${BASE_URL}/" />
+<id>${config.ABSOLUTE_BASE_URL}/?format=atom</id>
+<title type="text">${config.BLOG_NAME}</title>
+<link rel="self" type="application/atom+xml" href="${config.ABSOLUTE_BASE_URL}/?format=atom" />
+<link rel="alternate" href="${config.ABSOLUTE_BASE_URL}/" />
 <generator>Dan’s blogging engine</generator>
 <updated>${feed_updated.strftime(ATOM_TIME_FORMAT)}</updated>
 
@@ -21,17 +21,18 @@ ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 	<published>${entry.publication_date.strftime(ATOM_TIME_FORMAT)}</published>
 	<updated>${entry.modified_date.strftime(ATOM_TIME_FORMAT)}</updated>
 	<author>
-		<name>djc</name>
+		<name>${config.BLOG_AUTHOR}</name>
+		<email py:if="config.BLOG_EMAIL">${config.BLOG_EMAIL}</email>
 	</author>
-	<category py:for="category in entry.categories" scheme="http://www.djc.id.au${BASE_URL}/+categories/" term="${category}" />
-	<category py:for="tag in entry.tags" scheme="http://www.djc.id.au${BASE_URL}/+tags/" term="${tag}" />
+	<category py:for="category in entry.categories" scheme="${config.ABSOLUTE_BASE_URL}/+categories/" term="${category}" />
+	<category py:for="tag in entry.tags" scheme="${config.ABSOLUTE_BASE_URL}/+tags/" term="${tag}" />
 	<py:if test="'Reading' not in entry.categories">
-		<link rel="alternate" href="http://www.djc.id.au${BASE_URL}/${entry.id}" />
+		<link rel="alternate" href="${config.ABSOLUTE_BASE_URL}/${entry.id}" />
 		<title type="text">${entry.title}</title>
-		<content type="xhtml" xml:base="http://www.djc.id.au${BASE_URL}/${entry.id}"><xhtml:div>
+		<content type="xhtml" xml:base="${config.ABSOLUTE_BASE_URL}/${entry.id}"><xhtml:div>
 			${entry.body}
 			<p py:if="entry.tags">
-				<img src="${BASE_URL}/static/images/tag_blue.png" alt="Tags:" />
+				<img src="${config.ABSOLUTE_BASE_URL}/static/images/tag_blue.png" alt="Tags:" />
 				${tag_list(entry.tags)}
 			</p>
 		</xhtml:div></content>

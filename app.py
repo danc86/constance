@@ -7,12 +7,8 @@ from colubrid import RegexApplication, HttpResponse, execute
 from colubrid.exceptions import PageNotFound, HttpFound
 from colubrid.server import StaticExports
 
+import config
 import blog
-
-ENTRIES_DIR = os.path.join(os.path.dirname(__file__), u'entries')
-READINGLOG_FILE = os.path.join(os.path.dirname(__file__), u'reading_log')
-BASE_URL = ''
-ENTRIES_PER_PAGE = 20
 
 template_loader = TemplateLoader(
 		os.path.join(os.path.dirname(__file__), 'templates'), 
@@ -30,11 +26,11 @@ class BlogApplication(RegexApplication):
 
 	def __init__(self, *args, **kwargs):
 		super(BlogApplication, self).__init__(*args, **kwargs)
-		self.entries = blog.Entries(ENTRIES_DIR, READINGLOG_FILE)
+		self.entries = blog.Entries(config.ENTRIES_DIR, config.READINGLOG_FILE)
 
 	def index(self):
 		offset = int(self.request.args.get('offset', 0))
-		sorted_entries = sorted(self.entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + ENTRIES_PER_PAGE]
+		sorted_entries = sorted(self.entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + config.ENTRIES_PER_PAGE]
 		format = self.request.args.get('format', 'html')
 		if format == 'html':
 			rendered = template_loader.load('multiple.xml').generate(
@@ -72,7 +68,7 @@ class BlogApplication(RegexApplication):
 			raise PageNotFound()
 		offset = int(self.request.args.get('offset', 0))
 		entries = categories[category]
-		sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + ENTRIES_PER_PAGE]
+		sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + config.ENTRIES_PER_PAGE]
 		rendered = template_loader.load('multiple.xml').generate(
 				title=u'%s category' % category, 
 				all_categories=self.entries.categories(), 
@@ -88,7 +84,7 @@ class BlogApplication(RegexApplication):
 			raise PageNotFound()
 		offset = int(self.request.args.get('offset', 0))
 		entries = by_tag[tag]
-		sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + ENTRIES_PER_PAGE]
+		sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + config.ENTRIES_PER_PAGE]
 		rendered = template_loader.load('multiple.xml').generate(
 				title=u'“%s” tag' % tag, 
 				all_categories=self.entries.categories(), 
