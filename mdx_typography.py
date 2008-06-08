@@ -1,4 +1,6 @@
 
+# vim:encoding=utf-8
+
 # from Joachim Schipper <joachim@joachimschipper.nl>
 # XXX license?
 
@@ -47,7 +49,7 @@ class TypographyPattern(markdown.Pattern):
 
 		for p, r in self.replace:
 			if p.match(matched):
-				return doc.createEntityReference(r)
+				return r
 		
 		assert(('Configuration error: %s, matched by %s, must be matched by any of %s' % (matched, self.compiled_re.pattern, [p[0].pattern for p in self.replace])) == True)
 
@@ -142,15 +144,15 @@ def makeExtension(config=[]):
 		config = {}
 	if not config.has_key('rules'):
 		config['rules'] = [(r'(---?|\.\.\.)',      # apply rule to this
-		                    (('---', 'mdash'),     # (regex, entity)
-		                     ('--', 'ndash'),
-		                     ('\.\.\.', '#8230'))),# end of rule
+		                    (('---', u'—'),     # (regex, entity)
+		                     ('--', u'–'),
+		                     ('\.\.\.', u'…'))),# end of rule
 		                   (r"\B(\"|''?)\b",
-		                    (("\"|''", 'ldquo'),
-		                     ("'", 'lsquo'))),
+		                    (("\"|''", u'“'),
+		                     ("'", u'‘'))),
 				   (r"(?:\b|(?<=[,.!?]))(\"|''?)",
-		                    (("\"|''", 'rdquo'),
-		                     ("'", 'rsquo')))]
+		                    (("\"|''", u'”'),
+		                     ("'", u'’')))]
 	if not config.has_key('no_widows'):
 		config['no_widows'] = False
 	if not config.has_key('caps_re'):
