@@ -13,7 +13,7 @@ from viewutils import mini_markdown, tag_list, category_list
 	<h3 class="entrytitle" id="post-${entry.id}"><a href="${config.REL_BASE}/${entry.id}" rel="bookmark">${mini_markdown(entry.title)}</a></h3>
 
 	<div class="entrymeta">
-		Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
+		Posted ${entry.publication_date.strftime(str('%-1d %B %Y at %H:%M'))}
 		<py:if test="entry.categories">
 			in ${category_list(entry.categories)}
 		</py:if>
