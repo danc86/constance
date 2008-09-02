@@ -24,8 +24,8 @@ def export(options):
                 guid, post_content = row
         
         # Wordpress stores these URL-encoded
-        post_name = urllib.unquote(post_name)
-        guid = urllib.unquote(guid)
+        post_name = urllib.unquote(str(post_name)).decode('utf8')
+        guid = urllib.unquote(str(guid)).decode('utf8')
 
         subcur = cn.cursor()
         subcur.execute('SELECT wp_terms.name FROM wp_term_relationships '
