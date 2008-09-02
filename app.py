@@ -15,7 +15,7 @@ template_loader = TemplateLoader(
 		variable_lookup='strict', 
 		auto_reload=True)
 
-class BlogApplication(RegexApplication):
+class Constance(RegexApplication):
 
 	urls = [(r'^$', 'index'), 
 			(r'^feed$', 'feed'), 
@@ -24,7 +24,7 @@ class BlogApplication(RegexApplication):
 	charset = 'utf-8'
 
 	def __init__(self, *args, **kwargs):
-		super(BlogApplication, self).__init__(*args, **kwargs)
+		super(Constance, self).__init__(*args, **kwargs)
 		self.entries = blog.Entries(config.ENTRIES_DIR, config.READINGLOG_FILE)
 
 	def index(self):
@@ -88,8 +88,7 @@ class BlogApplication(RegexApplication):
 			raise PageNotFound('Unknown format %r' % format)
 
 
-app = BlogApplication
-app = StaticExports(app, {'/static': os.path.join(os.path.dirname(__file__), 'static')})
-
 if __name__ == '__main__':
+	app = Constance
+	app = StaticExports(app, {'/static': os.path.join(os.path.dirname(__file__), 'static')})
 	execute(app)
