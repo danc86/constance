@@ -63,25 +63,6 @@ class Entries(object):
 				 for d in yaml.load_all(open(self.readinglog_file, 'r')))
 				)
 
-	def by_category(self):
-		"""
-		Returns a dict of (category -> set of entries).
-		"""
-		d = {}
-		for entry in self:
-			for category in entry.categories:
-				d.setdefault(category, set()).add(entry)
-		return d
-
-	def categories(self):
-		"""
-		Returns a frequency-ordered list of categories.
-		"""
-		by_category = self.by_category()
-		return sorted(by_category.iterkeys(), 
-				key=lambda c: len(by_category[c]), 
-				reverse=True)
-
 	def by_tag(self):
 		d = {}
 		for entry in self:
@@ -109,11 +90,6 @@ class Entry(object):
 		self.metadata = cleanup_metadata(md.Meta)
 		self.title = self.metadata['title']
 
-		raw_cats = self.metadata.get('categories', '').strip()
-		if raw_cats:
-			self.categories = frozenset(cat.strip() for cat in raw_cats.split(','))
-		else:
-			self.categories = frozenset()
 		raw_tags = self.metadata.get('tags', '').strip()
 		if raw_tags:
 			self.tags = frozenset(tag.strip() for tag in raw_tags.split(','))
@@ -148,7 +124,6 @@ class ReadingLogEntry(object):
 		self.publication_date = self.modified_date = self.date = yaml_dict['Date']
 		self.url = yaml_dict.get('URL', None)
 		self.rating = yaml_dict.get('Rating', None)
-		self.categories = frozenset([u'Reading'])
 		self.tags = frozenset()
 		self._guid = yaml_dict.get('GUID', None)
 

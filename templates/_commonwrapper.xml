@@ -35,12 +35,6 @@ import config
 						<li><a rel="alternate" type="application/atom+xml" href="${config.REL_BASE}/?format=atom" title="Atom feed for posts">Atom posts</a></li>
 					</ul>
 				</li>
-				<li class="categories">
-					<h2>Categories</h2>
-					<ul>
-						<li py:for="category in all_categories" class="cat-item"><a href="${config.REL_BASE}/+categories/${category}">${category}</a></li>
-					</ul>
-				</li>
 				<li id="archives">
 					<h2>Archives</h2>
 					XXX TODO

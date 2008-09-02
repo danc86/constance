@@ -19,7 +19,6 @@ class BlogApplication(RegexApplication):
 
 	urls = [(r'^$', 'index'), 
 			(r'^feed$', 'feed'), 
-			(r'^\+categories/(.+)$', 'category'), 
 			(r'^\+tags/(.+)$', 'tag'), 
 			(r'^([^+/][^/]*)/?$', 'post')]
 	charset = 'utf-8'
@@ -35,7 +34,6 @@ class BlogApplication(RegexApplication):
 		if format == 'html':
 			rendered = template_loader.load('multiple.xml').generate(
 					title=None, 
-					all_categories=self.entries.categories(), 
 					sorted_entries=sorted_entries, 
 					offset=offset,
 					).render('xhtml')
@@ -54,28 +52,11 @@ class BlogApplication(RegexApplication):
 		try:
 			entry = self.entries[id]
 			rendered = template_loader.load('single.xml').generate(
-					all_categories=self.entries.categories(), 
 					entry=entry
 					).render('xhtml')
 			return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 		except blog.EntryNotFoundError:
 			raise PageNotFound()
-
-	def category(self, category):
-		category = category.decode(self.charset)
-		categories = self.entries.by_category()
-		if category not in categories:
-			raise PageNotFound()
-		offset = int(self.request.args.get('offset', 0))
-		entries = categories[category]
-		sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + config.ENTRIES_PER_PAGE]
-		rendered = template_loader.load('multiple.xml').generate(
-				title=u'%s category' % category, 
-				all_categories=self.entries.categories(), 
-				sorted_entries=sorted_entries, 
-				offset=offset
-				).render('xhtml')
-		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 
 	def tag(self, tag):
 		tag = tag.decode(self.charset)
@@ -87,7 +68,6 @@ class BlogApplication(RegexApplication):
 		sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + config.ENTRIES_PER_PAGE]
 		rendered = template_loader.load('multiple.xml').generate(
 				title=u'“%s” tag' % tag, 
-				all_categories=self.entries.categories(), 
 				sorted_entries=sorted_entries, 
 				offset=offset
 				).render('xhtml')

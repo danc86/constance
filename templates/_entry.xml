@@ -5,18 +5,16 @@
 	 py:def="show_entry(entry, show_comments=True)">
 
 <?python
+import blog
 from viewutils import mini_markdown, tag_list, category_list
 ?>
 
-<div class="entry" py:if="'Reading' not in entry.categories">
+<div class="entry" py:if="isinstance(entry, blog.Entry)">
 
 	<h3 class="entrytitle" id="post-${entry.id}"><a href="${config.REL_BASE}/${entry.id}" rel="bookmark">${mini_markdown(entry.title)}</a></h3>
 
 	<div class="entrymeta">
 		Posted ${entry.publication_date.strftime(str('%-1d %B %Y at %H:%M'))}
-		<py:if test="entry.categories">
-			in ${category_list(entry.categories)}
-		</py:if>
 		<py:if test="not show_comments and entry.has_comments()">
 			·
 			<a href="${config.REL_BASE}/${entry.id}#comments">
@@ -41,7 +39,7 @@ from viewutils import mini_markdown, tag_list, category_list
 	<img src="${config.REL_BASE}/static/images/halfstar.png" alt="[half-star]" py:if="rating > int(rating)" />
 </span>
 
-<div class="entry readinglog" py:if="'Reading' in entry.categories">
+<div class="entry readinglog" py:if="isinstance(entry, blog.ReadingLogEntry)">
 	<h3 class="entrytitle" id="post-${entry.id}">
 		<a py:strip="not entry.url" href="${entry.url}">${mini_markdown(entry.title)}</a>
 		<py:if test="entry.author">
@@ -50,9 +48,6 @@ from viewutils import mini_markdown, tag_list, category_list
 	</h3>
 	<div class="entrymeta">
 		Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
-		<py:if test="entry.categories">
-			in <a py:for="category in entry.categories" href="${config.REL_BASE}/+categories/${category}">${category}</a>
-		</py:if>
 		<py:if test="entry.rating">
 			· ${stars(entry.rating)}
 		</py:if>
