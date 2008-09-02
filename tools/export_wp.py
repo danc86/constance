@@ -82,6 +82,7 @@ def export(options):
             f = open(filename, 'w')
             if author:
                 f.write('From: %s\n' % author)
+            f.write('Date: %s\n' % date.strftime('%Y-%m-%d %H:%M:%S'))
             if email:
                 f.write('Author-Email: %s\n' % email)
             if url:
