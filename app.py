@@ -29,7 +29,7 @@ class BlogApplication(RegexApplication):
 
 	def index(self):
 		offset = int(self.request.args.get('offset', 0))
-		sorted_entries = sorted(self.entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + config.ENTRIES_PER_PAGE]
+		sorted_entries = sorted(self.entries, key=lambda e: e.publication_date, reverse=True)
 		format = self.request.args.get('format', 'html')
 		if format == 'html':
 			rendered = template_loader.load('multiple.xml').generate(
@@ -40,7 +40,9 @@ class BlogApplication(RegexApplication):
 			return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
 		elif format == 'atom':
 			rendered = template_loader.load('multiple_atom.xml').generate(
-					sorted_entries=sorted_entries, 
+					title=None, 
+					url=config.ABS_BASE + '/', 
+					sorted_entries=sorted_entries[:config.ENTRIES_PER_PAGE], 
 					feed_updated=sorted_entries[0].modified_date
 					).render('xml')
 			return HttpResponse(rendered, [('Content-Type', 'application/atom+xml')], 200)
@@ -65,13 +67,25 @@ class BlogApplication(RegexApplication):
 			raise PageNotFound()
 		offset = int(self.request.args.get('offset', 0))
 		entries = by_tag[tag]
-		sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True)[offset:offset + config.ENTRIES_PER_PAGE]
-		rendered = template_loader.load('multiple.xml').generate(
-				title=u'“%s” tag' % tag, 
-				sorted_entries=sorted_entries, 
-				offset=offset
-				).render('xhtml')
-		return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
+		sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True)
+		format = self.request.args.get('format', 'html')
+		if format == 'html':
+			rendered = template_loader.load('multiple.xml').generate(
+					title=u'“%s” tag' % tag, 
+					sorted_entries=sorted_entries, 
+					offset=offset
+					).render('xhtml')
+			return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
+		elif format == 'atom':
+			rendered = template_loader.load('multiple_atom.xml').generate(
+					title=u'“%s” tag' % tag, 
+					url='%s/+tags/%s' % (config.ABS_BASE, tag.encode(self.charset)), 
+					sorted_entries=sorted_entries[:config.ENTRIES_PER_PAGE], 
+					feed_updated=sorted_entries[0].modified_date
+					).render('xml')
+			return HttpResponse(rendered, [('Content-Type', 'application/atom+xml')], 200)
+		else:
+			raise PageNotFound('Unknown format %r' % format)
 
 
 app = BlogApplication

@@ -123,6 +123,7 @@ class ReadingLogEntry(object):
 		self.author = yaml_dict['Author']
 		self.publication_date = self.modified_date = self.date = yaml_dict['Date']
 		self.url = yaml_dict.get('URL', None)
+		self.isbn = yaml_dict.get('ISBN', None)
 		self.rating = yaml_dict.get('Rating', None)
 		self.tags = frozenset()
 		self._guid = yaml_dict.get('GUID', None)

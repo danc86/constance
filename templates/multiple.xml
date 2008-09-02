@@ -8,21 +8,17 @@
 
 <head>
 	<title py:if="title">${title}</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="?format=atom" />
+    <link py:if="bool(offset)" rel="prev" href="?offset=${max(0, offset - 20)}" />
+    <link py:if="len(sorted_entries) > offset + config.ENTRIES_PER_PAGE" rel="next" href="?offset=${offset + 20}" />
 </head>
 <body>
 
 <h2 class="archives" py:if="title">Archive for the ${title}</h2>
 
-<py:with vars="show_prev = bool(offset); show_next = len(sorted_entries) > offset + 20">
-	<py:for each="entry in sorted_entries">
-		${show_entry(entry, show_comments=False)}
-	</py:for>
-	<p py:if="show_prev or show_next">
-		<a py:if="show_prev" href="?offset=${max(0, offset - 20)}">« previous page</a>
-		<py:if test="show_prev and show_next">—</py:if>
-		<a py:if="show_next" href="?offset=${offset + 20}">next page »</a>
-	</p>
-</py:with>
+<py:for each="entry in sorted_entries[offset:offset + config.ENTRIES_PER_PAGE]">
+    ${show_entry(entry, show_comments=False)}
+</py:for>
 
 </body>
 </html>

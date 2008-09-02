@@ -5,75 +5,78 @@
 	 py:def="show_entry(entry, show_comments=True)">
 
 <?python
-import blog
+import blog, config
 from viewutils import mini_markdown, tag_list, category_list
 ?>
 
 <div class="entry" py:if="isinstance(entry, blog.Entry)">
 
-	<h3 class="entrytitle" id="post-${entry.id}"><a href="${config.REL_BASE}/${entry.id}" rel="bookmark">${mini_markdown(entry.title)}</a></h3>
+	<h3 class="entrytitle" id="post-${entry.id}">${mini_markdown(entry.title)}</h3>
 
-	<div class="entrymeta">
-		Posted ${entry.publication_date.strftime(str('%-1d %B %Y at %H:%M'))}
-		<py:if test="not show_comments and entry.has_comments()">
-			·
-			<a href="${config.REL_BASE}/${entry.id}#comments">
-				Comments
-				<py:if test="len(entry.comments()) > 0">(${len(entry.comments())})</py:if>
-			</a>
-		</py:if>
+	<div class="entrydate">
+		${entry.publication_date.strftime(str('%-1d %b %Y'))}
+	    <a href="${config.REL_BASE}/${entry.id}" rel="bookmark" class="permalink" title="permalink">#</a>
 	</div>
+
+    <div py:if="entry.tags" class="entrytags">
+        tagged: ${tag_list(entry.tags)}
+    </div>
   
 	<div class="entrybody">
 		${entry.body}
-		<p py:if="entry.tags">
-			<img src="${config.REL_BASE}/static/images/tag_blue.png" alt="Tags:" />
-			${tag_list(entry.tags)}
-		</p>
-	</div>
+    </div>
+
+    <div class="entrycommentslink" py:if="not show_comments and entry.has_comments()">
+        <a href="${config.REL_BASE}/${entry.id}#comments" py:choose="len(entry.comments())">
+            <py:when test="0">no comments »</py:when>
+            <py:when test="1">1 comment »</py:when>
+            <py:otherwise>${len(entry.comments())} comments »</py:otherwise>
+        </a>
+    </div>
+
+    <div class="commentblock" py:if="show_comments and entry.has_comments()"
+         py:with="comments = sorted(entry.comments(), key=lambda c: c.date)">
+        <h4 class="comments" py:choose="len(comments)">
+            <py:when test="0">No comments</py:when>
+            <py:when test="1">1 comment</py:when>
+            <py:otherwise>${len(entry.comments())} comments</py:otherwise>
+        </h4>
+        <div py:for="n, comment in enumerate(comments)" id="comment-${comment.id}">
+            <py:if test="n > 0">${block_sep()}</py:if>
+            ${comment.body}
+            <p class="commentmeta">
+                ― <a py:strip="not comment.author_url" href="${comment.author_url}">${comment.author_name()}</a>
+                <span class="commentdatetime">${comment.date.strftime(str('%-1d %b %Y %H:%M'))}</span>
+                <a href="#comment-${comment.id}" class="permalink" title="permalink">#</a>
+            </p>
+        </div>
+    </div>
 
 </div>
 
 <span py:def="stars(rating)" py:strip="True">
-	<img src="${config.REL_BASE}/static/images/star.png" alt="[star]" py:for="_ in range(int(rating))" />
-	<img src="${config.REL_BASE}/static/images/halfstar.png" alt="[half-star]" py:if="rating > int(rating)" />
+<img src="${config.REL_BASE}/static/images/star.png" alt="[star]" py:for="_ in range(int(rating))" /><img src="${config.REL_BASE}/static/images/star-half.png" alt="[half-star]" py:if="rating > int(rating)" /><img src="${config.REL_BASE}/static/images/star-off.png" alt="" py:for="_ in range(int(5 - rating))" />
 </span>
 
 <div class="entry readinglog" py:if="isinstance(entry, blog.ReadingLogEntry)">
-	<h3 class="entrytitle" id="post-${entry.id}">
-		<a py:strip="not entry.url" href="${entry.url}">${mini_markdown(entry.title)}</a>
-		<py:if test="entry.author">
-			by ${entry.author}
-		</py:if>
-	</h3>
-	<div class="entrymeta">
-		Posted ${entry.publication_date.strftime(str('%-1d %B %Y'))}
-		<py:if test="entry.rating">
-			· ${stars(entry.rating)}
-		</py:if>
-	</div>
-	<div class="entrybody"></div>
-</div>
 
-<div id="commentblock"
-	 py:if="show_comments and entry.has_comments()"
-	 py:with="comments = sorted(entry.comments(), key=lambda c: c.date)">
-	<h2 id="comments">${len(comments) == 1 and '1 comment' or '%d comments' % len(comments)} so far</h2>
-    <ol class="commentlist" id="commentlist">
-		<li py:for="n, comment in enumerate(comments)"
-			class="${(n % 2) and 'alt' or 'standard'}"
-			id="comment-${comment.id}">
-			<div class="commentname">
-				<a py:strip="not comment.author_url" href="${comment.author_url}">${comment.author_name()}</a>
-				on <a href="#comment-${comment.id}">${comment.date.strftime(str('%-1d %B %Y'))}</a>
-			</div>
-			<div class="commenttext">
-				<div class="commentp">
-					${comment.body}
-				</div>
-			</div>
-		</li>
-	</ol>
+    <img py:if="entry.isbn" class="cover" src="http://covers.librarything.com/devkey/${config.LIBRARYTHING_DEVKEY}/small/isbn/${entry.isbn}" />
+
+    <h3 class="entrytitle" id="post-${entry.id}">
+        <a py:strip="not entry.url" href="${entry.url}">${mini_markdown(entry.title)}</a>
+        <py:if test="entry.author">
+            <span class="author">by ${entry.author}</span>
+        </py:if>
+    </h3>
+
+    <div class="entrydate">
+        ${entry.publication_date.strftime(str('%-1d %b %Y'))}
+    </div>
+
+    <div py:if="entry.rating" class="rating">
+        ${stars(entry.rating)}
+    </div>
+
 </div>
 
 </div>
