@@ -1,4 +1,4 @@
-import os, time, re, urllib, uuid
+import os, time, re, urllib, uuid, codecs
 import MySQLdb
 
 def html2md(s):
@@ -47,13 +47,18 @@ def export(options):
         # XXX
         if 'Reading' in categories: continue
 
+        if options.convert_categories:
+            tags = [category.lower() for category in categories] + tags
+
         os.mkdir(os.path.join(base_dir, post_name))
-        f = open(os.path.join(base_dir, post_name, 'content.txt'), 'w')
+        f = codecs.open(os.path.join(base_dir, post_name, 'content.txt'), 
+                'w', 'utf8')
         f.write('Title: %s\n' % post_title)
         f.write('Publication-Date: %s\n' % 
                 post_date.strftime('%Y-%m-%d %H:%M:%S'))
         f.write('GUID: %s\n' % guid)
-        f.write('Categories: %s\n' % ', '.join(categories))
+        if not options.convert_categories:
+            f.write('Categories: %s\n' % ', '.join(categories))
         f.write('Tags: %s\n' % ', '.join(tags))
         f.write('\n')
         f.write(post_content)
@@ -104,9 +109,11 @@ if __name__ == '__main__':
     parser.add_option('-d', '--db', 
             help='name of the Wordpress database [default: %default]')
     parser.set_defaults(host='localhost', username='root', 
-            password=None, db='wordpress')
-    parser.add_option('-b', '--base-dir', 
-            help='base directory into which entries will be written')
+            password=None, db='wordpress', convert_categories=False)
+    parser.add_option('-b', '--base-dir', metavar='BASE', 
+            help='create entries as subdirectories of BASE')
+    parser.add_option('--convert-categories', action='store_true', 
+            help='convert categories to tags')
     options, args = parser.parse_args()
     if options.base_dir is None:
         parser.error('--base-dir must be specified')
