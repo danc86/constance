@@ -13,6 +13,4 @@
   - entire templates
   ...
 - pings, e.g. http://www.technorati.com/developers/ping/
-- convert -- to html en dash (&#8211;)
-- convert --- to html em dash (&#8212;)
 ...
