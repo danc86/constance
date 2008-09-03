@@ -9,7 +9,7 @@ from viewutils import tag_list
 ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 ?>
 
-<id>${config.ABS_BASE}/?format=atom</id>
+<id>${url}?format=atom</id>
 <title type="text">${config.BLOG_NAME}<py:if test="title"> (${title})</py:if></title>
 <link rel="self" type="application/atom+xml" href="${url}?format=atom" />
 <link rel="alternate" href="${url}" />
@@ -24,12 +24,12 @@ ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 		<name>${config.BLOG_AUTHOR}</name>
 		<email py:if="config.BLOG_EMAIL">${config.BLOG_EMAIL}</email>
 	</author>
-	<category py:for="tag in entry.tags" scheme="${config.ABS_BASE}/+tags/" term="${tag}" />
+	<category py:for="tag in entry.tags" scheme="${environ['APP_URI']}/+tags/" term="${tag}" />
 	<py:if test="isinstance(entry, blog.Entry)">
-		<link rel="alternate" href="${config.ABS_BASE}/${entry.id}" />
+		<link rel="alternate" href="${environ['APP_URI']}/${entry.id}" />
 		<title type="text">${entry.title}</title>
-		<content type="xhtml" xml:base="${config.ABS_BASE}/${entry.id}"><xhtml:div>
-			<p py:if="entry.tags">Tagged: ${tag_list(entry.tags)}</p>
+		<content type="xhtml" xml:base="${environ['APP_URI']}/${entry.id}"><xhtml:div>
+			<p py:if="entry.tags">Tagged: ${tag_list(environ.get('SCRIPT_NAME', ''), entry.tags)}</p>
 			${entry.body}
 		</xhtml:div></content>
 	</py:if>

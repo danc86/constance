@@ -10,7 +10,7 @@ def mini_markdown(s):
     the_p, = re.match(u'<p>(.*)\n</p>', m).groups()    
     return genshi.Markup(the_p)
 
-def tag_list(tags):
+def tag_list(script_name, tags):
     return genshi.Markup(u', ').join(
-            genshi.Markup(u'<a rel="tag" href="%s/+tags/%s">%s</a>' % (config.REL_BASE, tag, tag)) 
+            genshi.Markup(u'<a rel="tag" href="%s/+tags/%s">%s</a>' % (script_name, tag, tag)) 
             for tag in tags)

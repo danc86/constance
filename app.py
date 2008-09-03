@@ -2,6 +2,7 @@
 # vim:encoding=utf-8
 
 import os
+import wsgiref.util
 from genshi.template import TemplateLoader
 from colubrid import RegexApplication, HttpResponse, execute
 from colubrid.exceptions import PageNotFound, HttpFound
@@ -25,6 +26,7 @@ class Constance(RegexApplication):
 
     def __init__(self, *args, **kwargs):
         super(Constance, self).__init__(*args, **kwargs)
+        self.request.environ['APP_URI'] = wsgiref.util.application_uri(self.request.environ) # Colubrid ought to do this for us
         self.entries = blog.Entries(config.ENTRIES_DIR, config.READINGLOG_FILE)
 
     def index(self):
@@ -33,6 +35,7 @@ class Constance(RegexApplication):
         format = self.request.args.get('format', 'html')
         if format == 'html':
             rendered = template_loader.load('multiple.xml').generate(
+                    environ=self.request.environ, 
                     title=None, 
                     sorted_entries=sorted_entries, 
                     offset=offset,
@@ -40,8 +43,9 @@ class Constance(RegexApplication):
             return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
         elif format == 'atom':
             rendered = template_loader.load('multiple_atom.xml').generate(
+                    environ=self.request.environ, 
                     title=None, 
-                    url=config.ABS_BASE + '/', 
+                    self_url='%s/' % self.request.environ['APP_URI'], 
                     sorted_entries=sorted_entries[:config.ENTRIES_PER_PAGE], 
                     feed_updated=sorted_entries[0].modified_date
                     ).render('xml')
@@ -54,6 +58,7 @@ class Constance(RegexApplication):
         try:
             entry = self.entries[id]
             rendered = template_loader.load('single.xml').generate(
+                    environ=self.request.environ, 
                     entry=entry
                     ).render('xhtml')
             return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
@@ -71,6 +76,7 @@ class Constance(RegexApplication):
         format = self.request.args.get('format', 'html')
         if format == 'html':
             rendered = template_loader.load('multiple.xml').generate(
+                    environ=self.request.environ, 
                     title=u'“%s” tag' % tag, 
                     sorted_entries=sorted_entries, 
                     offset=offset
@@ -78,8 +84,9 @@ class Constance(RegexApplication):
             return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
         elif format == 'atom':
             rendered = template_loader.load('multiple_atom.xml').generate(
+                    environ=self.request.environ, 
                     title=u'“%s” tag' % tag, 
-                    url='%s/+tags/%s' % (config.ABS_BASE, tag.encode(self.charset)), 
+                    self_url='%s/+tags/%s' % (self.request.environ['APP_URI'], tag.encode(self.charset)), 
                     sorted_entries=sorted_entries[:config.ENTRIES_PER_PAGE], 
                     feed_updated=sorted_entries[0].modified_date
                     ).render('xml')
@@ -91,4 +98,4 @@ class Constance(RegexApplication):
 if __name__ == '__main__':
     app = Constance
     app = StaticExports(app, {'/static': os.path.join(os.path.dirname(__file__), 'static')})
-    execute(app)
+    execute(app, hostname='0.0.0.0', port=8082)

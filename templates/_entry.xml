@@ -14,11 +14,11 @@ from viewutils import mini_markdown, tag_list
 
 	<div class="entrydate">
 		${entry.publication_date.strftime(str('%-1d %b %Y'))}
-	    <a href="${config.REL_BASE}/${entry.id}" rel="bookmark" class="permalink" title="permalink">#</a>
+	    <a href="${environ.get('SCRIPT_NAME', '')}/${entry.id}" rel="bookmark" class="permalink" title="permalink">#</a>
 	</div>
 
     <div py:if="entry.tags" class="entrytags">
-        tagged: ${tag_list(entry.tags)}
+        tagged: ${tag_list(environ.get('SCRIPT_NAME', ''), entry.tags)}
     </div>
   
 	<div class="entrybody">
@@ -26,7 +26,7 @@ from viewutils import mini_markdown, tag_list
     </div>
 
     <div class="entrycommentslink" py:if="not show_comments and entry.has_comments()">
-        <a href="${config.REL_BASE}/${entry.id}#comments" py:choose="len(entry.comments())">
+        <a href="${environ.get('SCRIPT_NAME', '')}/${entry.id}#comments" py:choose="len(entry.comments())">
             <py:when test="0">no comments »</py:when>
             <py:when test="1">1 comment »</py:when>
             <py:otherwise>${len(entry.comments())} comments »</py:otherwise>
@@ -54,7 +54,7 @@ from viewutils import mini_markdown, tag_list
 </div>
 
 <span py:def="stars(rating)" py:strip="True">
-<img src="${config.REL_BASE}/static/images/star.png" alt="[star]" py:for="_ in range(int(rating))" /><img src="${config.REL_BASE}/static/images/star-half.png" alt="[half-star]" py:if="rating > int(rating)" /><img src="${config.REL_BASE}/static/images/star-off.png" alt="" py:for="_ in range(int(5 - rating))" />
+<img src="${environ.get('SCRIPT_NAME', '')}/static/images/star.png" alt="[star]" py:for="_ in range(int(rating))" /><img src="${environ.get('SCRIPT_NAME', '')}/static/images/star-half.png" alt="[half-star]" py:if="rating > int(rating)" /><img src="${environ.get('SCRIPT_NAME', '')}/static/images/star-off.png" alt="" py:for="_ in range(int(5 - rating))" />
 </span>
 
 <div class="entry readinglog" py:if="isinstance(entry, blog.ReadingLogEntry)">
