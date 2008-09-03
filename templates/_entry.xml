@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">
 <div xmlns="http://www.w3.org/1999/xhtml"
      xmlns:py="http://genshi.edgewall.org/"
 	 py:strip="True"
@@ -60,7 +59,9 @@ from viewutils import mini_markdown, tag_list, category_list
 
 <div class="entry readinglog" py:if="isinstance(entry, blog.ReadingLogEntry)">
 
-    <img py:if="entry.isbn" class="cover" src="http://covers.librarything.com/devkey/${config.LIBRARYTHING_DEVKEY}/small/isbn/${entry.isbn}" />
+    <img py:if="entry.isbn" class="cover"
+         src="http://covers.librarything.com/devkey/${config.LIBRARYTHING_DEVKEY}/small/isbn/${entry.isbn}" 
+         alt="Cover image for ${entry.title}" />
 
     <h3 class="entrytitle" id="post-${entry.id}">
         <a py:strip="not entry.url" href="${entry.url}">${mini_markdown(entry.title)}</a>
