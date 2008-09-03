@@ -10,11 +10,6 @@ def mini_markdown(s):
     the_p, = re.match(u'<p>(.*)\n</p>', m).groups()    
     return genshi.Markup(the_p)
 
-def category_list(categories):
-    return genshi.Markup(u', ').join(
-            genshi.Markup(u'<a href="%s/+categories/%s">%s</a>' % (config.REL_BASE, category, category)) 
-            for category in categories)
-
 def tag_list(tags):
     return genshi.Markup(u', ').join(
             genshi.Markup(u'<a rel="tag" href="%s/+tags/%s">%s</a>' % (config.REL_BASE, tag, tag)) 
