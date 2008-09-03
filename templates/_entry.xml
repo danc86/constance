@@ -5,7 +5,7 @@
 
 <?python
 import blog, config
-from viewutils import mini_markdown, tag_list, category_list
+from viewutils import mini_markdown, tag_list
 ?>
 
 <div class="entry" py:if="isinstance(entry, blog.Entry)">
