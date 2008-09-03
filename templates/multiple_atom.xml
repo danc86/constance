@@ -17,7 +17,7 @@ ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 <updated>${feed_updated.strftime(ATOM_TIME_FORMAT)}</updated>
 
 <entry py:for="entry in sorted_entries">
-	<id>${entry.guid()}</id>
+	<id>${entry.guid}</id>
 	<published>${entry.publication_date.strftime(ATOM_TIME_FORMAT)}</published>
 	<updated>${entry.modified_date.strftime(ATOM_TIME_FORMAT)}</updated>
 	<author>

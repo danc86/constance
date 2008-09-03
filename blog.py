@@ -98,7 +98,7 @@ class Entry(object):
 
         self.modified_date = datetime.fromtimestamp(os.path.getmtime(os.path.join(self.dir, 'content.txt')))
         self.publication_date = self.metadata.get('publication-date', None) or self.modified_date
-        self._guid = self.metadata.get('guid', None)
+        self.guid = self.metadata['guid']
 
     def comments(self):
         return Comments(self.comments_dir)
@@ -110,9 +110,6 @@ class Entry(object):
         """
         return os.path.isdir(self.comments_dir) and \
                 os.access(self.comments_dir, os.R_OK)
-
-    def guid(self):
-        return self._guid or u'%s/%s' % (config.ABS_BASE, self.id)
 
 
 class ReadingLogEntry(object):
@@ -126,13 +123,10 @@ class ReadingLogEntry(object):
         self.isbn = yaml_dict.get('ISBN', None)
         self.rating = yaml_dict.get('Rating', None)
         self.tags = frozenset()
-        self._guid = yaml_dict.get('GUID', None)
+        self.guid = yaml_dict['GUID']
 
     def has_comments(self):
         return False
-
-    def guid(self):
-        return self._guid or u'%s/#post-%s' % (config.ABS_BASE, self.id)
 
 
 class Comments(object):
