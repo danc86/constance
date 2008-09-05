@@ -20,9 +20,9 @@ ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 	<id>${entry.guid}</id>
 	<published>${entry.publication_date.strftime(ATOM_TIME_FORMAT)}</published>
 	<updated>${entry.modified_date.strftime(ATOM_TIME_FORMAT)}</updated>
-	<author>
+	<author py:with="email = config.getunicode('global', 'email')">
 		<name>${config.getunicode('global', 'author')}</name>
-		<email py:with="email = config.getunicode('global', 'email')" py:if="email">${email}</email>
+		<email py:if="email">${email}</email>
 	</author>
 	<category py:for="tag in entry.tags" scheme="${environ['APP_URI']}/+tags/" term="${tag}" />
 	<py:if test="isinstance(entry, blog.Entry)">
