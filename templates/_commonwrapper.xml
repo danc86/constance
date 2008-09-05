@@ -4,10 +4,6 @@
      xmlns:xi="http://www.w3.org/2001/XInclude"
      py:strip="True">
 
-<?python
-import config
-?>
-
 <span py:def="inline_sep()" class="inlinesep">·</span>
 <div py:def="block_sep()" class="blocksep">~</div>
 

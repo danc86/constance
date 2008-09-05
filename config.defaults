@@ -1,0 +1,33 @@
+[global]
+
+# The name of the blog. Appears at the end of page <title>s.
+name = Untitled
+
+# The name of the author of this blog.
+author = Anonymous
+
+# The author's e-mail address. Leave this blank if you don't want to publish an 
+# e-mail address.
+email = 
+
+# The maximum number of entries (of any kind) to be shown on each page.
+entries_per_page = 20
+
+[blog]
+
+# The directory containing blog entries.
+dir = ./entries
+
+[readinglog]
+
+# The name of the file containing a YAML stream of readinglog entries.
+filename = ./reading_log
+
+# Should LibraryThing covers be shown for readinglog entries?
+# See also librarything_devkey below.
+show_covers = False
+
+# If show_covers is True, you must supply a valid LibraryThing developer key to 
+# be included in cover URLs. You can leave this blank otherwise.
+# See http://www.librarything.com/services/keys.php
+librarything_devkey = 

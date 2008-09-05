@@ -4,7 +4,7 @@
 import os
 import wsgiref.util
 from genshi.template import TemplateLoader
-from colubrid import RegexApplication, HttpResponse, execute
+from colubrid import RegexApplication, HttpResponse
 from colubrid.exceptions import PageNotFound, HttpFound
 from colubrid.server import StaticExports
 
@@ -27,7 +27,9 @@ class Constance(RegexApplication):
     def __init__(self, *args, **kwargs):
         super(Constance, self).__init__(*args, **kwargs)
         self.request.environ['APP_URI'] = wsgiref.util.application_uri(self.request.environ) # Colubrid ought to do this for us
-        self.entries = blog.Entries(config.ENTRIES_DIR, config.READINGLOG_FILE)
+        self.config = config.ConstanceConfigParser(self.request.environ['constance.config_filename'])
+        self.entries = blog.Entries(self.config.getunicode('blog', 'dir'), 
+                self.config.getunicode('readinglog', 'filename'))
 
     def index(self):
         offset = int(self.request.args.get('offset', 0))
@@ -35,6 +37,7 @@ class Constance(RegexApplication):
         format = self.request.args.get('format', 'html')
         if format == 'html':
             rendered = template_loader.load('multiple.xml').generate(
+                    config=self.config, 
                     environ=self.request.environ, 
                     title=None, 
                     sorted_entries=sorted_entries, 
@@ -43,10 +46,11 @@ class Constance(RegexApplication):
             return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
         elif format == 'atom':
             rendered = template_loader.load('multiple_atom.xml').generate(
+                    config=self.config, 
                     environ=self.request.environ, 
                     title=None, 
                     self_url='%s/' % self.request.environ['APP_URI'], 
-                    sorted_entries=sorted_entries[:config.ENTRIES_PER_PAGE], 
+                    sorted_entries=sorted_entries[:self.config.getint('global', 'entries_per_page')], 
                     feed_updated=sorted_entries[0].modified_date
                     ).render('xml')
             return HttpResponse(rendered, [('Content-Type', 'application/atom+xml')], 200)
@@ -58,6 +62,7 @@ class Constance(RegexApplication):
         try:
             entry = self.entries[id]
             rendered = template_loader.load('single.xml').generate(
+                    config=self.config, 
                     environ=self.request.environ, 
                     entry=entry
                     ).render('xhtml')
@@ -76,6 +81,7 @@ class Constance(RegexApplication):
         format = self.request.args.get('format', 'html')
         if format == 'html':
             rendered = template_loader.load('multiple.xml').generate(
+                    config=self.config, 
                     environ=self.request.environ, 
                     title=u'“%s” tag' % tag, 
                     sorted_entries=sorted_entries, 
@@ -84,10 +90,11 @@ class Constance(RegexApplication):
             return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
         elif format == 'atom':
             rendered = template_loader.load('multiple_atom.xml').generate(
+                    config=self.config, 
                     environ=self.request.environ, 
                     title=u'“%s” tag' % tag, 
                     self_url='%s/+tags/%s' % (self.request.environ['APP_URI'], tag.encode(self.charset)), 
-                    sorted_entries=sorted_entries[:config.ENTRIES_PER_PAGE], 
+                    sorted_entries=sorted_entries[:self.config.getint('global', 'entries_per_page')], 
                     feed_updated=sorted_entries[0].modified_date
                     ).render('xml')
             return HttpResponse(rendered, [('Content-Type', 'application/atom+xml')], 200)
@@ -96,6 +103,10 @@ class Constance(RegexApplication):
 
 
 if __name__ == '__main__':
+    import sys
+    import wsgiref.simple_server
     app = Constance
     app = StaticExports(app, {'/static': os.path.join(os.path.dirname(__file__), 'static')})
-    execute(app, hostname='0.0.0.0', port=8082)
+    server = wsgiref.simple_server.make_server('0.0.0.0', 8082, app)
+    server.base_environ['constance.config_filename'] = sys.argv[1]
+    server.serve_forever()

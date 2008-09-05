@@ -14,5 +14,4 @@
   - entire templates
   ...
 - pings, e.g. http://www.technorati.com/developers/ping/
-- make covers configurable, instead of commented out
 - http://www.pell.portland.or.us/~orc/Code/markdown/ or http://github.com/jgm/peg-markdown/tree/master

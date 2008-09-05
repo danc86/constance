@@ -2,8 +2,6 @@ import re
 import markdown
 import genshi
 
-import config
-
 def mini_markdown(s):
     # XXX find a more efficient way to do this?
     m = markdown.Markdown(extensions=['typography']).convert(s)

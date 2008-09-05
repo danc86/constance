@@ -5,8 +5,6 @@ import markdown
 import genshi
 import yaml
 
-import config
-
 
 def count(iterable):
     count = 0

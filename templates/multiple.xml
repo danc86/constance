@@ -10,13 +10,13 @@
 	<title py:if="title">${title}</title>
     <link rel="alternate" type="application/atom+xml" title="Atom feed" href="?format=atom" />
     <link py:if="bool(offset)" rel="prev" href="?offset=${max(0, offset - 20)}" />
-    <link py:if="len(sorted_entries) > offset + config.ENTRIES_PER_PAGE" rel="next" href="?offset=${offset + 20}" />
+    <link py:if="len(sorted_entries) > offset + config.getint('global', 'entries_per_page')" rel="next" href="?offset=${offset + 20}" />
 </head>
 <body>
 
 <h2 class="archives" py:if="title">Archive for the ${title}</h2>
 
-<py:for each="entry in sorted_entries[offset:offset + config.ENTRIES_PER_PAGE]">
+<py:for each="entry in sorted_entries[offset:offset + config.getint('global', 'entries_per_page')]">
     ${show_entry(entry, show_comments=False)}
 </py:for>
 

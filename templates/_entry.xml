@@ -4,7 +4,7 @@
 	 py:def="show_entry(entry, show_comments=True)">
 
 <?python
-import blog, config
+import blog
 from viewutils import mini_markdown, tag_list
 ?>
 
@@ -59,9 +59,9 @@ from viewutils import mini_markdown, tag_list
 
 <div class="entry readinglog" py:if="isinstance(entry, blog.ReadingLogEntry)">
 
-    <!--img py:if="entry.isbn" class="cover"
-         src="http://covers.librarything.com/devkey/${config.LIBRARYTHING_DEVKEY}/small/isbn/${entry.isbn}" 
-         alt="Cover image for ${entry.title}" /-->
+    <img py:if="config.getboolean('readinglog', 'show_covers') and entry.isbn" class="cover"
+         src="http://covers.librarything.com/devkey/${config.get('readinglog', 'librarything_devkey')}/small/isbn/${entry.isbn}" 
+         alt="Cover image for ${entry.title}" />
 
     <h3 class="entrytitle" id="post-${entry.id}">
         <a py:strip="not entry.url" href="${entry.url}">${mini_markdown(entry.title)}</a>
