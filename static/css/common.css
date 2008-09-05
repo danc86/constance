@@ -17,6 +17,12 @@ body {
     max-width: 45em;
 }
 
+a {
+    color: #0066b3;
+}
+a:visited {
+    color: #990099;
+}
 h1, h2, h3, h4, h5, h6 {
     font-family: "Corbel", "Liberation Sans", sans-serif;
 }
@@ -43,7 +49,6 @@ div.blocksep {
     text-transform: uppercase;
     letter-spacing: 0.1ex;
     word-spacing: 0.2em;
-    color: black;
     margin-right: 0.5em;
 }
 .entry .entrydate {
