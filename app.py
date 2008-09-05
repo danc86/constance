@@ -101,12 +101,13 @@ class Constance(RegexApplication):
         else:
             raise PageNotFound('Unknown format %r' % format)
 
+application = Constance
+
 
 if __name__ == '__main__':
     import sys
     import wsgiref.simple_server
-    app = Constance
-    app = StaticExports(app, {'/static': os.path.join(os.path.dirname(__file__), 'static')})
-    server = wsgiref.simple_server.make_server('0.0.0.0', 8082, app)
+    application = StaticExports(application, {'/static': os.path.join(os.path.dirname(__file__), 'static')})
+    server = wsgiref.simple_server.make_server('0.0.0.0', 8082, application)
     server.base_environ['constance.config_filename'] = sys.argv[1]
     server.serve_forever()
