@@ -8,7 +8,7 @@ import blog
 from viewutils import mini_markdown, tag_list
 ?>
 
-<div class="entry" py:if="isinstance(entry, blog.Entry)">
+<div class="entry" py:if="isinstance(entry, blog.BlogEntry)">
 
 	<h3 class="entrytitle" id="post-${entry.id}">${mini_markdown(entry.title)}</h3>
 

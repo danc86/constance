@@ -21,7 +21,7 @@ dir = ./entries
 [readinglog]
 
 # The name of the file containing a YAML stream of readinglog entries.
-filename = ./reading_log
+filename = 
 
 # Should LibraryThing covers be shown for readinglog entries?
 # See also librarything_devkey below.

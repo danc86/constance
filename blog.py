@@ -1,6 +1,5 @@
 import os, re
 from datetime import datetime
-from itertools import chain
 import markdown
 import genshi
 import yaml
@@ -39,37 +38,42 @@ class CommentNotFoundError(ValueError): pass
 class CommentForbiddenError(ValueError): pass
 
 
-class Entries(object):
+class DirectoryEntrySet(object):
 
-    def __init__(self, entries_dir, readinglog_file):
-        self.entries_dir = entries_dir
-        self.readinglog_file = readinglog_file
-    
-    def __contains__(self, id):
-        return os.path.exists(os.path.join(self.entries_dir, id))
-    
-    def __getitem__(self, id):
-        # XXX reading log entries don't have a key
-        return Entry(self.entries_dir, id)
-    
+    def __init__(self, base_dir):
+        self.base_dir = base_dir
+        assert os.path.isdir(self.base_dir), self.base_dir
+
+    def __contains__(self, key):
+        return os.path.exists(os.path.join(self.base_dir, key))
+
+    def __getitem__(self, key):
+        if key not in self: raise KeyError(key)
+        return self.entry_class(self.base_dir, key)
+
+    def __len__(self):
+        return count(filename 
+                for filename in os.listdir(self.base_dir) 
+                if not filename.startswith('.'))
+
     def __iter__(self):
-        return chain(
-                (Entry(self.entries_dir, filename) 
-                 for filename in os.listdir(self.entries_dir)
-                 if not filename.startswith('.')), 
-                (ReadingLogEntry(d)
-                 for d in yaml.load_all(open(self.readinglog_file, 'r')))
-                )
-
-    def by_tag(self):
-        d = {}
-        for entry in self:
-            for tag in entry.tags:
-                d.setdefault(tag, set()).add(entry)
-        return d
+        return (self.entry_class(self.base_dir, filename)
+                for filename in os.listdir(self.base_dir)
+                if not filename.startswith('.'))
 
 
-class Entry(object):
+class YamlEntrySet(object):
+
+    def __init__(self, filename):
+        self.filename = filename
+        assert os.path.isfile(self.filename), self.filename
+
+    def __iter__(self):
+        return (self.entry_class(d)
+                for d in yaml.load_all(open(self.filename, 'r')))
+
+
+class BlogEntry(object):
 
     def __init__(self, entries_dir, id):
         assert isinstance(id, unicode), id
@@ -99,7 +103,7 @@ class Entry(object):
         self.guid = self.metadata['guid']
 
     def comments(self):
-        return Comments(self.comments_dir)
+        return CommentSet(self.comments_dir)
 
     def has_comments(self):
         """
@@ -108,6 +112,11 @@ class Entry(object):
         """
         return os.path.isdir(self.comments_dir) and \
                 os.access(self.comments_dir, os.R_OK)
+
+
+class BlogEntrySet(DirectoryEntrySet):
+
+    entry_class = BlogEntry
 
 
 class ReadingLogEntry(object):
@@ -127,26 +136,9 @@ class ReadingLogEntry(object):
         return False
 
 
-class Comments(object):
+class ReadingLogEntrySet(YamlEntrySet):
 
-    def __init__(self, path):
-        self.path = path
-    
-    def __contains__(self, id):
-        return os.path.exists(os.path.join(self.path, id))
-
-    def __len__(self):
-        return count(filename 
-                for filename in os.listdir(self.path) 
-                if not filename.startswith('.'))
-    
-    def __getitem__(self, id):
-        return Comment(self.path, id)
-    
-    def __iter__(self):
-        return (Comment(self.path, filename) 
-                for filename in os.listdir(self.path)
-                if not filename.startswith('.'))
+    entry_class = ReadingLogEntry
 
 
 class Comment(object):
@@ -171,3 +163,8 @@ class Comment(object):
 
     def author_name(self):
         return self.author or u'Anonymous'
+
+
+class CommentSet(DirectoryEntrySet):
+
+    entry_class = Comment

@@ -2,6 +2,7 @@
 # vim:encoding=utf-8
 
 import os
+from itertools import chain
 import wsgiref.util
 from genshi.template import TemplateLoader
 from colubrid import RegexApplication, HttpResponse
@@ -28,12 +29,17 @@ class Constance(RegexApplication):
         super(Constance, self).__init__(*args, **kwargs)
         self.request.environ['APP_URI'] = wsgiref.util.application_uri(self.request.environ) # Colubrid ought to do this for us
         self.config = config.ConstanceConfigParser(self.request.environ['constance.config_filename'])
-        self.entries = blog.Entries(self.config.getunicode('blog', 'dir'), 
-                self.config.getunicode('readinglog', 'filename'))
+        self.blog_entries = blog.BlogEntrySet(self.config.getunicode('blog', 'dir'))
+        readinglog_filename = self.config.getunicode('readinglog', 'filename')
+        if readinglog_filename:
+            self.readinglog_entries = blog.ReadingLogEntrySet(readinglog_filename)
+        else:
+            self.readinglog_entries = frozenset()
 
     def index(self):
         offset = int(self.request.args.get('offset', 0))
-        sorted_entries = sorted(self.entries, key=lambda e: e.publication_date, reverse=True)
+        sorted_entries = sorted(chain(self.blog_entries, self.readinglog_entries), 
+                key=lambda e: e.publication_date, reverse=True)
         format = self.request.args.get('format', 'html')
         if format == 'html':
             rendered = template_loader.load('multiple.xml').generate(
@@ -60,7 +66,7 @@ class Constance(RegexApplication):
     def post(self, id):
         id = id.decode(self.charset) # shouldn't Colubrid do this?
         try:
-            entry = self.entries[id]
+            entry = self.blog_entries[id]
             rendered = template_loader.load('single.xml').generate(
                     config=self.config, 
                     environ=self.request.environ, 
@@ -72,12 +78,11 @@ class Constance(RegexApplication):
 
     def tag(self, tag):
         tag = tag.decode(self.charset)
-        by_tag = self.entries.by_tag()
-        if tag not in by_tag:
+        with_tag = [e for e in self.blog_entries if tag in e.tags]
+        if not with_tag:
             raise PageNotFound()
         offset = int(self.request.args.get('offset', 0))
-        entries = by_tag[tag]
-        sorted_entries = sorted(entries, key=lambda e: e.publication_date, reverse=True)
+        sorted_entries = sorted(with_tag, key=lambda e: e.publication_date, reverse=True)
         format = self.request.args.get('format', 'html')
         if format == 'html':
             rendered = template_loader.load('multiple.xml').generate(

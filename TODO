@@ -1,5 +1,3 @@
-- handle absent readinglog
-- restructure blog.py class hierarchy: EntrySet, DirectoryEntrySet, YamlStreamSet, ... or something
 - ignore pages in export_wp.py
 - feeds everywhere else
 - monthly archives

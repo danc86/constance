@@ -25,7 +25,7 @@ ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 		<email py:if="email">${email}</email>
 	</author>
 	<category py:for="tag in entry.tags" scheme="${environ['APP_URI']}/+tags/" term="${tag}" />
-	<py:if test="isinstance(entry, blog.Entry)">
+	<py:if test="isinstance(entry, blog.BlogEntry)">
 		<link rel="alternate" href="${environ['APP_URI']}/${entry.id}" />
 		<title type="text">${entry.title}</title>
 		<content type="xhtml" xml:base="${environ['APP_URI']}/${entry.id}"><xhtml:div>
