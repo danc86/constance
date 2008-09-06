@@ -35,10 +35,10 @@ ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 	</py:if>
 	<py:if test="isinstance(entry, blog.ReadingLogEntry)">
 		<title type="text">${entry.title} by ${entry.author}</title>
-		<summary type="text">${entry.rating} stars</summary>
+		<summary py:if="entry.rating" type="text">${entry.rating} stars</summary>
 		<content type="xhtml"><xhtml:div>
 			<p><a href="${entry.url}">${entry.title}</a> by ${entry.author}</p>
-			<p>${entry.rating} stars</p>
+			<p py:if="entry.rating">${entry.rating} stars</p>
 		</xhtml:div></content>
 	</py:if>
 </entry>
