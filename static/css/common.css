@@ -40,8 +40,9 @@ div.blocksep {
 }
 
 .entry {
-    margin: 3em 0;
+    padding: 2em 0;
     clear: both;
+    border-top: 1px solid #ddd;
 }
 .entry h3.entrytitle {
     display: inline;
