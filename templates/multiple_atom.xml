@@ -34,6 +34,7 @@ ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 		</xhtml:div></content>
 	</py:if>
 	<py:if test="isinstance(entry, blog.ReadingLogEntry)">
+		<link rel="alternate" href="${environ['APP_URI']}/+reading/#entry-${entry.id}" />
 		<title type="text">${entry.title} by ${entry.author}</title>
 		<summary py:if="entry.rating" type="text">${entry.rating} stars</summary>
 		<content type="xhtml"><xhtml:div>

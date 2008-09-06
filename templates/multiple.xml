@@ -9,14 +9,16 @@
 <head>
 	<title py:if="title">${title}</title>
     <link rel="alternate" type="application/atom+xml" title="Atom feed" href="?format=atom" />
-    <link py:if="bool(offset)" rel="prev" href="?offset=${max(0, offset - 20)}" />
-    <link py:if="len(sorted_entries) > offset + config.getint('global', 'entries_per_page')" rel="next" href="?offset=${offset + 20}" />
+    <py:if test="defined('offset')">
+        <link py:if="bool(offset)" rel="prev" href="?offset=${max(0, offset - 20)}" />
+        <link py:if="len(sorted_entries) > offset + config.getint('global', 'entries_per_page')" rel="next" href="?offset=${offset + 20}" />
+    </py:if>
 </head>
 <body>
 
-<h2 class="archives" py:if="title">Archive for the ${title}</h2>
+<h2 class="archives" py:if="title">Archive of ${title}</h2>
 
-<py:for each="entry in sorted_entries[offset:offset + config.getint('global', 'entries_per_page')]">
+<py:for each="entry in (defined('offset') and sorted_entries[offset:offset + config.getint('global', 'entries_per_page')] or sorted_entries)">
     ${show_entry(entry, show_comments=False)}
 </py:for>
 

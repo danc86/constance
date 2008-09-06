@@ -10,7 +10,7 @@ from viewutils import mini_markdown, tag_list
 
 <div class="entry" py:if="isinstance(entry, blog.BlogEntry)">
 
-	<h3 class="entrytitle" id="post-${entry.id}">${mini_markdown(entry.title)}</h3>
+	<h3 class="entrytitle" id="entry-${entry.id}">${mini_markdown(entry.title)}</h3>
 
 	<div class="entrydate">
 		${entry.publication_date.strftime(str('%-1d %b %Y'))}
@@ -63,7 +63,7 @@ from viewutils import mini_markdown, tag_list
          src="http://covers.librarything.com/devkey/${config.get('readinglog', 'librarything_devkey')}/small/isbn/${entry.isbn}" 
          alt="Cover image for ${entry.title}" />
 
-    <h3 class="entrytitle" id="post-${entry.id}">
+    <h3 class="entrytitle" id="entry-${entry.id}">
         <a py:strip="not entry.url" href="${entry.url}">${mini_markdown(entry.title)}</a>
         <py:if test="entry.author">
             <span class="author">by ${entry.author}</span>
@@ -72,6 +72,7 @@ from viewutils import mini_markdown, tag_list
 
     <div class="entrydate">
         ${entry.publication_date.strftime(str('%-1d %b %Y'))}
+	    <a href="${environ.get('SCRIPT_NAME', '')}/+reading/#entry-${entry.id}" rel="bookmark" class="permalink" title="permalink">#</a>
     </div>
 
     <div py:if="entry.rating" class="rating">
