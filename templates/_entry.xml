@@ -41,14 +41,23 @@ from viewutils import mini_markdown, tag_list
             <py:otherwise>${len(entry.comments())} comments</py:otherwise>
         </h4>
         <div py:for="n, comment in enumerate(comments)" id="comment-${comment.id}">
-            <py:if test="n > 0">${block_sep()}</py:if>
             ${comment.body}
             <p class="commentmeta">
                 ― <a py:strip="not comment.author_url" href="${comment.author_url}">${comment.author_name()}</a>
                 <span class="commentdatetime">${comment.date.strftime(str('%-1d %b %Y %H:%M'))}</span>
                 <a href="#comment-${comment.id}" class="permalink" title="permalink">#</a>
             </p>
+            ${block_sep()}
         </div>
+        <div><form method="post" action="${environ.get('SCRIPT_NAME', '')}/${entry.id}/comments/+new">
+            <p>
+                <label for="commentform-from">Name:</label> <input type="text" id="commentform-from" name="from" /><br />
+                <label for="commentform-author-url">URL:</label> <input type="text" id="commentform-author-url" name="author-url" /><br />
+                <label for="commentform-author-email">E-mail address:</label> <input type="text" id="commentform-author-email" name="author-email" /> (not published)<br />
+            </p>
+            <p><textarea name="comment"></textarea></p>
+            <p><input type="submit" value="Submit" /></p>
+        </form></div>
     </div>
 
 </div>

@@ -6,7 +6,7 @@ from itertools import chain
 import wsgiref.util
 from genshi.template import TemplateLoader
 from colubrid import RegexApplication, HttpResponse
-from colubrid.exceptions import PageNotFound, HttpFound
+from colubrid.exceptions import PageNotFound, AccessDenied, HttpFound
 from colubrid.server import StaticExports
 
 import config
@@ -23,7 +23,8 @@ class Constance(RegexApplication):
             (r'^feed$', 'feed'), 
             (r'^\+tags/(.+)$', 'tag'), 
             (r'^\+reading/?$', 'reading'), 
-            (r'^([^+/][^/]*)/?$', 'post')]
+            (r'^([^+/][^/]*)/?$', 'post'), 
+            (r'^([^+/][^/]*)/comments/\+new$', 'add_post_comment')]
     charset = 'utf-8'
 
     def __init__(self, *args, **kwargs):
@@ -76,6 +77,27 @@ class Constance(RegexApplication):
             return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
         except blog.EntryNotFoundError:
             raise PageNotFound()
+    
+    def add_post_comment(self, id):
+        id = id.decode(self.charset) # shouldn't Colubrid do this?
+        try:
+            entry = self.blog_entries[id]
+            form_data = self.request.form.as_dict()
+            metadata = {}
+            metadata['From'] = form_data['from'] or 'Anonymous'
+            if form_data['author-url']:
+                metadata['Author-URL'] = form_data['author-url']
+            if form_data['author-email']:
+                metadata['Author-Email'] = form_data['author-email']
+            if self.request.environ['HTTP_USER_AGENT']:
+                metadata['User-Agent'] = self.request.environ['HTTP_USER_AGENT']
+            if self.request.environ['REMOTE_ADDR']:
+                metadata['Received'] = 'from %s' % self.request.environ['REMOTE_ADDR']
+            entry.add_comment(metadata, form_data['comment'])
+            raise HttpFound('%s/%s/' % (self.request.environ.get('SCRIPT_NAME', ''), 
+                    id.encode(self.charset)))
+        except blog.CommentingForbiddenError:
+            raise AccessDenied()
 
     def tag(self, tag):
         tag = tag.decode(self.charset)

@@ -1,4 +1,4 @@
-import os, re
+import os, re, uuid
 from datetime import datetime
 import markdown
 import genshi
@@ -32,6 +32,8 @@ def idify(s):
 class EntryNotFoundError(ValueError): pass
 
 class EntryForbiddenError(ValueError): pass
+
+class CommentingForbiddenError(ValueError): pass # XXX why all the different types?
 
 class CommentNotFoundError(ValueError): pass
 
@@ -112,6 +114,17 @@ class BlogEntry(object):
         """
         return os.path.isdir(self.comments_dir) and \
                 os.access(self.comments_dir, os.R_OK)
+
+    def add_comment(self, metadata, content):
+        if not os.access(self.comments_dir, os.W_OK):
+            raise CommentingForbiddenError()
+        # XXX write to temp file
+        guid = uuid.uuid4().get_hex()
+        f = open(os.path.join(self.comments_dir, guid), 'w')
+        for k, v in metadata.iteritems():
+            f.write('%s: %s\n' % (k, v))
+        f.write('\n')
+        f.write(content)
 
 
 class BlogEntrySet(DirectoryEntrySet):
