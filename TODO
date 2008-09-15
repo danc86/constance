@@ -1,5 +1,6 @@
 - ignore pages in export_wp.py
 - feeds everywhere else
+  - RSS as well as Atom
 - monthly archives
 - make comment submission form prettier
 - more styles: blockquote, pre, code, ...?
