@@ -69,14 +69,14 @@ class Constance(RegexApplication):
         id = id.decode(self.charset) # shouldn't Colubrid do this?
         try:
             entry = self.blog_entries[id]
-            rendered = template_loader.load('single.xml').generate(
-                    config=self.config, 
-                    environ=self.request.environ, 
-                    entry=entry
-                    ).render('xhtml')
-            return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
-        except blog.EntryNotFoundError:
+        except KeyError:
             raise PageNotFound()
+        rendered = template_loader.load('single.xml').generate(
+                config=self.config, 
+                environ=self.request.environ, 
+                entry=entry
+                ).render('xhtml')
+        return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
     
     def add_post_comment(self, id):
         id = id.decode(self.charset) # shouldn't Colubrid do this?
