@@ -19,3 +19,5 @@
   - perhaps as interim step could export from Nokia and embed gmaps directly in constance?
 - document on-disk format for the entry types
 - tests!!!!!!!!
+- escape high bytes in URLs (should work properly since the page is UTF-8 anyway, but it seems to confuse at least MSN-Bot (and probably IE) sigh)
+  - better means of generating URLs?
