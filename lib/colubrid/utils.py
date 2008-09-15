@@ -105,6 +105,20 @@ class MultiDict(dict):
             for key, value in other_dict.items():
                 self.setlistdefault(key, []).append(value)
 
+    def as_dict(self):
+        """
+        A MultiDict has lists as its real values, which means if we construct 
+        a dict from it or use it as keyword args (really anything which touches 
+        the internal dict implementation directly, instead of going through 
+        __getitem__) then we will get lists everywhere.
+
+        This method returns a real dict, with the same keys as this MultiDict, 
+        but with just the last value for each key (or None if it has no 
+        values).
+        """
+        return dict((k, self.get(k, None)) for k in self.iterkeys())
+
+
 
 class MergedMultiDict(object):
     """
