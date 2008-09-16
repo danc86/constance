@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<h2 class="archives" py:if="title">Archive of ${title}</h2>
+<h2 py:if="title">Archive of ${title}</h2>
 
 <py:for each="entry in (defined('offset') and sorted_entries[offset:offset + config.getint('global', 'entries_per_page')] or sorted_entries)">
     ${show_entry(entry, show_comments=False)}

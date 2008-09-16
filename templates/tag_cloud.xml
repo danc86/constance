@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      lang="en-AU">
+<xi:include href="_commonwrapper.xml" />
+
+<head>
+    <title>Tag cloud</title>
+    <link rel="stylesheet" type="text/css" href="${environ.get('SCRIPT_NAME', '')}/static/css/tag_cloud.css" />
+</head>
+<body>
+
+<h2>Tag cloud</h2>
+
+<ol id="tagcloud">
+    <li py:for="tag, freq in sorted(tag_freqs.iteritems(), key=lambda (t, f): t.lower())">
+        <a rel="tag" href="${environ.get('SCRIPT_NAME', '')}/+tags/${tag}" style="font-size: ${0.8 + (freq / 10.)}em;">${tag}</a>
+        <span class="frequency">(used ${freq} times)</span>
+    </li>
+</ol>
+
+</body>
+</html>

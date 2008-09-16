@@ -21,6 +21,7 @@ template_loader = TemplateLoader(
 class Constance(RegexApplication):
 
     urls = [(r'^$', 'index'), 
+            (r'^\+tags/$', 'tag_cloud'), 
             (r'^\+tags/(.+)$', 'tag'), 
             (r'^\+reading/?$', 'reading'), 
             (r'^([^+/][^/]*)/?$', 'post'), 
@@ -64,6 +65,18 @@ class Constance(RegexApplication):
             return HttpResponse(rendered, [('Content-Type', 'application/atom+xml')], 200)
         else:
             raise PageNotFound('Unknown format %r' % format)
+    
+    def tag_cloud(self):
+        tag_freqs = {}
+        for entry in self.blog_entries:
+            for tag in entry.tags:
+                tag_freqs[tag] = tag_freqs.get(tag, 0) + 1
+        rendered = template_loader.load('tag_cloud.xml').generate(
+                config=self.config, 
+                environ=self.request.environ, 
+                tag_freqs=tag_freqs
+                ).render('xhtml')
+        return HttpResponse(rendered, [('Content-Type', 'text/html')], 200)
     
     def post(self, id):
         id = id.decode(self.charset) # shouldn't Colubrid do this?
