@@ -49,14 +49,24 @@ from viewutils import mini_markdown, tag_list
             </p>
             ${block_sep()}
         </div>
-        <div><form method="post" action="${environ.get('SCRIPT_NAME', '')}/${entry.id}/comments/+new">
+        <div class="commentform"><form method="post" action="${environ.get('SCRIPT_NAME', '')}/${entry.id}/comments/+new">
             <p>
-                <label for="commentform-from">Name:</label> <input type="text" id="commentform-from" name="from" /><br />
-                <label for="commentform-author-url">URL:</label> <input type="text" id="commentform-author-url" name="author-url" /><br />
-                <label for="commentform-author-email">E-mail address:</label> <input type="text" id="commentform-author-email" name="author-email" /> (not published)<br />
+                <label for="commentform-from">Name</label>
+                <input type="text" id="commentform-from" name="from" />
             </p>
-            <p><textarea name="comment"></textarea></p>
-            <p><input type="submit" value="Submit" /></p>
+            <p>
+                <label for="commentform-author-email">E-mail address (not published)</label>
+                <input type="text" id="commentform-author-email" name="author-email" />
+            </p>
+            <p>
+                <label for="commentform-author-url">URL</label>
+                <input type="text" id="commentform-author-url" name="author-url" />
+            </p>
+            <p>
+                <label for="commentform-comment">Comment (use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a>, no HTML)</label>
+                <textarea id="commentform-comment" name="comment" rows="7" cols="30"></textarea>
+            </p>
+            <p><button type="submit">Submit</button></p>
         </form></div>
     </div>
 

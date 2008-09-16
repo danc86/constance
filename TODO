@@ -2,7 +2,6 @@
 - feeds everywhere else
   - RSS as well as Atom
 - monthly archives
-- make comment submission form prettier
 - more styles: blockquote, pre, code, ...?
 - <!-- more -->
 - customisation:
@@ -22,3 +21,6 @@
 - tests!!!!!!!!
 - escape high bytes in URLs (should work properly since the page is UTF-8 anyway, but it seems to confuse at least MSN-Bot (and probably IE) sigh)
   - better means of generating URLs?
+- fix unicode in comments
+  - really, this means cleaning up the whole self.charset crap (move into config) and apply it consistently!
+    - *really*, this means patching or ditching colubrid ergh ...

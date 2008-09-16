@@ -102,6 +102,19 @@ div.blocksep {
     color: #888;
 }
 
+/* Comment form */
+.entry .commentform label {
+    display: block;
+}
+.entry .commentform input {
+    display: block;
+    width: 30em;
+}
+.entry .commentform textarea {
+    width: 100%;
+    font-size: 1em;
+}
+
 /* Reading log entries */
 .readinglog h3.entrytitle {
     font-size: 1.2em;
