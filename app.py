@@ -8,6 +8,7 @@ from genshi.template import TemplateLoader
 from colubrid import RegexApplication, HttpResponse
 from colubrid.exceptions import PageNotFound, AccessDenied, HttpFound
 from colubrid.server import StaticExports
+from recaptcha.client import captcha
 
 import config
 import blog
@@ -80,9 +81,20 @@ class Constance(RegexApplication):
     
     def add_post_comment(self, id):
         id = id.decode(self.charset) # shouldn't Colubrid do this?
+        entry = self.blog_entries[id]
+        form_data = self.request.form.as_dict()
+
+        if self.config.getboolean('blog', 'require_captcha'):
+            # first verify the captcha
+            captcha_response = captcha.submit(
+                    form_data['recaptcha_challenge_field'], 
+                    form_data['recaptcha_response_field'], 
+                    self.config.get('blog', 'recaptcha_privkey'), 
+                    self.request.environ['REMOTE_ADDR'])
+            if not captcha_response.is_valid:
+                raise ValueError(captcha_response.error_code) # XXX handle better
+
         try:
-            entry = self.blog_entries[id]
-            form_data = self.request.form.as_dict()
             metadata = {}
             metadata['From'] = form_data['from'] or 'Anonymous'
             if form_data['author-url']:

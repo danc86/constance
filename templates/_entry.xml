@@ -6,6 +6,7 @@
 <?python
 import blog
 from viewutils import mini_markdown, tag_list
+from recaptcha.client import captcha
 ?>
 
 <div class="entry" py:if="isinstance(entry, blog.BlogEntry)">
@@ -66,6 +67,12 @@ from viewutils import mini_markdown, tag_list
                 <label for="commentform-comment">Comment (use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a>, no HTML)</label>
                 <textarea id="commentform-comment" name="comment" rows="7" cols="30"></textarea>
             </p>
+            <py:if test="config.getboolean('blog', 'require_captcha')">
+                <script type="text/javascript">
+                    RecaptchaOptions = {theme: 'white'};
+                </script>
+                ${Markup(captcha.displayhtml(config.get('blog', 'recaptcha_pubkey')))}
+            </py:if>
             <p><button type="submit">Submit</button></p>
         </form></div>
     </div>

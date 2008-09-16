@@ -21,6 +21,15 @@ entries_in_feed = 20
 # The directory containing blog entries.
 dir = ./entries
 
+# Require reCAPTCHA verification for comment submission?
+require_captcha = False
+
+# If require_captcha is True, you must supply a valid public/private reCAPTCHA 
+# key pair here. Otherwise they can be left blank.
+# See https://admin.recaptcha.net/recaptcha/createsite/
+recaptcha_pubkey =
+recaptcha_privkey =
+
 [readinglog]
 
 # The name of the file containing a YAML stream of readinglog entries.
