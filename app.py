@@ -21,7 +21,6 @@ template_loader = TemplateLoader(
 class Constance(RegexApplication):
 
     urls = [(r'^$', 'index'), 
-            (r'^feed$', 'feed'), 
             (r'^\+tags/(.+)$', 'tag'), 
             (r'^\+reading/?$', 'reading'), 
             (r'^([^+/][^/]*)/?$', 'post'), 
