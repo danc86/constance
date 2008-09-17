@@ -1,4 +1,4 @@
-import os, re, uuid
+import os, re, uuid, email
 from datetime import datetime
 import markdown
 import genshi
@@ -11,12 +11,14 @@ def count(iterable):
         count += 1
     return count
 
-def cleanup_metadata(meta):
+def cleanup_metadata(header_items):
     cleaned = {}
-    for k, v in meta.iteritems():
-        v = '\n'.join(v)
+    for k, v in header_items:
+        k = k.lower()
         if k.endswith('date'):
             v = datetime.strptime(v, '%Y-%m-%d %H:%M:%S')
+        else:
+            v = v.decode('utf8') # XXX encoding
         cleaned[k] = v
     return cleaned
 
@@ -88,10 +90,12 @@ class BlogEntry(object):
         if not os.access(self.dir, os.R_OK):
             raise EntryForbiddenError()
 
-        self.raw = open(os.path.join(self.dir, 'content.txt'), 'r').read().decode('utf-8')
-        md = markdown.Markdown(extensions=['meta', 'typography'])
-        self.body = genshi.Markup(md.convert(self.raw))
-        self.metadata = cleanup_metadata(md.Meta)
+        # not really a MIME document, but parse it like one
+        msg = email.message_from_file(open(os.path.join(self.dir, 'content.txt'), 'r'))
+        self.metadata = cleanup_metadata(msg.items())
+        self.raw_body = msg.get_payload().decode('utf8') # XXX encoding
+        md = markdown.Markdown(extensions=['typography'])
+        self.body = genshi.Markup(md.convert(self.raw_body))
         self.title = self.metadata['title']
 
         raw_tags = self.metadata.get('tags', '').strip()
@@ -164,11 +168,11 @@ class Comment(object):
             raise CommentForbiddenError()
 
         self.id = id
-        self.raw = open(path, 'r').read().decode('utf-8')
-        md = markdown.Markdown(extensions=['meta', 'typography'], safe_mode='escape')
-        self.body = genshi.Markup(md.convert(self.raw))
-        if not hasattr(md, 'Meta'): raise Exception(self.raw)
-        self.metadata = md.Meta
+        msg = email.message_from_file(open(path, 'r'))
+        self.metadata = cleanup_metadata(msg.items())
+        self.raw_body = msg.get_payload().decode('utf8') # XXX encoding
+        md = markdown.Markdown(extensions=['typography'], safe_mode='escape')
+        self.body = genshi.Markup(md.convert(self.raw_body))
         
         self.author = self.metadata.get('from', None)
         self.author_url = self.metadata.get('author-url', None)
