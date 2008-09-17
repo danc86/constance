@@ -12,4 +12,4 @@ class ConstanceConfigParser(SafeConfigParser):
         self.readfp(open(filename, 'r'))
 
     def getunicode(self, section, option):
-        return self.get(section, option).decode('utf8') # XXX make codec configurable?
+        return self.get(section, option).decode(self.get('global', 'encoding'))

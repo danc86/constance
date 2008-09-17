@@ -17,14 +17,14 @@
   - perhaps as interim step could export from Nokia and embed gmaps directly in constance?
 - document on-disk format for the entry types
 - tests!!!!!!!!
-- escape high bytes in URLs (should work properly since the page is UTF-8 anyway, but it seems to confuse at least MSN-Bot (and probably IE) sigh)
+- escape high bytes in URLs (should work properly since pages are served in the same encoding as what we expect URLs to be in, but it seems to confuse at least MSN-Bot (and probably IE) sigh)
   - better means of generating URLs?
-- fix unicode in comments
-  - really, this means cleaning up the whole self.charset crap (move into config) and apply it consistently!
-    - *really*, this means patching or ditching colubrid ergh ...
+- have almost completely ditched colubrid, just need to replace StaticExports for testing then rm it
+- use encoding from config for blog.py instead of hard-coding utf8
 - handle reCAPTCHA errors (including no captcha fields submitted!!!)
 - invalid offsets (displays every entry at max and 500's on invalid such as alpha)
 - config option to add next/prev links to page (as well as the link rels)
 - markdown typography/smartypants
   - or even just, better markdown
 - generate goog sitemaps
+- prettier error pages

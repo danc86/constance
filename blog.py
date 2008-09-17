@@ -126,9 +126,9 @@ class BlogEntry(object):
         guid = uuid.uuid4().get_hex()
         f = open(os.path.join(self.comments_dir, guid), 'w')
         for k, v in metadata.iteritems():
-            f.write('%s: %s\n' % (k, v))
+            f.write('%s: %s\n' % (k, v.encode('utf8'))) # XXX encoding
         f.write('\n')
-        f.write(content)
+        f.write(content.encode('utf8')) # XXX encoding
 
 
 class BlogEntrySet(DirectoryEntrySet):
