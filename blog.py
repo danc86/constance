@@ -1,6 +1,6 @@
 import os, re, uuid, email
 from datetime import datetime
-import markdown
+from markdown2 import Markdown
 import genshi
 import yaml
 
@@ -94,7 +94,7 @@ class BlogEntry(object):
         msg = email.message_from_file(open(os.path.join(self.dir, 'content.txt'), 'r'))
         self.metadata = cleanup_metadata(msg.items())
         self.raw_body = msg.get_payload().decode('utf8') # XXX encoding
-        md = markdown.Markdown(extensions=['typography'])
+        md = Markdown(extras=['code-friendly'])
         self.body = genshi.Markup(md.convert(self.raw_body))
         self.title = self.metadata['title']
 
@@ -171,7 +171,7 @@ class Comment(object):
         msg = email.message_from_file(open(path, 'r'))
         self.metadata = cleanup_metadata(msg.items())
         self.raw_body = msg.get_payload().decode('utf8') # XXX encoding
-        md = markdown.Markdown(extensions=['typography'], safe_mode='escape')
+        md = Markdown(extras=['code-friendly'], safe_mode='escape')
         self.body = genshi.Markup(md.convert(self.raw_body))
         
         self.author = self.metadata.get('from', None)

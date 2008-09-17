@@ -1,12 +1,13 @@
 import re
-import markdown
+from markdown2 import Markdown
 import genshi
 
 def mini_markdown(s):
     # XXX find a more efficient way to do this?
-    m = markdown.Markdown(extensions=['typography']).convert(s)
-    the_p, = re.match(u'<p>(.*)\n</p>', m).groups()    
-    return genshi.Markup(the_p)
+    m = Markdown(extras=['code_friendly']).convert(s)
+    match = re.match(u'<p>(.*)</p>', m)
+    assert match, m
+    return genshi.Markup(match.group(1))
 
 def tag_list(script_name, tags):
     return genshi.Markup(u', ').join(
