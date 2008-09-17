@@ -167,13 +167,17 @@ class Constance(object):
 
         if self.config.getboolean('blog', 'require_captcha'):
             # first verify the captcha
+            if ('recaptcha_challenge_field' not in self.form or 
+                    'recaptcha_response_field' not in self.form):
+                raise ForbiddenError('CAPTCHA form values missing. Are you a bot?')
             captcha_response = captcha.submit(
                     self.form['recaptcha_challenge_field'], 
                     self.form['recaptcha_response_field'], 
                     self.config.get('blog', 'recaptcha_privkey'), 
                     self.environ['REMOTE_ADDR'])
             if not captcha_response.is_valid:
-                raise ValueError(captcha_response.error_code) # XXX handle better
+                raise ForbiddenError('You failed the CAPTCHA. Please try submitting again. '
+                        '(reCAPTCHA error code: %s)' % captcha_response.error_code)
 
         try:
             metadata = {}
@@ -190,7 +194,7 @@ class Constance(object):
             raise HTTPFound('%s/%s/' % (self.environ.get('APP_URI', ''), 
                     id.encode(self.encoding)))
         except blog.CommentingForbiddenError:
-            raise ForbiddenError()
+            raise ForbiddenError('Commenting is disabled for this entry.')
 
     def tag(self, tag):
         with_tag = [e for e in self.blog_entries if tag in e.tags]
