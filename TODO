@@ -27,3 +27,4 @@
 - config option to add next/prev links to page (as well as the link rels)
 - markdown typography/smartypants
   - or even just, better markdown
+- generate goog sitemaps
