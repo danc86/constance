@@ -13,13 +13,18 @@ import blog
 
 class HTTPException(Exception):
     status = '500 Internal Server Error'
+    message = 'An internal error occurred.'
     headers = []
+    def __init__(self, message=None):
+        if message is not None: self.message = message
 
 class ForbiddenError(HTTPException):
     status = '403 Forbidden'
+    message = 'You do not have access to the requested resource.'
 
 class NotFoundError(HTTPException):
     status = '404 Not Found'
+    message = 'The requested resource could not be found.'
 
 class HTTPRedirect(HTTPException):
     def __init__(self, location):
@@ -28,12 +33,15 @@ class HTTPRedirect(HTTPException):
 
 class HTTPFound(HTTPRedirect):
     status = '302 Found'
+    message = 'The requested resource is located at a different URL.'
 
 class HTTPTemporaryRedirect(HTTPRedirect):
     status = '307 Temporary Redirect'
+    message = 'The requested resource is temporarily located at a different URL.'
 
 class HTTPPermanentRedirect(HTTPRedirect):
     status = '301 Moved Permanently'
+    message = 'The requested resource has moved permanently to a different URL.'
 
 template_loader = TemplateLoader(
         os.path.join(os.path.dirname(__file__), 'templates'), 
@@ -82,9 +90,18 @@ class Constance(object):
             # no matching URI found, so give a 404
             raise NotFoundError()
         except HTTPException, e:
-            # XXX make prettier errors
-            self.start(e.status, [('Content-type', 'text/plain')] + e.headers)
-            return iter([e.status])
+            return self.error_response(e)
+
+    def error_response(self, error):
+        # XXX should probably just use real templates here ...
+        body = u"""<html><head><title>%s - %s</title>
+                <link rel="stylesheet" type="text/css" href="/static/css/common.css" />
+                </head><body><div id="contentwrapper"><div id="content">
+                <h2>%s</h2><p>%s</p></div></div></body></html>""" % (
+                error.status, self.config.getunicode('global', 'name'), 
+                error.status, error.message)
+        self.start(error.status, [('Content-type', 'text/html')] + error.headers)
+        return iter([body.encode(self.encoding)])
 
     urls = [(r'/$', 'index'), 
             (r'/\+tags/$', 'tag_cloud'), 
@@ -119,7 +136,7 @@ class Constance(object):
                     ).render('xml', encoding=self.encoding)
             return (rendered, [('Content-Type', 'application/atom+xml')])
         else:
-            raise PageNotFound('Unknown format %r' % format)
+            raise NotFoundError('Unknown format %r' % format)
     
     def tag_cloud(self):
         tag_freqs = {}
@@ -202,7 +219,7 @@ class Constance(object):
                     ).render('xml')
             return (rendered, [('Content-Type', 'application/atom+xml')])
         else:
-            raise PageNotFound('Unknown format %r' % format)
+            raise NotFoundError('Unknown format %r' % format)
 
     def reading(self):
         sorted_entries = sorted(self.readinglog_entries, key=lambda e: e.publication_date, reverse=True)
