@@ -24,3 +24,5 @@
   - really, this means cleaning up the whole self.charset crap (move into config) and apply it consistently!
     - *really*, this means patching or ditching colubrid ergh ...
 - handle reCAPTCHA errors (including no captcha fields submitted!!!)
+- invalid offsets (displays every entry at max and 500's on invalid such as alpha)
+- config option to add next/prev links to page (as well as the link rels)
