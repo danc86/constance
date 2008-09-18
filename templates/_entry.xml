@@ -1,7 +1,10 @@
 <div xmlns="http://www.w3.org/1999/xhtml"
      xmlns:py="http://genshi.edgewall.org/"
+     xmlns:xi="http://www.w3.org/2001/XInclude"
 	 py:strip="True"
 	 py:def="show_entry(entry, show_comments=True)">
+
+<xi:include href="_fragments.xml" />
 
 <?python
 import blog
@@ -15,7 +18,7 @@ from recaptcha.client import captcha
 
 	<div class="entrydate">
 		${entry.publication_date.strftime(str('%-1d %b %Y'))}
-	    <a href="${environ.get('SCRIPT_NAME', '')}/${entry.id}" rel="bookmark" class="permalink" title="permalink">#</a>
+	    <a href="${uri(entry.id)}" rel="bookmark" class="permalink" title="permalink">#</a>
 	</div>
 
     <div py:if="entry.tags" class="entrytags">
@@ -27,7 +30,7 @@ from recaptcha.client import captcha
     </div>
 
     <div class="entrycommentslink" py:if="not show_comments and entry.has_comments()">
-        <a href="${environ.get('SCRIPT_NAME', '')}/${entry.id}#comments" py:choose="len(entry.comments())">
+        <a href="${uri(entry.id)}#comments" py:choose="len(entry.comments())">
             <py:when test="0">no comments »</py:when>
             <py:when test="1">1 comment »</py:when>
             <py:otherwise>${len(entry.comments())} comments »</py:otherwise>
@@ -50,7 +53,7 @@ from recaptcha.client import captcha
             </p>
             ${block_sep()}
         </div>
-        <div class="commentform"><form method="post" action="${environ.get('SCRIPT_NAME', '')}/${entry.id}/comments/+new">
+        <div class="commentform"><form method="post" action="${uri(entry.id, 'comments', '+new')}">
             <p>
                 <label for="commentform-from">Name</label>
                 <input type="text" id="commentform-from" name="from" />
@@ -80,7 +83,7 @@ from recaptcha.client import captcha
 </div>
 
 <span py:def="stars(rating)" py:strip="True">
-<img src="${environ.get('SCRIPT_NAME', '')}/static/images/star.png" alt="[star]" py:for="_ in range(int(rating))" /><img src="${environ.get('SCRIPT_NAME', '')}/static/images/star-half.png" alt="[half-star]" py:if="rating > int(rating)" /><img src="${environ.get('SCRIPT_NAME', '')}/static/images/star-off.png" alt="" py:for="_ in range(int(5 - rating))" />
+<img src="${uri('static', 'images', 'star.png')}" alt="[star]" py:for="_ in range(int(rating))" /><img src="${uri('static', 'images', 'star-half.png')}" alt="[half-star]" py:if="rating > int(rating)" /><img src="${uri('static', 'images', 'star-off.png')}" alt="" py:for="_ in range(int(5 - rating))" />
 </span>
 
 <div class="entry readinglog" py:if="isinstance(entry, blog.ReadingLogEntry)">
@@ -98,7 +101,7 @@ from recaptcha.client import captcha
 
     <div class="entrydate">
         ${entry.publication_date.strftime(str('%-1d %b %Y'))}
-	    <a href="${environ.get('SCRIPT_NAME', '')}/+reading/#entry-${entry.id}" rel="bookmark" class="permalink" title="permalink">#</a>
+	    <a href="${uri('+reading', '')}#entry-${entry.id}" rel="bookmark" class="permalink" title="permalink">#</a>
     </div>
 
     <div py:if="entry.rating" class="rating">

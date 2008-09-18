@@ -3,6 +3,8 @@
       xmlns:py="http://genshi.edgewall.org/"
 	  xmlns:xi="http://www.w3.org/2001/XInclude">
 
+<xi:include href="_fragments.xml" />
+
 <?python
 import blog
 from viewutils import tag_list
@@ -24,17 +26,17 @@ ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 		<name>${config.getunicode('global', 'author')}</name>
 		<email py:if="email">${email}</email>
 	</author>
-	<category py:for="tag in entry.tags" scheme="${environ['APP_URI']}/+tags/" term="${tag}" />
+	<category py:for="tag in entry.tags" scheme="${abs_uri('+tags', '')}" term="${tag}" />
 	<py:if test="isinstance(entry, blog.BlogEntry)">
-		<link rel="alternate" href="${environ['APP_URI']}/${entry.id}" />
+		<link rel="alternate" href="${abs_uri(entry.id)}" />
 		<title type="text">${entry.title}</title>
-		<content type="xhtml" xml:base="${environ['APP_URI']}/${entry.id}"><xhtml:div>
+		<content type="xhtml" xml:base="${abs_uri(entry.id)}"><xhtml:div>
 			<p py:if="entry.tags">Tagged: ${tag_list(environ.get('SCRIPT_NAME', ''), entry.tags)}</p>
 			${entry.body}
 		</xhtml:div></content>
 	</py:if>
 	<py:if test="isinstance(entry, blog.ReadingLogEntry)">
-		<link rel="alternate" href="${environ['APP_URI']}/+reading/#entry-${entry.id}" />
+		<link rel="alternate" href="${abs_uri('+reading', '')}#entry-${entry.id}" />
 		<title type="text">${entry.title} by ${entry.author}</title>
 		<summary py:if="entry.rating" type="text">${entry.rating} stars</summary>
 		<content type="xhtml"><xhtml:div>

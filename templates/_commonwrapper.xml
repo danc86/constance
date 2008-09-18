@@ -4,8 +4,7 @@
      xmlns:xi="http://www.w3.org/2001/XInclude"
      py:strip="True">
 
-<span py:def="inline_sep()" class="inlinesep">·</span>
-<div py:def="block_sep()" class="blocksep">~</div>
+<xi:include href="_fragments.xml" />
 
 <py:match path="head">
 	<head profile="http://gmpg.org/xfn/11" py:attrs="select('@*')" py:with="title = unicode(select('title[1]/text()'))">
@@ -14,7 +13,7 @@
 		<title py:if="not title">${config.getunicode('global', 'name')}</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="constance" />
-        <link rel="stylesheet" type="text/css" href="${environ.get('SCRIPT_NAME', '')}/static/css/common.css" />
+        <link rel="stylesheet" type="text/css" href="${uri('static', 'css', 'common.css')}" />
 	</head>
 </py:match>
 

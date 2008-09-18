@@ -15,8 +15,7 @@
   - perhaps as interim step could export from Nokia and embed gmaps directly in constance?
 - document on-disk format for the entry types
 - tests!!!!!!!!
-- escape high bytes in URLs (should work properly since pages are served in the same encoding as what we expect URLs to be in, but it seems to confuse at least MSN-Bot (and probably IE) sigh)
-  - better means of generating URLs?
+- something better for viewutils.tag_list (at least fix URL quoting)
 - have almost completely ditched colubrid, just need to replace StaticExports for testing then rm it
 - use encoding from config for blog.py instead of hard-coding utf8
 - invalid offsets (displays every entry at max and 500's on invalid such as alpha)
