@@ -26,8 +26,19 @@ a:visited {
 h1, h2, h3, h4, h5, h6 {
     font-family: "Corbel", "Liberation Sans", sans-serif;
 }
+pre, code {
+    font-family: "Consolas", monospace;
+}
 img {
     border: none;
+}
+blockquote {
+    border-left: 3px solid #ddd;
+    padding-left: 1em;
+    margin-left: 2em;
+}
+pre {
+    margin-left: 2em;
 }
 
 span.inlinesep {
