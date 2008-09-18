@@ -14,16 +14,22 @@ def export(options):
     if not os.path.exists(base_dir):
         os.mkdir(base_dir)
 
+    accepted_post_types = ['post']
+    if options.include_pages:
+        accepted_post_types.append('page')
+
     cn = MySQLdb.connect(host=options.host, user=options.username, 
             passwd=options.password, db=options.db, use_unicode=True)
 
     cur = cn.cursor()
     cur.execute('SELECT id, post_name, post_title, post_date, post_modified, '
-            'guid, post_content FROM wp_posts WHERE post_status = %s', 
+            'guid, post_content, post_type FROM wp_posts WHERE post_status = %s', 
             ('publish',))
     for row in cur.fetchall():
         id, post_name, post_title, post_date, post_modified, \
-                guid, post_content = row
+                guid, post_content, post_type = row
+
+        if post_type not in accepted_post_types: continue
         
         # Wordpress stores these URL-encoded
         post_name = urllib.unquote(str(post_name)).decode('utf8')
@@ -117,6 +123,8 @@ if __name__ == '__main__':
             help='create entries as subdirectories of BASE')
     parser.add_option('--convert-categories', action='store_true', 
             help='convert categories to tags')
+    parser.add_option('--include-pages', action='store_true', 
+            help='include pages as well as posts')
     options, args = parser.parse_args()
     if options.base_dir is None:
         parser.error('--base-dir must be specified')
