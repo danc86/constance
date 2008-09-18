@@ -13,6 +13,9 @@ email =
 # The maximum number of entries (of any kind) to be shown on each page.
 entries_per_page = 20
 
+# Whether to include explicit previous/next <A> links for paged browsing (when needed). <LINK> elements are always included.
+show_prev_next = False
+
 # The maximum number of entries to be included in feeds.
 entries_in_feed = 20
 

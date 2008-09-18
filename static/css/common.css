@@ -149,6 +149,14 @@ div.blocksep {
     white-space: nowrap;
 }
 
+/* Previous/next links, if enabled */
+#prevnextlinks {
+    padding: 2em 0;
+    clear: both;
+    border-top: 1px solid #ddd;
+    text-align: center;
+}
+
 /* Links at the bottom */
 #links {
     padding: 0.5em 2em 2em 2em;
