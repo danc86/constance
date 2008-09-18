@@ -18,7 +18,6 @@
 - something better for viewutils.tag_list (at least fix URL quoting)
 - have almost completely ditched colubrid, just need to replace StaticExports for testing then rm it
 - use encoding from config for blog.py instead of hard-coding utf8
-- invalid offsets (displays every entry at max and 500's on invalid such as alpha)
 - config option to add next/prev links to page (as well as the link rels)
 - markdown typography/smartypants
   - or even just, better markdown

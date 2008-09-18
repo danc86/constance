@@ -112,9 +112,14 @@ class Constance(object):
     urls = [(re.compile(patt), method) for patt, method in urls]
 
     def index(self):
-        offset = int(self.args.get('offset', 0))
+        try:
+            offset = int(self.args.get('offset', 0))
+        except ValueError:
+            raise NotFoundError('Invalid offset %r' % self.args['offset'])
         sorted_entries = sorted(chain(self.blog_entries, self.readinglog_entries), 
                 key=lambda e: e.publication_date, reverse=True)
+        if offset >= len(sorted_entries):
+            raise NotFoundError('Offset beyond end of entries')
         format = self.args.get('format', 'html')
         if format == 'html':
             rendered = template_loader.load('multiple.xml').generate(
@@ -200,8 +205,13 @@ class Constance(object):
         with_tag = [e for e in self.blog_entries if tag in e.tags]
         if not with_tag:
             raise NotFoundError()
-        offset = int(self.args.get('offset', 0))
+        try:
+            offset = int(self.args.get('offset', 0))
+        except ValueError:
+            raise NotFoundError('Invalid offset %r' % self.args['offset'])
         sorted_entries = sorted(with_tag, key=lambda e: e.publication_date, reverse=True)
+        if offset >= len(sorted_entries):
+            raise NotFoundError('Offset beyond end of entries')
         format = self.args.get('format', 'html')
         if format == 'html':
             rendered = template_loader.load('multiple.xml').generate(
