@@ -4,3 +4,4 @@ Dependencies
 python-2.5
 genshi
 pyyaml
+mysql-python (for export_wp.py)
