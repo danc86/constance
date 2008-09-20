@@ -30,6 +30,12 @@ entries_in_feed = 20
 # utf8!
 encoding = utf8
 
+[links]
+
+# The name of the YAML file containing links to be placed at the bottom of 
+# every page. Leaving this blank disables the link section.
+filename = 
+
 [blog]
 
 # The directory containing blog entries.
