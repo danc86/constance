@@ -8,7 +8,7 @@
 
 <?python
 import blog
-from viewutils import mini_markdown, tag_list
+from viewutils import markdown, mini_markdown, tag_list
 from recaptcha.client import captcha
 ?>
 
@@ -26,7 +26,7 @@ from recaptcha.client import captcha
     </div>
   
 	<div class="entrybody">
-		${entry.body}
+		${markdown(entry.body)}
     </div>
 
     <div class="entrycommentslink" py:if="not show_comments and entry.has_comments()">
@@ -45,7 +45,7 @@ from recaptcha.client import captcha
             <py:otherwise>${len(entry.comments())} comments</py:otherwise>
         </h4>
         <div py:for="n, comment in enumerate(comments)" id="comment-${comment.id}">
-            ${comment.body}
+            ${markdown(comment.body, safe_mode='escape')}
             <p class="commentmeta">
                 ― <a py:strip="not comment.author_url" href="${comment.author_url}">${comment.author_name()}</a>
                 <span class="commentdatetime">${comment.date.strftime(str('%-1d %b %Y %H:%M'))}</span>

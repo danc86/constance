@@ -2,7 +2,11 @@ import re, urllib
 from markdown2 import Markdown
 import genshi
 
-def mini_markdown(s):
+def markdown(s, safe_mode=None):
+    m = Markdown(extras=['code_friendly'], safe_mode=safe_mode).convert(s)
+    return genshi.Markup(m)
+
+def mini_markdown(s, safe_mode=None):
     # XXX find a more efficient way to do this?
     m = Markdown(extras=['code_friendly']).convert(s)
     match = re.match(u'<p>(.*)</p>', m)

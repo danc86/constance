@@ -1,5 +1,4 @@
 <feed xmlns="http://www.w3.org/2005/Atom"
-      xmlns:xhtml="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
 	  xmlns:xi="http://www.w3.org/2001/XInclude">
 
@@ -7,7 +6,7 @@
 
 <?python
 import blog
-from viewutils import tag_list
+from viewutils import markdown, tag_list
 ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 ?>
 
@@ -30,19 +29,23 @@ ATOM_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
 	<py:if test="isinstance(entry, blog.BlogEntry)">
 		<link rel="alternate" href="${abs_uri(entry.id)}" />
 		<title type="text">${entry.title}</title>
-		<content type="xhtml" xml:base="${abs_uri(entry.id)}"><xhtml:div>
-			<p py:if="entry.tags">Tagged: ${tag_list(environ.get('SCRIPT_NAME', ''), entry.tags)}</p>
-			${entry.body}
-		</xhtml:div></content>
+		<content type="xhtml" xml:base="${abs_uri(entry.id)}">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <p py:if="entry.tags">Tagged: ${tag_list(environ.get('SCRIPT_NAME', ''), entry.tags)}</p>
+                ${markdown(entry.body)}
+            </div>
+		</content>
 	</py:if>
 	<py:if test="isinstance(entry, blog.ReadingLogEntry)">
 		<link rel="alternate" href="${abs_uri('+reading', '')}#entry-${entry.id}" />
 		<title type="text">${entry.title} by ${entry.author}</title>
 		<summary py:if="entry.rating" type="text">${entry.rating} stars</summary>
-		<content type="xhtml"><xhtml:div>
-			<p><a href="${entry.url}">${entry.title}</a> by ${entry.author}</p>
-			<p py:if="entry.rating">${entry.rating} stars</p>
-		</xhtml:div></content>
+		<content type="xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <p><a href="${entry.url}">${entry.title}</a> by ${entry.author}</p>
+                <p py:if="entry.rating">${entry.rating} stars</p>
+            </div>
+        </content>
 	</py:if>
 </entry>
 

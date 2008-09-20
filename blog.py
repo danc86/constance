@@ -1,6 +1,5 @@
 import os, re, uuid, email
 from datetime import datetime
-from markdown2 import Markdown
 import genshi
 import yaml
 
@@ -93,9 +92,7 @@ class BlogEntry(object):
         # not really a MIME document, but parse it like one
         msg = email.message_from_file(open(os.path.join(self.dir, 'content.txt'), 'r'))
         self.metadata = cleanup_metadata(msg.items())
-        self.raw_body = msg.get_payload().decode('utf8') # XXX encoding
-        md = Markdown(extras=['code-friendly'])
-        self.body = genshi.Markup(md.convert(self.raw_body))
+        self.body = msg.get_payload().decode('utf8') # XXX encoding
         self.title = self.metadata['title']
 
         raw_tags = self.metadata.get('tags', '').strip()
@@ -170,9 +167,7 @@ class Comment(object):
         self.id = id
         msg = email.message_from_file(open(path, 'r'))
         self.metadata = cleanup_metadata(msg.items())
-        self.raw_body = msg.get_payload().decode('utf8') # XXX encoding
-        md = Markdown(extras=['code-friendly'], safe_mode='escape')
-        self.body = genshi.Markup(md.convert(self.raw_body))
+        self.body = msg.get_payload().decode('utf8') # XXX encoding
         
         self.author = self.metadata.get('from', None)
         self.author_url = self.metadata.get('author-url', None)
