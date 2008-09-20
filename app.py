@@ -137,7 +137,7 @@ class Constance(object):
                     title=None, 
                     self_url='%s/' % self.environ['APP_URI'], 
                     sorted_entries=sorted_entries[:self.config.getint('global', 'entries_in_feed')], 
-                    feed_updated=sorted_entries[0].modified_date
+                    feed_updated=max(e.modified_date for e in sorted_entries[:self.config.getint('global', 'entries_in_feed')])
                     ).render('xml', encoding=self.encoding)
             return (rendered, [('Content-Type', 'application/atom+xml')])
         else:
