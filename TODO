@@ -20,7 +20,6 @@
 - use encoding from config for blog.py instead of hard-coding utf8
 - markdown typography/smartypants
   - or even just, better markdown
-- generate goog sitemaps
 - change/add class names per http://microformats.org/wiki/hatom ?
 - alternative entry type for tumblelog-style entries (unnamed)
 - cache headers! (last-modified, e-tag)
