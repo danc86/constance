@@ -23,3 +23,5 @@
 - generate goog sitemaps
 - change/add class names per http://microformats.org/wiki/hatom ?
 - alternative entry type for tumblelog-style entries (unnamed)
+- cache headers! (last-modified, e-tag)
+  - also conditional request headers (got middleware maybe?)
