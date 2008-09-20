@@ -25,3 +25,5 @@
 - cache headers! (last-modified, e-tag)
   - also conditional request headers (got middleware maybe?)
 - use heapq.nlargest to avoid doing a full sort of entries?
+- allow OpenID verification of commenter URLs
+- allow PGP-signed comments (might be too hard? and all it gives you is verification of the commenter's e-mail address, and I guess a key fingerprint but what use is that? hmmm needs some kind of online thingy thing with fingerprints and hmmmmmmmmmmmm)
