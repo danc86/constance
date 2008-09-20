@@ -95,11 +95,11 @@ class Constance(object):
     def error_response(self, error):
         # XXX should probably just use real templates here ...
         body = u"""<html><head><title>%s - %s</title>
-                <link rel="stylesheet" type="text/css" href="/static/css/common.css" />
+                <link rel="stylesheet" type="text/css" href="%s/static/css/common.css" />
                 </head><body><div id="contentwrapper"><div id="content">
                 <h2>%s</h2><p>%s</p></div></div></body></html>""" % (
                 error.status, self.config.getunicode('global', 'name'), 
-                error.status, error.message)
+                self.environ['SCRIPT_NAME'], error.status, error.message)
         self.start(error.status, [('Content-type', 'text/html')] + error.headers)
         return iter([body.encode(self.encoding)])
 
