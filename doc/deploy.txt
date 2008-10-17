@@ -1,0 +1,15 @@
+Deployment Instructions
+=======================
+
+Make a local copy of config.defaults (for example, config.local) and edit it 
+as appropriate.
+
+mod_wsgi
+--------
+
+    SetEnv constance.config_filename /home/dan/constance/config.local
+    <Directory /home/dan/constance>
+        Allow from all
+    </Directory>
+    WSGIScriptAlias /blog /home/dan/constance/app.py
+    Alias /blog/static /home/dan/constance/static/
