@@ -1,7 +1,11 @@
 
 # vim:encoding=utf-8
 
-import os, cgi, re, datetime
+import os, sys
+sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(1, os.path.join(os.path.dirname(__file__), 'lib'))
+
+import cgi, re, datetime
 from itertools import chain
 import wsgiref.util
 from genshi.template import TemplateLoader
@@ -282,7 +286,6 @@ application = Constance
 
 
 if __name__ == '__main__':
-    import sys
     import wsgiref.simple_server
     application = StaticExports(application, {'/static': os.path.join(os.path.dirname(__file__), 'static')})
     server = wsgiref.simple_server.make_server('0.0.0.0', 8082, application)
