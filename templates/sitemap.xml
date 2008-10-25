@@ -25,7 +25,7 @@ W3C_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
     <changefreq>weekly</changefreq>
     <priority>0.25</priority>
 </url>
-<url>
+<url py:if="readinglog_updated is not None">
     <loc>${abs_uri('+reading', '')}</loc>
     <lastmod>${readinglog_updated.strftime(W3C_TIME_FORMAT)}</lastmod>
     <changefreq>weekly</changefreq>

@@ -272,12 +272,16 @@ class Constance(object):
                 tags[tag] = max(entry.modified_date, tags.get(tag, datetime.datetime.min))
         sorted_entries = sorted(chain(self.blog_entries, self.readinglog_entries), 
                 key=lambda e: e.publication_date, reverse=True)
+        if len(self.readinglog_entries) != 0:
+            rl_updated = max(e.date for e in self.readlinglog_entries)
+        else:
+            rl_updated = None
         rendered = template_loader.load('sitemap.xml').generate(
                 config=self.config, 
                 environ=self.environ, 
                 blog_entries=self.blog_entries, 
                 tags=tags, 
-                readinglog_updated=max(e.date for e in self.readinglog_entries), 
+                readinglog_updated=rl_updated,
                 index_updated=max(e.modified_date for e in sorted_entries[:self.config.getint('global', 'entries_per_page')]), 
                 ).render('xml', encoding='utf8') # sitemaps must be UTF-8
         return (rendered, [('Content-Type', 'text/xml')])
