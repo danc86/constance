@@ -18,7 +18,7 @@ from recaptcha.client import captcha
 
 	<div class="entrydate">
 		${entry.publication_date.strftime(str('%-1d %b %Y'))}
-	    <a href="${uri(entry.id)}" rel="bookmark" class="permalink" title="permalink">#</a>
+	    <a href="${uri('blog', entry.id)}" rel="bookmark" class="permalink" title="permalink">#</a>
 	</div>
 
     <div py:if="entry.tags" class="entrytags">
@@ -30,7 +30,7 @@ from recaptcha.client import captcha
     </div>
 
     <div class="entrycommentslink" py:if="not show_comments and entry.has_comments()">
-        <a href="${uri(entry.id)}#comments" py:choose="len(entry.comments())">
+        <a href="${uri('blog', entry.id)}#comments" py:choose="len(entry.comments())">
             <py:when test="0">no comments »</py:when>
             <py:when test="1">1 comment »</py:when>
             <py:otherwise>${len(entry.comments())} comments »</py:otherwise>
@@ -53,7 +53,7 @@ from recaptcha.client import captcha
             </p>
             ${block_sep()}
         </div>
-        <div class="commentform"><form method="post" action="${uri(entry.id, 'comments', '+new')}">
+        <div class="commentform"><form method="post" action="${uri('blog', entry.id, 'comments', '+new')}">
             <p>
                 <label for="commentform-from">Name</label>
                 <input type="text" id="commentform-from" name="from" />
@@ -101,7 +101,7 @@ from recaptcha.client import captcha
 
     <div class="entrydate">
         ${entry.publication_date.strftime(str('%-1d %b %Y'))}
-	    <a href="${uri('+reading', '')}#entry-${entry.id}" rel="bookmark" class="permalink" title="permalink">#</a>
+	    <a href="${uri('reading', '')}#entry-${entry.id}" rel="bookmark" class="permalink" title="permalink">#</a>
     </div>
 
     <div py:if="entry.rating" class="rating">

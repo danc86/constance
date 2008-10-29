@@ -16,23 +16,29 @@ W3C_TIME_FORMAT = str('%Y-%m-%dT%H:%M:%S+10:00')
     <priority>1.0</priority>
 </url>
 <url>
-    <loc>${abs_uri('+tags', '')}</loc>
+    <loc>${abs_uri('tags', '')}</loc>
     <priority>0.25</priority>
 </url>
 <url py:for="tag, modtime in tags.iteritems()">
-    <loc>${abs_uri('+tags', tag)}</loc>
+    <loc>${abs_uri('tags', tag)}</loc>
     <lastmod>${modtime.strftime(W3C_TIME_FORMAT)}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.25</priority>
 </url>
 <url py:if="readinglog_updated is not None">
-    <loc>${abs_uri('+reading', '')}</loc>
+    <loc>${abs_uri('reading', '')}</loc>
     <lastmod>${readinglog_updated.strftime(W3C_TIME_FORMAT)}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
 </url>
+<url>
+    <loc>${abs_uri('blog', '')}</loc>
+    <lastmod>${blog_index_updated.strftime(W3C_TIME_FORMAT)}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+</url>
 <url py:for="entry in blog_entries">
-    <loc>${abs_uri(entry.id)}</loc>
+    <loc>${abs_uri('blog', entry.id)}</loc>
     <lastmod>${entry.modified_date.strftime(W3C_TIME_FORMAT)}</lastmod>
     <changefreq>never</changefreq>
     <priority>1.0</priority>
