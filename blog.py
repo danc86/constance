@@ -1,6 +1,7 @@
 import os, re, uuid, email
 from datetime import datetime
 import genshi
+from smartypants import smartyPants
 import yaml
 
 
@@ -20,6 +21,10 @@ def cleanup_metadata(header_items):
             v = v.decode('utf8') # XXX encoding
         cleaned[k] = v
     return cleaned
+
+def smartypants_parse(s):
+    return smartyPants(s, attr='2') # attr adds -- and --- support
+
 
 IDIFY_WHITESPACE_PATT = re.compile(r'(?u)\s+')
 IDIFY_ACCEPT_PATT = re.compile(r'(?u)\w|[-_]')
@@ -92,7 +97,7 @@ class BlogEntry(object):
         # not really a MIME document, but parse it like one
         msg = email.message_from_file(open(os.path.join(self.dir, 'content.txt'), 'r'))
         self.metadata = cleanup_metadata(msg.items())
-        self.body = msg.get_payload().decode('utf8') # XXX encoding
+        self.body = smartypants_parse(msg.get_payload().decode('utf8')) # XXX encoding
         self.title = self.metadata['title']
 
         raw_tags = self.metadata.get('tags', '').strip()
