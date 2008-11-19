@@ -74,8 +74,8 @@ class Constance(object):
                               v.decode(self.encoding, 'ignore')) 
                              for k, v in cgi.parse_qsl(self.post_data, True))
 
-        self.blog_entries = blog.BlogEntrySet(self.config.getunicode('blog', 'dir'))
-        readinglog_filename = self.config.getunicode('readinglog', 'filename')
+        self.blog_entries = blog.BlogEntrySet(self.config.get('blog', 'dir'))
+        readinglog_filename = self.config.get('readinglog', 'filename')
         if readinglog_filename:
             self.readinglog_entries = blog.ReadingLogEntrySet(readinglog_filename)
         else:
