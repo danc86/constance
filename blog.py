@@ -51,6 +51,7 @@ class DirectoryEntrySet(object):
         return os.path.exists(os.path.join(self.base_dir, key))
 
     def __getitem__(self, key):
+        key = key.encode('utf8') # XXX don't hardcode
         if key not in self: raise KeyError(key)
         return self.entry_class(self.base_dir, key)
 
