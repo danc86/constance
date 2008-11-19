@@ -60,6 +60,7 @@ class DirectoryEntrySet(object):
                 if not filename.startswith('.'))
 
     def __iter__(self):
+        assert isinstance(self.base_dir, str)
         return (self.entry_class(self.base_dir, filename)
                 for filename in os.listdir(self.base_dir)
                 if not filename.startswith('.'))
@@ -79,8 +80,8 @@ class YamlEntrySet(object):
 class BlogEntry(object):
 
     def __init__(self, entries_dir, id):
-        assert isinstance(id, unicode), id
-        self.id = id
+        assert isinstance(id, str), id
+        self.id = id.decode('utf8') # XXX shouldn't hardcode the encoding
         self.dir = os.path.join(entries_dir, id)
         self.comments_dir = os.path.join(self.dir, 'comments')
 
