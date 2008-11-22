@@ -9,7 +9,6 @@ import cgi, re, datetime
 from itertools import chain
 import wsgiref.util
 from genshi.template import TemplateLoader
-from colubrid.server import StaticExports
 from recaptcha.client import captcha
 
 import config
@@ -327,8 +326,22 @@ application = Constance
 
 
 if __name__ == '__main__':
+    import optparse
+    parser = optparse.OptionParser(usage='%prog [OPTIONS...] CONFIG_FILENAME')
+    parser.set_defaults(port=8082)
+    parser.add_option('-p', '--port', type='int', 
+            help='Port to server on (default: %default)')
+    options, args = parser.parse_args()
+    if not args:
+        parser.error('You must supply a CONFIG_FILENAME')
+
+    from paste.urlparser import StaticURLParser
+    from paste.urlmap import URLMap
+    application = URLMap()
+    application['/static'] = StaticURLParser(os.path.join(os.path.dirname(__file__), 'static'))
+    application['/'] = Constance
+
     import wsgiref.simple_server
-    application = StaticExports(application, {'/static': os.path.join(os.path.dirname(__file__), 'static')})
-    server = wsgiref.simple_server.make_server('0.0.0.0', 8082, application)
-    server.base_environ['constance.config_filename'] = sys.argv[1]
+    server = wsgiref.simple_server.make_server('0.0.0.0', options.port, application)
+    server.base_environ['constance.config_filename'] = args[0]
     server.serve_forever()
