@@ -32,8 +32,6 @@ class Constance(object):
         self.req = Request(environ)
         self.req.charset = self.encoding
         
-        # removed args, post_data, form
-
         self.blog_entries = blog.BlogEntrySet(self.config.get('blog', 'dir'))
         readinglog_filename = self.config.get('readinglog', 'filename')
         if readinglog_filename:
