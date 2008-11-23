@@ -5,17 +5,17 @@ import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(1, os.path.join(os.path.dirname(__file__), 'lib'))
 
-import cgi, re, datetime
+import cgi, re, datetime, urllib
 from itertools import chain
-from genshi.template import TemplateLoader
+import genshi.template
 from webob import Request, Response
 from webob import exc
 from recaptcha.client import captcha
 
 import config
-import blog
+from itemtypes import *
 
-template_loader = TemplateLoader(
+template_loader = genshi.template.TemplateLoader(
         os.path.join(os.path.dirname(__file__), 'templates'), 
         variable_lookup='strict', 
         auto_reload=True)
@@ -31,13 +31,8 @@ class Constance(object):
 
         self.req = Request(environ)
         self.req.charset = self.encoding
-        
-        self.blog_entries = blog.BlogEntrySet(self.config.get('blog', 'dir'))
-        readinglog_filename = self.config.get('readinglog', 'filename')
-        if readinglog_filename:
-            self.readinglog_entries = blog.ReadingLogEntrySet(readinglog_filename)
-        else:
-            self.readinglog_entries = frozenset()
+
+        self.item_sets = eval(self.config.get('global', 'item_sets'))
 
     def __iter__(self):
         try:
@@ -57,11 +52,15 @@ class Constance(object):
             (r'/blog/([^/]+)/comments/\+new$', 'add_post_comment')]
     urls = [(re.compile(patt), method) for patt, method in urls]
     def dispatch(self, path_info):
-        for patt, method_name in self.urls:
-            match = patt.match(path_info)
-            if match:
-                return getattr(self, method_name)(
-                        *[x.decode(self.encoding, 'ignore') for x in match.groups()])
+        path_info = urllib.unquote(path_info).decode(self.encoding)
+        for item_set in self.item_sets:
+            try:
+                item = item_set.get(path_info)
+            except NotExistError, e:
+                pass
+            else:
+                rendered = item.render('text/html').render('xhtml')
+                return Response(rendered, content_type='text/html')
         # no matching URI found, so give a 404
         raise exc.HTTPNotFound().exception
 

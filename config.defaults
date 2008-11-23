@@ -30,6 +30,8 @@ entries_in_feed = 20
 # utf8!
 encoding = utf8
 
+item_sets = [BlogEntrySet('./entries'), ReadingLogEntrySet('./reading_log.yaml')]
+
 [links]
 
 # The name of the YAML file containing links to be placed at the bottom of 
@@ -37,9 +39,6 @@ encoding = utf8
 filename = 
 
 [blog]
-
-# The directory containing blog entries.
-dir = ./entries
 
 # Require reCAPTCHA verification for comment submission?
 require_captcha = False
@@ -51,9 +50,6 @@ recaptcha_pubkey =
 recaptcha_privkey =
 
 [readinglog]
-
-# The name of the file containing a YAML stream of readinglog entries.
-filename = 
 
 # Should LibraryThing covers be shown for readinglog entries?
 # See also librarything_devkey below.

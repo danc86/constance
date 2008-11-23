@@ -1,0 +1,35 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:py="http://genshi.edgewall.org/"
+     xmlns:xi="http://www.w3.org/2001/XInclude"
+     class="item ReadingLogEntry">
+
+<xi:include href="_fragments.xml" />
+
+<?python
+from viewutils import markdown, mini_markdown, tag_list
+from recaptcha.client import captcha
+?>
+
+<span py:def="stars(rating)" py:strip="True">
+<img src="${uri('static', 'images', 'star.png')}" alt="[star]" py:for="_ in range(int(rating))" /><img src="${uri('static', 'images', 'star-half.png')}" alt="[half-star]" py:if="rating > int(rating)" /><img src="${uri('static', 'images', 'star-off.png')}" alt="" py:for="_ in range(int(5 - rating))" />
+</span>
+
+<!-- XXX img py:if="config.getboolean('readinglog', 'show_covers') and entry.isbn" class="cover"
+     src="http://covers.librarything.com/devkey/${config.get('readinglog', 'librarything_devkey')}/small/isbn/${entry.isbn}" 
+     alt="Cover image for ${entry.title}" /-->
+
+<h3 class="title" id="ReadingLogEntry-${item.id}">
+    <a py:strip="not entry.url" href="${item.url}">${mini_markdown(item.title)}</a>
+    <span py:if="item.author" class="author">by ${item.author}</span>
+</h3>
+
+<div class="date">
+    ${item.publication_date.strftime(str('%-1d %b %Y'))}
+    <a href="${item.uri_path}" rel="bookmark" class="permalink" title="permalink">#</a>
+</div>
+
+<div py:if="item.rating" class="rating">
+    ${stars(item.rating)}
+</div>
+
+</div>

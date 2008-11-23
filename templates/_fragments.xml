@@ -10,7 +10,4 @@ import urllib
 <span py:def="inline_sep()" class="inlinesep">·</span>
 <div py:def="block_sep()" class="blocksep">~</div>
 
-<span py:def="uri(*components)" py:strip="True">${'/'.join([environ.get('SCRIPT_NAME', '')] + [urllib.quote(component.encode(config.get('global', 'encoding')), '+') for component in components])}</span>
-<span py:def="abs_uri(*components)" py:strip="True">${environ['APP_URI']}/${'/'.join(urllib.quote(component.encode(config.get('global', 'encoding')), '+') for component in components)}</span>
-
 </div>
