@@ -67,7 +67,7 @@ class Constance(object):
         raise exc.HTTPNotFound().exception
 
     def render_single(self, item):
-        template = template_loader.load('single.xml')
+        template = template_loader.load('html/single.xml')
         rendered = template.generate(
                 config=self.config, 
                 item=item
@@ -79,7 +79,7 @@ class Constance(object):
             offset = int(self.req.GET.get('offset', 0))
         except ValueError:
             raise exc.HTTPBadRequest('Invalid offset %r' % self.GET['offset']).exception
-        template = template_loader.load('multiple.xml')
+        template = template_loader.load('html/multiple.xml')
         rendered = template.generate(
                 config=self.config, 
                 items=items, 

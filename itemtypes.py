@@ -89,7 +89,7 @@ class BlogEntry(object):
 
     def render(self, format):
         if format == 'text/html':
-            template = template_loader.load(self.__class__.__name__ + '.xml')
+            template = template_loader.load('html/' + self.__class__.__name__ + '.xml')
             return template.generate(item=self)
         else:
             raise UnsupportedFormatError(format)
@@ -157,7 +157,7 @@ class ReadingLogEntry(object):
 
     def render(self, format):
         if format == 'text/html':
-            template = template_loader.load(self.__class__.__name__ + '.xml')
+            template = template_loader.load('html/' + self.__class__.__name__ + '.xml')
             return template.generate(item=self)
         else:
             raise UnsupportedFormatError(format)
