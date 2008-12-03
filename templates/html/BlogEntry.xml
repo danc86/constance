@@ -25,14 +25,4 @@ from recaptcha.client import captcha
     ${markdown(item.body)}
 </div>
 
-<!-- XXX comments -->
-
-<div class="commentslink" py:if="item.has_comments()">
-    <!-- XXX script_name --><a href="${item.uri_path}#comments" py:choose="len(item.comments())">
-        <py:when test="0">no comments »</py:when>
-        <py:when test="1">1 comment »</py:when>
-        <py:otherwise>${len(item.comments())} comments »</py:otherwise>
-    </a>
-</div>
-
 </div>

@@ -10,7 +10,7 @@ body {
     border-bottom: 1px dashed #aaa;
     background-color: white;
     margin: 0;
-    padding: 0.001em 1em;
+    padding: 0.01em 1em 1em 2em;
 }
 #content {
     margin: 1em auto;
@@ -57,7 +57,8 @@ div.blocksep {
 
 /* Styles which are common to all item types */
 .item {
-    padding: 2em 0;
+    margin-top: 2em;
+    padding-top: 2em;
     clear: both;
     border-top: 1px solid #ddd;
 }
@@ -78,6 +79,14 @@ div.blocksep {
 .item .date a {
     color: #888;
 }
+.commentslink {
+    text-align: right;
+    font-style: italic;
+}
+.commentslink a {
+    color: #888;
+    white-space: nowrap;
+}
 
 /* Blog entries */
 .BlogEntry h3 {
@@ -93,14 +102,6 @@ div.blocksep {
 }
 .BlogEntry .tags a {
     color: black;
-    white-space: nowrap;
-}
-.BlogEntry .commentslink {
-    text-align: right;
-    font-style: italic;
-}
-.BlogEntry .commentslink a {
-    color: #888;
     white-space: nowrap;
 }
 
@@ -126,33 +127,33 @@ div.blocksep {
 }
 
 /* Comments */
-.entry .commentblock {
+.commentblock {
     margin: 2em 4em 0 4em;
     font-size: 0.9em;
 }
-.entry .commentblock h4 {
+.commentblock h4 {
     font-size: 1.2em;
 }
-.entry .commentblock .commentmeta {
+.commentblock .commentmeta {
     text-align: right;
 }
-.entry .commentblock .commentmeta .commentdatetime {
+.commentblock .commentmeta .commentdatetime {
     color: #888;
     margin: 0 0.5em;
 }
-.entry .commentblock .commentmeta .permalink {
+.commentblock .commentmeta .permalink {
     color: #888;
 }
 
 /* Comment form */
-.entry .commentform label {
+.commentform label {
     display: block;
 }
-.entry .commentform input {
+.commentform input {
     display: block;
     width: 30em;
 }
-.entry .commentform textarea {
+.commentform textarea {
     width: 100%;
     font-size: 1em;
 }

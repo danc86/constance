@@ -5,12 +5,66 @@
 	  lang="en-AU">
 <xi:include href="_commonwrapper.xml" />
 
+<?python
+from viewutils import markdown
+from recaptcha.client import captcha
+?>
+
 <head>
   <title>${item.title}</title>
 </head>
 <body>
 
 ${item.render('text/html')}
+
+<div id="comments" class="commentblock" py:if="item.has_comments()"
+     py:with="comments = sorted(item.comments(), key=lambda c: c.date)">
+
+    <h4 class="comments" py:choose="len(comments)">
+        <py:when test="0">No comments</py:when>
+        <py:when test="1">1 comment</py:when>
+        <py:otherwise>${len(entry.comments())} comments</py:otherwise>
+    </h4>
+    <div py:for="n, comment in enumerate(comments)" id="comment-${comment.id}">
+        ${markdown(comment.body, safe_mode='escape')}
+        <p class="commentmeta">
+
+            ― <a py:strip="not comment.author_url" href="${comment.author_url}">${comment.author_name()}</a>
+            <span class="commentdatetime">${comment.date.strftime(str('%-1d %b %Y %H:%M'))}</span>
+            <a href="#comment-${comment.id}" class="permalink" title="permalink">#</a>
+        </p>
+        ${block_sep()}
+    </div>
+    <div class="commentform"><form method="post" action="${item.uri_path}/comments/+new"><!-- XXX script_name -->
+
+        <p>
+            <label for="commentform-from">Name</label>
+            <input type="text" id="commentform-from" name="from" />
+        </p>
+        <p>
+            <label for="commentform-author-email">E-mail address (not published)</label>
+            <input type="text" id="commentform-author-email" name="author-email" />
+        </p>
+
+        <p>
+            <label for="commentform-author-url">URL</label>
+            <input type="text" id="commentform-author-url" name="author-url" />
+        </p>
+        <p>
+            <label for="commentform-comment">Comment (use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a>, no HTML)</label>
+            <textarea id="commentform-comment" name="comment" rows="7" cols="30"></textarea>
+
+        </p>
+        <py:if test="config.getboolean('blog', 'require_captcha')">
+            <script type="text/javascript">
+                RecaptchaOptions = {theme: 'white'};
+            </script>
+            ${Markup(captcha.displayhtml(config.get('blog', 'recaptcha_pubkey')))}
+        </py:if>
+        <p><button type="submit">Submit</button></p>
+    </form></div>
+
+</div>
 
 </body>
 </html>
