@@ -52,6 +52,8 @@ class Constance(object):
             (r'/blog/([^/]+)/comments/\+new$', 'add_post_comment')]
     urls = [(re.compile(patt), method) for patt, method in urls]
     def dispatch(self, path_info):
+        if path_info == '/':
+            return self.index()
         path_info = urllib.unquote(path_info).decode(self.encoding)
         for item_set in self.item_sets:
             try:
@@ -89,36 +91,8 @@ class Constance(object):
         return Response(rendered, content_type='text/html')
 
     def index(self):
-        try:
-            offset = int(self.req.GET.get('offset', 0))
-        except ValueError:
-            raise exc.HTTPBadRequest('Invalid offset %r' % self.GET['offset']).exception
-        sorted_entries = sorted(chain(self.blog_entries, self.readinglog_entries), 
-                key=lambda e: e.publication_date, reverse=True)
-        if offset >= len(sorted_entries):
-            raise exc.HTTPBadRequest('Offset beyond end of entries').exception
-        format = self.req.GET.get('format', 'html')
-        if format == 'html':
-            rendered = template_loader.load('multiple.xml').generate(
-                    config=self.config, 
-                    environ=self.environ, 
-                    title=None, 
-                    sorted_entries=sorted_entries, 
-                    offset=offset,
-                    ).render('xhtml', encoding=self.encoding)
-            return Response(rendered, content_type='text/html')
-        elif format == 'atom':
-            rendered = template_loader.load('multiple_atom.xml').generate(
-                    config=self.config, 
-                    environ=self.environ, 
-                    title=None, 
-                    self_url='%s/' % self.req.application_url, 
-                    sorted_entries=sorted_entries[:self.config.getint('global', 'entries_in_feed')], 
-                    feed_updated=max(e.modified_date for e in sorted_entries[:self.config.getint('global', 'entries_in_feed')])
-                    ).render('xml', encoding=self.encoding)
-            return Response(rendered, content_type='application/atom+xml')
-        else:
-            raise exc.HTTPBadRequest('Unknown format %r' % format).exception
+        items = chain(*self.item_sets)
+        return self.render_multiple(items)
     
     def tag_cloud(self):
         tag_freqs = {}
