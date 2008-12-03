@@ -55,20 +55,17 @@ div.blocksep {
     text-align: center;
 }
 
-.entry {
+/* Styles which are common to all item types */
+.item {
     padding: 2em 0;
     clear: both;
     border-top: 1px solid #ddd;
 }
-.entry h3.entrytitle {
+.item h3 {
     display: inline;
-    font-size: 1.5em;
-    text-transform: uppercase;
-    letter-spacing: 0.1ex;
-    word-spacing: 0.2em;
     margin-right: 0.5em;
 }
-.entry .entrydate {
+.item .date {
     font-family: "Corbel", "Liberation Sans", sans-serif;
     display: inline;
     font-size: 1.2em;
@@ -78,24 +75,53 @@ div.blocksep {
     white-space: nowrap;
     margin-right: 0.25em;
 }
-.entry .entrydate a {
+.item .date a {
     color: #888;
 }
-.entry .entrytags {
+
+/* Blog entries */
+.BlogEntry h3 {
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 0.1ex;
+    word-spacing: 0.2em;
+}
+.BlogEntry .tags {
     display: inline;
     font-style: italic;
     color: #888;
 }
-.entry .entrytags a {
+.BlogEntry .tags a {
     color: black;
     white-space: nowrap;
 }
-.entry .entrycommentslink {
+.BlogEntry .commentslink {
     text-align: right;
     font-style: italic;
 }
-.entry .entrycommentslink a {
+.BlogEntry .commentslink a {
     color: #888;
+    white-space: nowrap;
+}
+
+/* Reading log entries */
+.ReadingLogEntry h3 {
+    font-size: 1.2em;
+    word-spacing: 0.1em;
+}
+.ReadingLogEntry h3 a {
+    font-style: italic;
+    margin-right: 0.2em;
+}
+.ReadingLogEntry .author {
+    white-space: nowrap;
+}
+.ReadingLogEntry img.cover {
+    float: right;
+    margin: 0 0 1em 1em;
+}
+.ReadingLogEntry .rating {
+    display: inline;
     white-space: nowrap;
 }
 
@@ -129,29 +155,6 @@ div.blocksep {
 .entry .commentform textarea {
     width: 100%;
     font-size: 1em;
-}
-
-/* Reading log entries */
-.readinglog h3.entrytitle {
-    font-size: 1.2em;
-    word-spacing: 0.1em;
-    letter-spacing: 0;
-    text-transform: none;
-}
-.readinglog h3.entrytitle a {
-    font-style: italic;
-    margin-right: 0.2em;
-}
-.readinglog .author {
-    white-space: nowrap;
-}
-.readinglog img.cover {
-    float: right;
-    margin: 0 0 1em 1em;
-}
-.readinglog .rating {
-    display: inline;
-    white-space: nowrap;
 }
 
 /* Previous/next links, if enabled */
