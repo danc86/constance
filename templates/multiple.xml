@@ -4,31 +4,34 @@
 	  xmlns:xi="http://www.w3.org/2001/XInclude"
 	  lang="en-AU">
 <xi:include href="_commonwrapper.xml" />
-<xi:include href="_entry.xml" />
+
+<?python
+sorted_items = sorted(items, key=lambda item: item.publication_date, reverse=True)
+?>
 
 <head>
 	<title py:if="title">${title}</title>
     <link rel="alternate" type="application/atom+xml" title="Atom feed" href="?format=atom" />
     <py:if test="defined('offset')">
         <link py:if="bool(offset)" rel="prev" href="?offset=${max(0, offset - 20)}" />
-        <link py:if="len(sorted_entries) > offset + config.getint('global', 'entries_per_page')" rel="next" href="?offset=${offset + 20}" />
+        <link py:if="len(sorted_items) > offset + config.getint('global', 'items_per_page')" rel="next" href="?offset=${offset + 20}" />
     </py:if>
 </head>
 <body>
 
 <h2 py:if="title">Archive of ${title}</h2>
 
-<py:for each="entry in (defined('offset') and sorted_entries[offset:offset + config.getint('global', 'entries_per_page')] or sorted_entries)">
-    ${show_entry(entry, show_comments=False)}
+<py:for each="item in (defined('offset') and sorted_items[offset:offset + config.getint('global', 'items_per_page')] or sorted_items)">
+    ${item.render('text/html')}
 </py:for>
 
 <p id="prevnextlinks"
    py:if="defined('offset') and config.getboolean('global', 'show_prev_next')"
    py:with="show_prev = bool(offset);
-            show_next = len(sorted_entries) > offset + config.getint('global', 'entries_per_page')">
-    <a py:if="show_prev" rel="prev" href="?offset=${max(0, offset - 20)}">Newer entries</a>
+            show_next = len(sorted_items) > offset + config.getint('global', 'items_per_page')">
+    <a py:if="show_prev" rel="prev" href="?offset=${max(0, offset - 20)}">Newer items</a>
     <py:if test="show_prev and show_next">—</py:if>
-    <a py:if="show_next" rel="next" href="?offset=${offset + 20}">Older entries</a>
+    <a py:if="show_next" rel="next" href="?offset=${offset + 20}">Older items</a>
 </p>
 
 </body>

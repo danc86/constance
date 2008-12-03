@@ -4,14 +4,13 @@
 	  xmlns:xi="http://www.w3.org/2001/XInclude"
 	  lang="en-AU">
 <xi:include href="_commonwrapper.xml" />
-<xi:include href="_entry.xml" />
 
 <head>
-  <title>${entry.title}</title>
+  <title>${item.title}</title>
 </head>
 <body>
 
-${show_entry(entry, show_comments=True)}
+${item.render('text/html')}
 
 </body>
 </html>

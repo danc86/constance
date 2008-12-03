@@ -11,7 +11,8 @@ from recaptcha.client import captcha
 ?>
 
 <span py:def="stars(rating)" py:strip="True">
-<img src="${uri('static', 'images', 'star.png')}" alt="[star]" py:for="_ in range(int(rating))" /><img src="${uri('static', 'images', 'star-half.png')}" alt="[half-star]" py:if="rating > int(rating)" /><img src="${uri('static', 'images', 'star-off.png')}" alt="" py:for="_ in range(int(5 - rating))" />
+<!-- XXX script_name -->
+<img src="/static/images/star.png" alt="[star]" py:for="_ in range(int(rating))" /><img src="/static/images/star-half.png" alt="[half-star]" py:if="rating > int(rating)" /><img src="/static/images/star-off.png" alt="" py:for="_ in range(int(5 - rating))" />
 </span>
 
 <!-- XXX img py:if="config.getboolean('readinglog', 'show_covers') and entry.isbn" class="cover"
@@ -19,7 +20,7 @@ from recaptcha.client import captcha
      alt="Cover image for ${entry.title}" /-->
 
 <h3 class="title" id="ReadingLogEntry-${item.id}">
-    <a py:strip="not entry.url" href="${item.url}">${mini_markdown(item.title)}</a>
+    <a py:strip="not item.url" href="${item.url}">${mini_markdown(item.title)}</a>
     <span py:if="item.author" class="author">by ${item.author}</span>
 </h3>
 

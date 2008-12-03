@@ -134,6 +134,8 @@ class BlogEntrySet(object):
         self.entry_patt = re.compile(re.escape(prefix) + r'/([^/]+)/?$')
 
     def get(self, path_info):
+        if path_info == self.prefix or path_info == self.prefix + '/':
+            return iter(self)
         m = self.entry_patt.match(path_info)
         if m is None:
             raise NotExistError(path_info)
@@ -144,7 +146,7 @@ class BlogEntrySet(object):
 
     def __iter__(self):
         assert isinstance(self.base_dir, str)
-        return (BlogEntry(self.base_dir, filename, self.prefix + '/' + filename.encode('utf8'))
+        return (BlogEntry(self.base_dir, filename, self.prefix + '/' + filename.decode('utf8'))
                 for filename in os.listdir(self.base_dir)
                 if not filename.startswith('.'))
 
@@ -182,6 +184,8 @@ class ReadingLogEntrySet(object):
         self.prefix = prefix
 
     def get(self, path_info):
+        if path_info == self.prefix or path_info == self.prefix + '/':
+            return iter(self)
         raise NotExistError(path_info)
 
     def __iter__(self):

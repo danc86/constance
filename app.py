@@ -55,14 +55,38 @@ class Constance(object):
         path_info = urllib.unquote(path_info).decode(self.encoding)
         for item_set in self.item_sets:
             try:
-                item = item_set.get(path_info)
+                result = item_set.get(path_info)
             except NotExistError, e:
                 pass
             else:
-                rendered = item.render('text/html').render('xhtml')
-                return Response(rendered, content_type='text/html')
+                if hasattr(result, '__iter__'):
+                    return self.render_multiple(result)
+                else:
+                    return self.render_single(result)
         # no matching URI found, so give a 404
         raise exc.HTTPNotFound().exception
+
+    def render_single(self, item):
+        template = template_loader.load('single.xml')
+        rendered = template.generate(
+                config=self.config, 
+                item=item
+                ).render('xhtml')
+        return Response(rendered, content_type='text/html')
+
+    def render_multiple(self, items):
+        try:
+            offset = int(self.req.GET.get('offset', 0))
+        except ValueError:
+            raise exc.HTTPBadRequest('Invalid offset %r' % self.GET['offset']).exception
+        template = template_loader.load('multiple.xml')
+        rendered = template.generate(
+                config=self.config, 
+                items=items, 
+                title=None, 
+                offset=offset
+                ).render('xhtml')
+        return Response(rendered, content_type='text/html')
 
     def index(self):
         try:
