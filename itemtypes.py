@@ -49,14 +49,6 @@ def cleanup_metadata(header_items):
         cleaned[k] = v
     return cleaned
 
-IDIFY_WHITESPACE_PATT = re.compile(r'(?u)\s+')
-IDIFY_ACCEPT_PATT = re.compile(r'(?u)\w|[-_]')
-def idify(s):
-    # http://www.w3.org/TR/REC-xml/#NT-Name
-    s = s.lower()
-    s = IDIFY_WHITESPACE_PATT.sub(u'-', s)
-    return u''.join(c for c in s if IDIFY_ACCEPT_PATT.match(c))
-
 
 class NoAccessError(StandardError): pass
 
@@ -153,10 +145,8 @@ class BlogEntrySet(object):
 
 class ReadingLogEntry(object):
 
-    def __init__(self, yaml_dict, uri_path):
-        self.uri_path = uri_path
+    def __init__(self, yaml_dict):
         self.title = yaml_dict['Title']
-        self.id = idify(self.title)
         self.author = yaml_dict['Author']
         self.publication_date = self.modified_date = self.date = yaml_dict['Date']
         self.url = yaml_dict.get('URL', None)
@@ -189,7 +179,7 @@ class ReadingLogEntrySet(object):
         raise NotExistError(path_info)
 
     def __iter__(self):
-        return (ReadingLogEntry(d, self.prefix + '/#ReadingLogEntry-' + idify(d['Title']))
+        return (ReadingLogEntry(d)
                 for d in yaml.load_all(open(self.filename, 'r')))
 
 

@@ -13,6 +13,14 @@ def mini_markdown(s, safe_mode=None):
     assert match, m
     return genshi.Markup(match.group(1))
 
+IDIFY_WHITESPACE_PATT = re.compile(r'(?u)\s+')
+IDIFY_ACCEPT_PATT = re.compile(r'(?u)\w|[-_]')
+def idify(s):
+    # http://www.w3.org/TR/REC-xml/#NT-Name
+    s = s.lower()
+    s = IDIFY_WHITESPACE_PATT.sub(u'-', s)
+    return u''.join(c for c in s if IDIFY_ACCEPT_PATT.match(c))
+
 def tag_list(script_name, tags):
     # XXX urllib.quote
     return genshi.Markup(u', ').join(
