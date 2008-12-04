@@ -21,6 +21,8 @@ def idify(s):
     s = IDIFY_WHITESPACE_PATT.sub(u'-', s)
     return u''.join(c for c in s if IDIFY_ACCEPT_PATT.match(c))
 
+ATOM_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S+10:00'
+
 def tag_list(script_name, tags):
     # XXX urllib.quote
     return genshi.Markup(u', ').join(

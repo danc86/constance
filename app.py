@@ -36,7 +36,7 @@ class Constance(object):
 
     def __iter__(self):
         try:
-            resp = self.dispatch(self.req.path_info)
+            resp = self.dispatch()
         except exc.HTTPException, e:
             resp = e
         return iter(resp(self.environ, self.start))
@@ -51,10 +51,13 @@ class Constance(object):
             (r'/blog/([^/]+)/?$', 'blog_entry'), 
             (r'/blog/([^/]+)/comments/\+new$', 'add_post_comment')]
     urls = [(re.compile(patt), method) for patt, method in urls]
-    def dispatch(self, path_info):
-        if path_info == '/':
-            return self.index()
-        path_info = urllib.unquote(path_info).decode(self.encoding)
+    def dispatch(self):
+        format = self.req.accept.best_match(['text/html', 'application/atom+xml']) # XXX don't hardcode
+
+        if self.req.path_info == '/':
+            return self.index(format)
+
+        path_info = urllib.unquote(self.req.path_info).decode(self.encoding)
         for item_set in self.item_sets:
             try:
                 result = item_set.get(path_info)
@@ -62,37 +65,51 @@ class Constance(object):
                 pass
             else:
                 if hasattr(result, '__iter__'):
-                    return self.render_multiple(result)
+                    return self.render_multiple(result, format)
                 else:
-                    return self.render_single(result)
+                    return self.render_single(result, format)
         # no matching URI found, so give a 404
         raise exc.HTTPNotFound().exception
 
-    def render_single(self, item):
-        template = template_loader.load('html/single.xml')
-        rendered = template.generate(
-                config=self.config, 
-                item=item
-                ).render('xhtml')
-        return Response(rendered, content_type='text/html')
+    def render_single(self, item, format):
+        if format == 'text/html':
+            template = template_loader.load('html/single.xml')
+            rendered = template.generate(
+                    config=self.config, 
+                    item=item
+                    ).render('xhtml')
+        else:
+            raise exc.HTTPBadRequest('Unacceptable format for render_single %r' % format).exception
+        return Response(rendered, content_type=format)
 
-    def render_multiple(self, items):
+    def render_multiple(self, items, format):
         try:
             offset = int(self.req.GET.get('offset', 0))
         except ValueError:
             raise exc.HTTPBadRequest('Invalid offset %r' % self.GET['offset']).exception
-        template = template_loader.load('html/multiple.xml')
-        rendered = template.generate(
-                config=self.config, 
-                items=items, 
-                title=None, 
-                offset=offset
-                ).render('xhtml')
-        return Response(rendered, content_type='text/html')
+        if format == 'text/html':
+            template = template_loader.load('html/multiple.xml')
+            rendered = template.generate(
+                    config=self.config, 
+                    items=items, 
+                    title=None, 
+                    offset=offset
+                    ).render('xhtml')
+        elif format == 'application/atom+xml':
+            template = template_loader.load('atom/multiple.xml')
+            rendered = template.generate(
+                    config=self.config, 
+                    items=items, 
+                    title=None, 
+                    self_url=self.req.path_url
+                    ).render('xml')
+        else:
+            raise exc.HTTPBadRequest('Unacceptable format for render_multiple %r' % format).exception
+        return Response(rendered, content_type=format)
 
-    def index(self):
+    def index(self, format):
         items = chain(*self.item_sets)
-        return self.render_multiple(items)
+        return self.render_multiple(items, format)
     
     def tag_cloud(self):
         tag_freqs = {}

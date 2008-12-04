@@ -91,6 +91,9 @@ class BlogEntry(object):
         if format == 'text/html':
             template = template_loader.load('html/' + self.__class__.__name__ + '.xml')
             return template.generate(item=self)
+        elif format == 'application/atom+xml':
+            template = template_loader.load('atom/' + self.__class__.__name__ + '.xml')
+            return template.generate(item=self)
         else:
             raise UnsupportedFormatError(format)
 
@@ -158,6 +161,9 @@ class ReadingLogEntry(object):
     def render(self, format):
         if format == 'text/html':
             template = template_loader.load('html/' + self.__class__.__name__ + '.xml')
+            return template.generate(item=self)
+        elif format == 'application/atom+xml':
+            template = template_loader.load('atom/' + self.__class__.__name__ + '.xml')
             return template.generate(item=self)
         else:
             raise UnsupportedFormatError(format)
