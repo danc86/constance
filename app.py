@@ -52,7 +52,11 @@ class Constance(object):
             (r'/blog/([^/]+)/comments/\+new$', 'add_post_comment')]
     urls = [(re.compile(patt), method) for patt, method in urls]
     def dispatch(self):
-        format = self.req.accept.best_match(['text/html', 'application/atom+xml']) # XXX don't hardcode
+        if self.req.path_info.endswith('.atom'):
+            format = 'application/atom+xml'
+            self.req.path_info = self.req.path_info[:-5]
+        else:
+            format = self.req.accept.best_match(['text/html', 'application/atom+xml']) # XXX don't hardcode
 
         if self.req.path_info == '/':
             return self.index(format)

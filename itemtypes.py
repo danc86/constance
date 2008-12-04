@@ -126,10 +126,11 @@ class BlogEntrySet(object):
         self.base_dir = base_dir
         assert os.path.isdir(self.base_dir), self.base_dir
         self.prefix = prefix
+        self.index_patt = re.compile(re.escape(prefix) + r'/?(index)?$')
         self.entry_patt = re.compile(re.escape(prefix) + r'/([^/]+)/?$')
 
     def get(self, path_info):
-        if path_info == self.prefix or path_info == self.prefix + '/':
+        if self.index_patt.match(path_info):
             return iter(self)
         m = self.entry_patt.match(path_info)
         if m is None:
@@ -178,9 +179,10 @@ class ReadingLogEntrySet(object):
         self.filename = filename
         assert os.path.isfile(self.filename), self.filename
         self.prefix = prefix
+        self.index_patt = re.compile(re.escape(prefix) + r'/?(index)?$')
 
     def get(self, path_info):
-        if path_info == self.prefix or path_info == self.prefix + '/':
+        if self.index_patt.match(path_info):
             return iter(self)
         raise NotExistError(path_info)
 
