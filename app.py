@@ -41,27 +41,27 @@ class Constance(object):
             resp = e
         return iter(resp(self.environ, self.start))
 
-    # XXX keep sitemap in sync with these
-    urls = [(r'/$', 'index'), 
+    urls = [(r'/(?:index)?$', 'index'), 
             (r'/tags/$', 'tag_cloud'), 
             (r'/tags/(.+)$', 'tag'), 
-            (r'/reading/?$', 'reading'), 
-            (r'/sitemap.xml$', 'sitemap'), 
-            (r'/blog/?$', 'blog_index'), 
-            (r'/blog/([^/]+)/?$', 'blog_entry'), 
-            (r'/blog/([^/]+)/comments/\+new$', 'add_post_comment')]
+            (r'/sitemap.xml$', 'sitemap')]
     urls = [(re.compile(patt), method) for patt, method in urls]
     def dispatch(self):
         if self.req.path_info.endswith('.atom'):
-            format = 'application/atom+xml'
+            self.req.format = 'application/atom+xml'
             self.req.path_info = self.req.path_info[:-5]
         else:
-            format = self.req.accept.best_match(['text/html', 'application/atom+xml']) # XXX don't hardcode
-
-        if self.req.path_info == '/':
-            return self.index(format)
+            self.req.format = self.req.accept.best_match(['text/html', 'application/atom+xml']) # XXX don't hardcode
 
         path_info = urllib.unquote(self.req.path_info).decode(self.encoding)
+
+        # first, try the predefined urls above
+        for patt, method in self.urls:
+            m = patt.match(path_info)
+            if m is not None:
+                return getattr(self, method)(*m.groups())
+
+        # next, try the item sets
         for item_set in self.item_sets:
             try:
                 result = item_set.get(path_info)
@@ -69,29 +69,30 @@ class Constance(object):
                 pass
             else:
                 if hasattr(result, '__iter__'):
-                    return self.render_multiple(result, format)
+                    return self.render_multiple(result)
                 else:
-                    return self.render_single(result, format)
+                    return self.render_single(result)
+
         # no matching URI found, so give a 404
         raise exc.HTTPNotFound().exception
 
-    def render_single(self, item, format):
-        if format == 'text/html':
+    def render_single(self, item):
+        if self.req.format == 'text/html':
             template = template_loader.load('html/single.xml')
             rendered = template.generate(
                     config=self.config, 
                     item=item
                     ).render('xhtml')
         else:
-            raise exc.HTTPBadRequest('Unacceptable format for render_single %r' % format).exception
-        return Response(rendered, content_type=format)
+            raise exc.HTTPBadRequest('Unacceptable format for render_single %r' % self.req.format).exception
+        return Response(rendered, content_type=self.req.format)
 
-    def render_multiple(self, items, format):
+    def render_multiple(self, items):
         try:
             offset = int(self.req.GET.get('offset', 0))
         except ValueError:
             raise exc.HTTPBadRequest('Invalid offset %r' % self.GET['offset']).exception
-        if format == 'text/html':
+        if self.req.format == 'text/html':
             template = template_loader.load('html/multiple.xml')
             rendered = template.generate(
                     config=self.config, 
@@ -99,7 +100,7 @@ class Constance(object):
                     title=None, 
                     offset=offset
                     ).render('xhtml')
-        elif format == 'application/atom+xml':
+        elif self.req.format == 'application/atom+xml':
             template = template_loader.load('atom/multiple.xml')
             rendered = template.generate(
                     config=self.config, 
@@ -108,68 +109,27 @@ class Constance(object):
                     self_url=self.req.path_url
                     ).render('xml')
         else:
-            raise exc.HTTPBadRequest('Unacceptable format for render_multiple %r' % format).exception
-        return Response(rendered, content_type=format)
+            raise exc.HTTPBadRequest('Unacceptable format for render_multiple %r' % self.req.format).exception
+        return Response(rendered, content_type=self.req.format)
 
-    def index(self, format):
+    def index(self):
         items = chain(*self.item_sets)
-        return self.render_multiple(items, format)
+        return self.render_multiple(items)
     
     def tag_cloud(self):
         tag_freqs = {}
-        for entry in self.blog_entries:
+        for entry in chain(*self.item_sets):
             for tag in entry.tags:
                 tag_freqs[tag] = tag_freqs.get(tag, 0) + 1
-        rendered = template_loader.load('tag_cloud.xml').generate(
-                config=self.config, 
-                environ=self.environ, 
-                tag_freqs=tag_freqs
-                ).render('xhtml', encoding=self.encoding)
-        return Response(rendered, content_type='text/html')
-
-    def blog_index(self):
-        try:
-            offset = int(self.req.GET.get('offset', 0))
-        except ValueError:
-            raise exc.HTTPBadRequest('Invalid offset %r' % self.req.GET['offset']).exception
-        sorted_entries = sorted(self.blog_entries, 
-                key=lambda e: e.publication_date, reverse=True)
-        if offset >= len(sorted_entries):
-            raise exc.HTTPBadRequest('Offset beyond end of entries').exception
-        format = self.req.GET.get('format', 'html')
-        if format == 'html':
-            rendered = template_loader.load('multiple.xml').generate(
+        if self.req.format == 'text/html':
+            rendered = template_loader.load('html/tag_cloud.xml').generate(
                     config=self.config, 
                     environ=self.environ, 
-                    title=None, 
-                    sorted_entries=sorted_entries, 
-                    offset=offset,
+                    tag_freqs=tag_freqs
                     ).render('xhtml', encoding=self.encoding)
-            return Response(rendered, content_type='text/html')
-        elif format == 'atom':
-            rendered = template_loader.load('multiple_atom.xml').generate(
-                    config=self.config, 
-                    environ=self.environ, 
-                    title=None, 
-                    self_url='%s/blog/' % self.req.application_url, 
-                    sorted_entries=sorted_entries[:self.config.getint('global', 'entries_in_feed')], 
-                    feed_updated=max(e.modified_date for e in sorted_entries[:self.config.getint('global', 'entries_in_feed')])
-                    ).render('xml', encoding=self.encoding)
-            return Response(rendered, content_type='application/atom+xml')
         else:
-            raise exc.HTTPBadRequest('Unknown format %r' % format).exception
-    
-    def blog_entry(self, id):
-        try:
-            entry = self.blog_entries[id]
-        except KeyError:
-            raise exc.HTTPNotFound().exception
-        rendered = template_loader.load('single.xml').generate(
-                config=self.config, 
-                environ=self.environ, 
-                entry=entry
-                ).render('xhtml', encoding=self.encoding)
-        return Response(rendered, content_type='text/html')
+            raise exc.HTTPBadRequest('Unacceptable format for render_multiple %r' % self.req.format).exception
+        return Response(rendered, content_type=self.req.format)
     
     def add_post_comment(self, id):
         entry = self.blog_entries[id]
@@ -206,62 +166,10 @@ class Constance(object):
             raise exc.HTTPForbidden('Commenting is disabled for this entry.').exception
 
     def tag(self, tag):
-        with_tag = [e for e in self.blog_entries if tag in e.tags]
+        with_tag = [e for e in chain(*self.item_sets) if tag in e.tags]
         if not with_tag:
             raise exc.HTTPNotFound().exception
-        try:
-            offset = int(self.req.GET.get('offset', 0))
-        except ValueError:
-            raise exc.HTTPBadRequest('Invalid offset %r' % self.req.GET['offset']).exception
-        sorted_entries = sorted(with_tag, key=lambda e: e.publication_date, reverse=True)
-        if offset >= len(sorted_entries):
-            raise exc.HTTPBadRequest('Offset beyond end of entries').exception
-        format = self.req.GET.get('format', 'html')
-        if format == 'html':
-            rendered = template_loader.load('multiple.xml').generate(
-                    config=self.config, 
-                    environ=self.environ, 
-                    title=u'“%s” tag' % tag, 
-                    sorted_entries=sorted_entries, 
-                    offset=offset
-                    ).render('xhtml')
-            return Response(rendered, content_type='text/html')
-        elif format == 'atom':
-            rendered = template_loader.load('multiple_atom.xml').generate(
-                    config=self.config, 
-                    environ=self.environ, 
-                    title=u'“%s” tag' % tag, 
-                    self_url='%s/+tags/%s' % (self.req.application_url, tag.encode(self.encoding)), 
-                    sorted_entries=sorted_entries[:self.config.getint('global', 'entries_in_feed')], 
-                    feed_updated=sorted_entries[0].modified_date
-                    ).render('xml')
-            return Response(rendered, content_type='application/atom+xml')
-        else:
-            raise NotFoundError('Unknown format %r' % format)
-
-    def reading(self):
-        sorted_entries = sorted(self.readinglog_entries, key=lambda e: e.publication_date, reverse=True)
-        format = self.req.GET.get('format', 'html')
-        if format == 'html':
-            rendered = template_loader.load('multiple.xml').generate(
-                    config=self.config, 
-                    environ=self.environ, 
-                    title=u'reading log', 
-                    sorted_entries=sorted_entries, 
-                    ).render('xhtml', encoding=self.encoding)
-            return Response(rendered, content_type='text/html')
-        elif format == 'atom':
-            rendered = template_loader.load('multiple_atom.xml').generate(
-                    config=self.config, 
-                    environ=self.environ, 
-                    title=u'reading log', 
-                    self_url='%s/reading/' % self.req.application_url, 
-                    sorted_entries=sorted_entries[:self.config.getint('global', 'entries_in_feed')], 
-                    feed_updated=sorted_entries[0].modified_date
-                    ).render('xml', encoding=self.encoding)
-            return Response(rendered, content_type='application/atom+xml')
-        else:
-            raise exc.HTTPBadRequest('Unknown format %r' % format).exception
+        return self.render_multiple(with_tag)
 
     def sitemap(self):
         tags = {}

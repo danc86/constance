@@ -7,7 +7,7 @@
 
 <head>
     <title>Tag cloud</title>
-    <link rel="stylesheet" type="text/css" href="${uri('static', 'css', 'tag_cloud.css')}" />
+    <link rel="stylesheet" type="text/css" href="/static/css/tag_cloud.css" /><!-- XXX script_name -->
 </head>
 <body>
 
@@ -15,7 +15,7 @@
 
 <ol id="tagcloud">
     <li py:for="tag, freq in sorted(tag_freqs.iteritems(), key=lambda (t, f): t.lower())">
-        <a rel="tag" href="${uri('tags', tag)}" style="font-size: ${0.8 + (freq / 10.)}em;">${tag}</a>
+        <!-- XXX script_name --><a rel="tag" href="/tags/${tag}" style="font-size: ${0.8 + (freq / 10.)}em;">${tag}</a>
         <span class="frequency">(used ${freq} times)</span>
     </li>
 </ol>
