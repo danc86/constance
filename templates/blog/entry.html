@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+	  lang="en-AU">
+
+<?python
+from viewutils import tag_list
+?>
+
+<head>
+    <title>${item.title.striptags()}</title>
+    <meta name="DC.date" content="${item.publication_date.strftime(str('%Y-%m-%d'))}" />
+</head>
+<body>
+    <div class="item blog-entry">
+
+        <h1 class="entry-title"><a href="http://www.djc.id.au/blog/${item.id}" rel="bookmark">${item.title}</a></h1>
+
+        <div class="date published">${item.publication_date.strftime(str('%-1d %b %Y'))}</div>
+
+        <div py:if="item.tags" class="tags">
+            tagged: ${tag_list('', item.tags)} <!-- XXX script_name -->
+        </div>
+
+        <div class="entry-content">
+            ${item.body}
+        </div>
+
+    </div>
+</body>
+</html>

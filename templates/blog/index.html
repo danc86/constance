@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+	  lang="en-AU">
+
+<?python
+from itertools import groupby
+from viewutils import markdown, mini_markdown, tag_list
+?>
+
+<head>
+    <title>Blog archive</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="index.atom" />
+</head>
+
+<body>
+
+    <h1>Blog archive</h1>
+
+    <py:for each="year, items in groupby(sorted(items, key=lambda e: e.publication_date, reverse=True), key=lambda e: e.publication_date.year)">
+        <h2>${year}</h2>
+        <div class="item blog-entry-stub" py:for="item in items">
+            <h3 class="entry-title"><a href="${item.id}">${item.title}</a></h3>
+            <div class="date published">${item.publication_date.strftime(str('%-1d %b %Y'))}</div>
+        </div>
+    </py:for>
+
+</body>
+</html>

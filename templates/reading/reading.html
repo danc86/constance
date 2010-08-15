@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+	  lang="en-AU">
+
+<?python
+from viewutils import markdown, mini_markdown, tag_list, idify
+?>
+
+<span py:def="stars(rating)" py:strip="True">
+    <img src="/images/star.png" alt="[star]" py:for="_ in range(int(rating))" /><img src="/images/star-half.png" alt="[half-star]" py:if="rating > int(rating)" /><img src="/images/star-off.png" alt="" py:for="_ in range(int(5 - rating))" />
+</span>
+
+<head>
+    <title>Reading log</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="reading.atom" />
+</head>
+
+<body>
+
+    <h1>Reading log</h1>
+
+    <py:for each="item in sorted(items, key=lambda e: e.publication_date, reverse=True)">
+        <div class="item reading-log-entry">
+
+            <img py:if="item.isbn" class="cover"
+                 src="http://covers.librarything.com/devkey/f6da4b15120267233430bb13cdaf1be9/small/isbn/${item.isbn}" 
+                 alt="Cover image for ${item.title.striptags()}" />
+
+            <h3 id="${idify(item.title.striptags())}">
+                <a py:strip="not item.url" href="${item.url}">${item.title}</a>
+                <span py:if="item.author" class="author">by ${item.author}</span>
+            </h3>
+
+            <div class="date published">
+                ${item.publication_date.strftime(str('%-1d %b %Y'))}
+            </div>
+
+            <div py:if="item.rating" class="rating">
+                ${stars(item.rating)}
+            </div>
+
+        </div>
+    </py:for>
+
+</body>
+</html>
+
