@@ -8,7 +8,13 @@ from viewutils import markdown, mini_markdown, tag_list
 ?>
 
 <head>
-    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="index.atom" />
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="firehose.atom" />
+    <meta name="ICBM" content="-27.485859,152.983643" />
+    <link rel="openid.server" href="http://www.myopenid.com/server" />
+    <link rel="openid.delegate" href="http://djc.myopenid.com/" />
+    <link rel="openid2.local_id" href="http://djc.myopenid.com" />
+    <link rel="openid2.provider" href="http://www.myopenid.com/server" />
+    <meta http-equiv="X-XRDS-Location" content="http://www.myopenid.com/xrds?username=djc.myopenid.com" />
 </head>
 
 <body py:with="sorted_blog_entries=sorted(blog_entries, key=lambda e: e.publication_date, reverse=True)">
@@ -35,7 +41,7 @@ from viewutils import markdown, mini_markdown, tag_list
             <h3 class="entry-title"><a href="blog/${item.id}">${item.title}</a></h3>
             <div class="date published">${item.publication_date.strftime(str('%-1d %b %Y'))}</div>
         </div>
-        <a href="blog/">more...</a>
+        <a href="blog/">more&#8230;</a>
     </div>
 
 </body>
