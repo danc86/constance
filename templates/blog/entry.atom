@@ -1,6 +1,7 @@
 <entry xmlns="http://www.w3.org/2005/Atom"
        xmlns:py="http://genshi.edgewall.org/"
-       xmlns:xi="http://www.w3.org/2001/XInclude">
+       xmlns:xi="http://www.w3.org/2001/XInclude"
+       py:attrs="(item.language is not None) and {'xml:lang': item.language} or {}">
 
 <?python
 import urllib

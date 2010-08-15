@@ -47,6 +47,7 @@ class BlogEntry(object):
         self.modified_date = datetime.fromtimestamp(os.path.getmtime(content_filename))
         self.publication_date = self.metadata.get('publication-date', None) or self.modified_date
         self.guid = self.metadata['guid']
+        self.language = self.metadata.get('language', None)
 
     def generate_atom(self):
         return template_loader.load('entry.atom').generate(item=self)

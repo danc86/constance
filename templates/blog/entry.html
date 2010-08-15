@@ -11,7 +11,7 @@ from viewutils import tag_list
     <meta name="DC.date" content="${item.publication_date.strftime(str('%Y-%m-%d'))}" />
 </head>
 <body>
-    <div class="item blog-entry">
+    <div class="item blog-entry" py:attrs="(item.language is not None) and {'lang': item.language} or {}">
 
         <h1 class="entry-title"><a href="http://www.djc.id.au/blog/${item.id}" rel="bookmark">${item.title}</a></h1>
 
