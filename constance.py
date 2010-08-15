@@ -18,6 +18,16 @@ import reading
 import tags
 import homepage
 
+def output(filename, content):
+    assert isinstance(content, str)
+    if os.path.exists(filename):
+        existing = open(filename, 'r').read()
+        if content == existing:
+            print 'Skipped %s' % filename
+            return
+    open(filename, 'w').write(content)
+    print 'Wrote %s' % filename
+
 def main():
     parser = optparse.OptionParser()
     parser.add_option('--blog-dir', metavar='DIR')

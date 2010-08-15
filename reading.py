@@ -6,6 +6,7 @@ import genshi.template
 import yaml
 import lxml.etree
 
+import constance
 import viewutils
 
 template_loader = genshi.template.TemplateLoader(
@@ -43,10 +44,10 @@ def generate(filename, xslt):
 
     rendered = template_loader.load('reading.html').generate(items=entries).render('xhtml')
     transformed = str(xslt(lxml.etree.fromstring(rendered)))
-    open(os.path.join(os.path.dirname(filename), 'reading.html'), 'w').write(transformed)
+    constance.output(os.path.join(os.path.dirname(filename), 'reading.html'), transformed)
 
     # feed
     rendered = template_loader.load('reading.atom').generate(items=entries).render('xml')
-    open(os.path.join(os.path.dirname(filename), 'reading.atom'), 'w').write(rendered)
+    constance.output(os.path.join(os.path.dirname(filename), 'reading.atom'), rendered)
 
     return entries

@@ -5,6 +5,7 @@ import os
 import genshi.template
 import lxml.etree
 
+import constance
 import viewutils
 
 template_loader = genshi.template.TemplateLoader(
@@ -21,8 +22,8 @@ def generate(dir, xslt, blog_entries):
         tagged_entries = [e for e in blog_entries if tag in e.tags]
         rendered = template_loader.load('tag.html').generate(tag=tag, items=tagged_entries).render('xhtml')
         transformed = str(xslt(lxml.etree.fromstring(rendered)))
-        open(os.path.join(dir, tag.encode('utf8') + '.html'), 'w').write(transformed)
+        constance.output(os.path.join(dir, tag.encode('utf8') + '.html'), transformed)
 
     rendered = template_loader.load('index.html').generate(tag_freqs=tag_freqs).render('xhtml')
     transformed = str(xslt(lxml.etree.fromstring(rendered)))
-    open(os.path.join(dir, 'index.html'), 'w').write(transformed)
+    constance.output(os.path.join(dir, 'index.html'), transformed)
