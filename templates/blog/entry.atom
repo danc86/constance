@@ -3,6 +3,7 @@
        xmlns:xi="http://www.w3.org/2001/XInclude">
 
 <?python
+import urllib
 from viewutils import ATOM_TIME_FORMAT
 ?>
 
@@ -14,9 +15,9 @@ from viewutils import ATOM_TIME_FORMAT
     <email>djc@djc.id.au</email>
 </author>
 <category py:for="tag in item.tags" scheme="http://www.djc.id.au/tags/" term="${tag}" />
-<link rel="alternate" href="http://www.djc.id.au/blog/${item.id}" />
+<link rel="alternate" href="http://www.djc.id.au/blog/${urllib.quote(item.id.encode('utf8'), '')}" />
 <title type="text">${item.title.striptags()}</title>
-<content type="xhtml" xml:base="http://www.djc.id.au/blog/${item.id}">
+<content type="xhtml" xml:base="http://www.djc.id.au/blog/${urllib.quote(item.id.encode('utf8'), '')}">
     <div xmlns="http://www.w3.org/1999/xhtml">
         ${item.body}
     </div>
