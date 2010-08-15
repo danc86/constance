@@ -46,6 +46,10 @@ def main():
     blog_entries = blog.generate(options.blog_dir, xslt)
     reading_entries = reading.generate(options.reading_log, xslt)
     tags.generate(options.tags_dir, xslt, blog_entries)
+    for filename in os.listdir(options.root_dir):
+        if filename.endswith('.html.in'):
+            transformed = str(xslt(lxml.etree.parse(filename)))
+            output(filename[:-3], transformed)
     homepage.generate(options.root_dir, xslt, blog_entries, reading_entries)
 
 if __name__ == '__main__':
