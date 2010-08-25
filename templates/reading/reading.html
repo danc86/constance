@@ -23,7 +23,7 @@ from viewutils import markdown, mini_markdown, tag_list, idify
         <div class="item reading-log-entry">
 
             <img py:if="item.isbn" class="cover"
-                 src="http://covers.librarything.com/devkey/f6da4b15120267233430bb13cdaf1be9/small/isbn/${item.isbn}" 
+                 src="/covers/isbn/${item.isbn}/thumbnail"
                  alt="Cover image for ${item.title.striptags()}" />
 
             <h3 id="${idify(item.title.striptags())}">

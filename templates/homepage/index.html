@@ -17,32 +17,25 @@ from viewutils import markdown, mini_markdown, tag_list
     <meta http-equiv="X-XRDS-Location" content="http://www.myopenid.com/xrds?username=djc.myopenid.com" />
 </head>
 
-<body py:with="sorted_blog_entries=sorted(blog_entries, key=lambda e: e.publication_date, reverse=True)">
+<body>
 
-    <div class="item blog-entry" py:with="item = sorted_blog_entries[0]">
-
-        <h1 class="entry-title"><a href="http://www.djc.id.au/blog/${item.id}" rel="bookmark">${item.title}</a></h1>
-
+    <h1>Recent blog entries</h1>
+    <div class="item blog-entry-stub" py:for="item in sorted(blog_entries, key=lambda e: e.publication_date, reverse=True)[:4]">
+        <h3 class="entry-title"><a href="blog/${item.id}">${item.title}</a></h3>
         <div class="date published">${item.publication_date.strftime(str('%-1d %b %Y'))}</div>
-
-        <div py:if="item.tags" class="tags">
-            tagged: ${tag_list('', item.tags)} <!-- XXX script_name -->
-        </div>
-
-        <div class="entry-content">
-            ${item.body}
-        </div>
-
+        <div py:if="item.tags" class="tags">tagged: ${tag_list(item.tags)}</div>
     </div>
+    <p><a href="blog/">older entries&#8230;</a></p>
 
-    <div>
-        <h2>Previous blog entries</h2>
-        <div class="item blog-entry-stub" py:for="item in sorted_blog_entries[1:4]">
-            <h3 class="entry-title"><a href="blog/${item.id}">${item.title}</a></h3>
-            <div class="date published">${item.publication_date.strftime(str('%-1d %b %Y'))}</div>
-        </div>
-        <a href="blog/">more&#8230;</a>
+    <h1>Recent reading</h1>
+    <div class="item reading-log-entry-stub" py:for="item in sorted((e for e in reading_entries if e.isbn), key=lambda e: e.publication_date, reverse=True)[:6]">
+        <a py:strip="not item.url" href="${item.url}">
+            <img py:if="item.isbn" class="cover"
+                 src="/covers/isbn/${item.isbn}/thumbnail"
+                 alt="${item.title.striptags()}" />
+        </a>
     </div>
+    <p><a href="reading">older entries&#8230;</a></p>
 
 </body>
 </html>

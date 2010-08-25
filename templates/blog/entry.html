@@ -18,7 +18,7 @@ from viewutils import tag_list
         <div class="date published">${item.publication_date.strftime(str('%-1d %b %Y'))}</div>
 
         <div py:if="item.tags" class="tags">
-            tagged: ${tag_list('', item.tags)} <!-- XXX script_name -->
+            tagged: ${tag_list(item.tags)}
         </div>
 
         <div class="entry-content">

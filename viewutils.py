@@ -23,8 +23,7 @@ def idify(s):
 
 ATOM_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S+10:00'
 
-def tag_list(script_name, tags):
-    # XXX urllib.quote
+def tag_list(tags):
     return genshi.Markup(u', ').join(
-            genshi.Markup(u'<a rel="tag" href="%s/tags/%s">%s</a>' % (script_name, tag, tag)) 
+            genshi.Markup(u'<a rel="tag" href="/tags/%s">%s</a>' % (urllib.quote(tag.encode('utf8'), ''), tag)) 
             for tag in tags)

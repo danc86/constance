@@ -16,7 +16,7 @@ template_loader = genshi.template.TemplateLoader(
 def generate(dir, xslt, blog_entries, reading_entries):
     # index
     template = template_loader.load('index.html')
-    rendered = template.generate(blog_entries=blog_entries).render('xhtml')
+    rendered = template.generate(blog_entries=blog_entries, reading_entries=reading_entries).render('xhtml')
     transformed = str(xslt(lxml.etree.fromstring(rendered)))
     constance.output(os.path.join(dir, 'index.html'), transformed)
 
