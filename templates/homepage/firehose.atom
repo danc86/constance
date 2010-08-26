@@ -8,7 +8,7 @@ sorted_items = sorted(items, key=lambda item: item.publication_date, reverse=Tru
 ?>
 
 <id>http://www.djc.id.au/firehose.atom</id>
-<title type="text">djc firehose</title>
+<title type="text">Dan’s firehose</title>
 <link rel="self" type="application/atom+xml" href="http://www.djc.id.au/firehose.atom" />
 <link rel="alternate" href="http://www.djc.id.au/" />
 <generator>constance</generator>
