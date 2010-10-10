@@ -25,15 +25,17 @@ from viewutils import tag_list
             ${item.body}
         </div>
 
+        <py:if test="template_config.get('disqus_user') is not None and template_config.get('disqus_user') != ''">
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           (function() {
            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-           dsq.src = 'http://djc.disqus.com/embed.js';
+           dsq.src = 'http://${template_config.get("disqus_user")}.disqus.com/embed.js';
            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
           })();
         </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=djc">comments powered by Disqus.</a></noscript>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=${template_config.get('disqus_user')}">comments powered by Disqus.</a></noscript>
+        </py:if>
 
     </div>
 </body>

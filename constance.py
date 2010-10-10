@@ -39,6 +39,7 @@ xslt = ./style.xsl
 [template]
 website = http://localhost
 email = user@domain.com
+disqus_user = 
 """
 
 def main():
