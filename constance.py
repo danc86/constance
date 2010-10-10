@@ -36,7 +36,7 @@ def main():
     parser.add_option('--root-dir', metavar='DIR')
     parser.add_option('--xslt', metavar='FILENAME')
     parser.set_defaults(blog_dir='./blog/',
-            reading_log='./reading_log.yaml',
+            reading_log=None,
             tags_dir='./tags/',
             root_dir='./',
             xslt='./style.xsl')
@@ -44,7 +44,10 @@ def main():
 
     xslt = lxml.etree.XSLT(lxml.etree.parse(options.xslt))
     blog_entries = blog.generate(options.blog_dir, xslt)
-    reading_entries = reading.generate(options.reading_log, xslt)
+    if options.reading_log is not None:
+        reading_entries = reading.generate(options.reading_log, xslt)
+    else:
+        reading_entries = []
     tags.generate(options.tags_dir, xslt, blog_entries)
     for filename in os.listdir(options.root_dir):
         if filename.endswith('.html.in'):
