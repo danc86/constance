@@ -30,11 +30,11 @@ def output(filename, content):
     print 'Wrote %s' % filename
 
 default_config = """[paths]
-blog = ./blog/
+root = ./htdocs
+blog = %(root)s/blog
+tags = %(root)s/tags
 reading_log =
-tags = ./tags/
-root = ./
-xslt = ./style.xsl
+xslt = ./sample.xsl
 
 [template]
 website = http://localhost
