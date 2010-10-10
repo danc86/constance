@@ -49,8 +49,9 @@ class BlogEntry(object):
         self.guid = self.metadata['guid']
         self.language = self.metadata.get('language', None)
 
-    def generate_atom(self):
-        return template_loader.load('entry.atom').generate(item=self)
+    def generate_atom(self, website):
+        return template_loader.load('entry.atom').generate(item=self,
+                website=website)
 
 class BlogEntrySet(object):
 
@@ -65,21 +66,24 @@ class BlogEntrySet(object):
     def __iter__(self):
         return iter(self.entries)
 
-def generate(dir, xslt):
+def generate(dir, xslt, website):
     entries = BlogEntrySet(dir)
     
     for entry in entries:
-        rendered = template_loader.load('entry.html').generate(item=entry).render('xhtml')
+        rendered = template_loader.load('entry.html').generate(item=entry,
+                website=website).render('xhtml')
         transformed = str(xslt(lxml.etree.fromstring(rendered)))
         constance.output(os.path.join(dir, entry.id.encode('utf8') + '.html'), transformed)
     
     # index
-    rendered = template_loader.load('index.html').generate(items=entries).render('xhtml')
+    rendered = template_loader.load('index.html').generate(items=entries,
+            website=website).render('xhtml')
     transformed = str(xslt(lxml.etree.fromstring(rendered)))
     constance.output(os.path.join(dir, 'index.html'), transformed)
 
     # feed
-    rendered = template_loader.load('index.atom').generate(items=entries).render('xml')
+    rendered = template_loader.load('index.atom').generate(items=entries,
+            website=website).render('xml')
     constance.output(os.path.join(dir, 'index.atom'), rendered)
 
     return entries

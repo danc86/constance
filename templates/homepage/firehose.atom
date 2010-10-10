@@ -7,15 +7,15 @@ from viewutils import ATOM_TIME_FORMAT
 sorted_items = sorted(items, key=lambda item: item.publication_date, reverse=True)
 ?>
 
-<id>http://www.djc.id.au/firehose.atom</id>
+<id>${website}/firehose.atom</id>
 <title type="text">Dan’s firehose</title>
-<link rel="self" type="application/atom+xml" href="http://www.djc.id.au/firehose.atom" />
-<link rel="alternate" href="http://www.djc.id.au/" />
+<link rel="self" type="application/atom+xml" href="${website}/firehose.atom" />
+<link rel="alternate" href="${website}/" />
 <generator>constance</generator>
 <updated py:if="sorted_items">${max(item.modified_date for item in sorted_items).strftime(ATOM_TIME_FORMAT)}</updated>
 
 <py:for each="item in sorted_items">
-    ${item.generate_atom()}
+    ${item.generate_atom(website)}
 </py:for>
 
 </feed>

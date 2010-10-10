@@ -39,15 +39,17 @@ class ReadingLogEntrySet(object):
     def __iter__(self):
         return iter(self.entries)
 
-def generate(filename, xslt):
+def generate(filename, xslt, website):
     entries = ReadingLogEntrySet(filename)
 
-    rendered = template_loader.load('reading.html').generate(items=entries).render('xhtml')
+    rendered = template_loader.load('reading.html').generate(items=entries,
+            website=website).render('xhtml')
     transformed = str(xslt(lxml.etree.fromstring(rendered)))
     constance.output(os.path.join(os.path.dirname(filename), 'reading.html'), transformed)
 
     # feed
-    rendered = template_loader.load('reading.atom').generate(items=entries).render('xml')
+    rendered = template_loader.load('reading.atom').generate(items=entries,
+            website=website).render('xml')
     constance.output(os.path.join(os.path.dirname(filename), 'reading.atom'), rendered)
 
     return entries

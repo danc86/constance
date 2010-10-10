@@ -35,25 +35,33 @@ def main():
     parser.add_option('--tags-dir', metavar='DIR')
     parser.add_option('--root-dir', metavar='DIR')
     parser.add_option('--xslt', metavar='FILENAME')
+    parser.add_option('--website', metavar='URL')
     parser.set_defaults(blog_dir='./blog/',
             reading_log=None,
             tags_dir='./tags/',
             root_dir='./',
-            xslt='./style.xsl')
+            xslt='./style.xsl',
+            website='http://localhost')
     options, args = parser.parse_args()
 
+    # strip trailing slash if it was given
+    website = options.website
+    if website[-1] == '/':
+        website = website[:-1]
+
     xslt = lxml.etree.XSLT(lxml.etree.parse(options.xslt))
-    blog_entries = blog.generate(options.blog_dir, xslt)
+    blog_entries = blog.generate(options.blog_dir, xslt, website)
     if options.reading_log is not None:
-        reading_entries = reading.generate(options.reading_log, xslt)
+        reading_entries = reading.generate(options.reading_log, xslt, website)
     else:
         reading_entries = []
-    tags.generate(options.tags_dir, xslt, blog_entries)
+    tags.generate(options.tags_dir, xslt, blog_entries, website)
     for filename in os.listdir(options.root_dir):
         if filename.endswith('.html.in'):
             transformed = str(xslt(lxml.etree.parse(filename)))
             output(filename[:-3], transformed)
-    homepage.generate(options.root_dir, xslt, blog_entries, reading_entries)
+    homepage.generate(options.root_dir, xslt, blog_entries, reading_entries,
+            website)
 
 if __name__ == '__main__':
     main()
