@@ -46,8 +46,14 @@ def main():
     # set up argument parser
     parser = optparse.OptionParser()
     parser.add_option('--config', metavar='FILENAME')
+    parser.add_option('--dump-default-config', action='store_true')
     parser.set_defaults(config=config_filename)
+    parser.set_defaults(dump_default_config=False)
     options, args = parser.parse_args()
+
+    if options.dump_default_config:
+        print default_config
+        return
 
     # populate config from default location (which would have been
     # overidden by --config above, if given)
