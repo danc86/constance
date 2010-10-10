@@ -60,7 +60,7 @@ def main():
 
     # populate config from default location (which would have been
     # overidden by --config above, if given)
-    config = SafeConfigParser(allow_no_value=True)
+    config = SafeConfigParser()
     with open(options.config, 'r') as fp:
         config.readfp(fp)
     template_config = dict(config.items('template'))
@@ -76,7 +76,7 @@ def main():
             template_config=template_config)
 
     rl_path = config.get('paths', 'reading_log')
-    if rl_path is not None and rl_path != '': # XXX allow_no_value is broken?
+    if rl_path is not None and rl_path != '':
         reading_entries = reading.generate(rl_path, xslt, 
                 template_config=template_config)
     else:
