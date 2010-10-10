@@ -15,10 +15,10 @@ from viewutils import ATOM_TIME_FORMAT
     <name>Dan C</name>
     <email>djc@djc.id.au</email>
 </author>
-<category py:for="tag in item.tags" scheme="${website}/tags/" term="${tag}" />
-<link rel="alternate" href="${website}/blog/${urllib.quote(item.id.encode('utf8'), '')}" />
+<category py:for="tag in item.tags" scheme="${template_config.get('website')}/tags/" term="${tag}" />
+<link rel="alternate" href="${template_config.get('website')}/blog/${urllib.quote(item.id.encode('utf8'), '')}" />
 <title type="text">${item.title.striptags()}</title>
-<content type="xhtml" xml:base="${website}/blog/${urllib.quote(item.id.encode('utf8'), '')}">
+<content type="xhtml" xml:base="${template_config.get('website')}/blog/${urllib.quote(item.id.encode('utf8'), '')}">
     <div xmlns="http://www.w3.org/1999/xhtml">
         ${item.body}
     </div>
