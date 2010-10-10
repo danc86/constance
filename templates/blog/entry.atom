@@ -13,7 +13,7 @@ from viewutils import ATOM_TIME_FORMAT
 <updated>${item.modified_date.strftime(ATOM_TIME_FORMAT)}</updated>
 <author>
     <name>Dan C</name>
-    <email>djc@djc.id.au</email>
+    <email>${template_config.get('email')}</email>
 </author>
 <category py:for="tag in item.tags" scheme="${template_config.get('website')}/tags/" term="${tag}" />
 <link rel="alternate" href="${template_config.get('website')}/blog/${urllib.quote(item.id.encode('utf8'), '')}" />

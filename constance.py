@@ -38,6 +38,7 @@ xslt = ./style.xsl
 
 [template]
 website = http://localhost
+email = user@domain.com
 """
 
 def main():
