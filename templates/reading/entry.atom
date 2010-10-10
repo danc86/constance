@@ -10,7 +10,7 @@ from viewutils import ATOM_TIME_FORMAT
 <published>${item.publication_date.strftime(ATOM_TIME_FORMAT)}</published>
 <updated>${item.modified_date.strftime(ATOM_TIME_FORMAT)}</updated>
 <author>
-    <name>Dan C</name>
+    <name>${template_config.get('name')}</name>
     <email>${template_config.get('email')}</email>
 </author>
 <category py:for="tag in item.tags" scheme="${template_config.get('website')}/tags/" term="${tag}" />

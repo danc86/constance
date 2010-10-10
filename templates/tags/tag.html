@@ -8,12 +8,12 @@ from viewutils import markdown, mini_markdown, tag_list
 ?>
 
 <head>
-    <title>“${tag}” tag</title>
+    <title>&ldquo;${tag}&rdquo; tag</title>
 </head>
 
 <body>
 
-    <h1>“${tag}” tag</h1>
+    <h1>&ldquo;${tag}&rdquo; tag</h1>
 
     <div class="item blog-entry-stub" py:for="item in sorted(items, key=lambda e: e.publication_date, reverse=True)">
         <h3 class="entry-title"><a href="/blog/${item.id}">${item.title}</a></h3>

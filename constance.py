@@ -38,6 +38,7 @@ xslt = ./style.xsl
 
 [template]
 website = http://localhost
+name = Joe Bloggs
 email = user@domain.com
 disqus_user = 
 """
