@@ -6,3 +6,19 @@ genshi-0.6
 pyyaml
 lxml
 mysql-python (for export_wp.py)
+
+Initial config
+--------------
+
+1. python constance.py --dump-default-config > ~/.constance
+2. Edit ~/.constance - ensure you update the root directory or your working
+   directory will be used!
+3. mkdir ROOT/{blog,tags}
+4. Edit your XSLT stylesheet
+5. Copy or symlink htaccess to ROOT/.htaccess
+
+Running constance
+-----------------
+
+1. Place entries in the `blog` subdirectory as YAML-formatted .txt files
+2. Run python constance.py
