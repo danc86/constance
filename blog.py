@@ -66,6 +66,9 @@ class BlogEntrySet(object):
     def __iter__(self):
         return iter(self.entries)
 
+    def __len__(self):
+        return len(self.entries)
+
 def generate(dir, xslt, template_config):
     entries = BlogEntrySet(dir)
     

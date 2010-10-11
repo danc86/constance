@@ -13,6 +13,7 @@ from viewutils import markdown, mini_markdown, tag_list
 
 <body>
 
+    <py:if test="len(blog_entries) != 0">
     <h1>Recent blog entries</h1>
     <div class="item blog-entry-stub" py:for="item in sorted(blog_entries, key=lambda e: e.publication_date, reverse=True)[:4]">
         <h3 class="entry-title"><a href="blog/${item.id}">${item.title}</a></h3>
@@ -20,7 +21,9 @@ from viewutils import markdown, mini_markdown, tag_list
         <div py:if="item.tags" class="tags">tagged: ${tag_list(item.tags)}</div>
     </div>
     <p><a href="blog/">older entries&#8230;</a></p>
+    </py:if>
 
+    <py:if test="len(reading_entries) != 0">
     <h1>Recent reading</h1>
     <div class="item reading-log-entry-stub" py:for="item in sorted((e for e in reading_entries if e.isbn), key=lambda e: e.publication_date, reverse=True)[:6]">
         <a py:strip="not item.url" href="${item.url}">
@@ -30,6 +33,7 @@ from viewutils import markdown, mini_markdown, tag_list
         </a>
     </div>
     <p><a href="reading">older entries&#8230;</a></p>
+    </py:if>
 
 </body>
 </html>

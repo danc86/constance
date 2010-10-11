@@ -39,6 +39,9 @@ class ReadingLogEntrySet(object):
     def __iter__(self):
         return iter(self.entries)
 
+    def __len__(self):
+        return len(self.entries)
+
 def generate(filename, xslt, template_config):
     entries = ReadingLogEntrySet(filename)
 
