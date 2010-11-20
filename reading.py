@@ -25,8 +25,9 @@ class ReadingLogEntry(object):
         self.tags = frozenset()
         self.guid = yaml_dict['GUID']
 
-    def generate_atom(self):
-        return template_loader.load('entry.atom').generate(item=self)
+    def generate_atom(self, template_config):
+        return template_loader.load('entry.atom').generate(item=self,
+                template_config=template_config)
 
 class ReadingLogEntrySet(object):
 
