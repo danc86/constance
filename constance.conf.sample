@@ -1,0 +1,12 @@
+[paths]
+root = ./htdocs
+blog = %(root)s/blog
+tags = %(root)s/tags
+reading_log =
+xslt = ./sample.xsl
+
+[template]
+website = http://localhost
+name = Joe Bloggs
+email = user@domain.com
+disqus_user = 

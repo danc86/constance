@@ -29,31 +29,12 @@ def output(filename, content):
     open(filename, 'w').write(content)
     print 'Wrote %s' % filename
 
-default_config = """[paths]
-root = ./htdocs
-blog = %(root)s/blog
-tags = %(root)s/tags
-reading_log =
-xslt = ./sample.xsl
-
-[template]
-website = http://localhost
-name = Joe Bloggs
-email = user@domain.com
-disqus_user = 
-"""
-
 def main():
     # set up argument parser
     parser = optparse.OptionParser()
     parser.add_option('--config', metavar='FILENAME')
-    parser.add_option('--dump-default-config', action='store_true')
-    parser.set_defaults(config='~/.constance.conf', dump_default_config=False)
+    parser.set_defaults(config='~/.constance.conf')
     options, args = parser.parse_args()
-
-    if options.dump_default_config:
-        print default_config
-        return
 
     # populate config from default location (which would have been
     # overidden by --config above, if given)
