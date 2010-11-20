@@ -10,9 +10,9 @@ mysql-python (for export_wp.py)
 Initial config
 --------------
 
-1. python constance.py --dump-default-config > ~/.constance
-2. Edit ~/.constance - ensure you update the root directory or your working
-   directory will be used!
+1. python constance.py --dump-default-config > ~/.constance.conf
+2. Edit ~/.constance.conf -- ensure you update the root directory or your 
+   working directory will be used!
 3. mkdir ROOT/{blog,tags}
 4. Edit your XSLT stylesheet
 5. Copy or symlink htaccess to ROOT/.htaccess
