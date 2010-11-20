@@ -65,8 +65,10 @@ def main():
 
     for filename in os.listdir(config.get('paths', 'root')):
         if filename.endswith('.html.in'):
-            transformed = str(xslt(lxml.etree.parse(filename)))
-            output(filename[:-3], transformed)
+            src = os.path.join(config.get('paths', 'root'), filename)
+            dest = src[:-3]
+            transformed = str(xslt(lxml.etree.parse(src)))
+            output(dest, transformed)
 
     homepage.generate(config.get('paths', 'root'), xslt, blog_entries, 
             reading_entries, template_config=template_config)
