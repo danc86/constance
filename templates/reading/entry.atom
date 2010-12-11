@@ -10,10 +10,10 @@ from viewutils import ATOM_TIME_FORMAT
 <published>${item.publication_date.strftime(ATOM_TIME_FORMAT)}</published>
 <updated>${item.modified_date.strftime(ATOM_TIME_FORMAT)}</updated>
 <author>
-    <name>${template_config.get('name')}</name>
-    <email>${template_config.get('email')}</email>
+    <name>${config.get('global', 'name')}</name>
+    <email>${config.get('global', 'email')}</email>
 </author>
-<category py:for="tag in item.tags" scheme="${template_config.get('website')}/tags/" term="${tag}" />
+<category py:for="tag in item.tags" scheme="${config.get('global', 'url_base')}tags/" term="${tag}" />
 <title type="text">${item.title.striptags()} by ${item.author}</title>
 <summary py:if="item.rating" type="text">${item.rating} stars</summary>
 <content type="xhtml">

@@ -7,13 +7,13 @@ from viewutils import tag_list
 ?>
 
 <head>
-    <title>${item.title.striptags()}</title>
+    <title>${item.title.striptags()} - ${config.get('blog', 'title')}</title>
     <meta name="DC.date" content="${item.publication_date.strftime(str('%Y-%m-%d'))}" />
 </head>
 <body>
     <div class="item blog-entry" py:attrs="(item.language is not None) and {'lang': item.language} or {}">
 
-        <h1 class="entry-title"><a href="${template_config.get('website')}/blog/${item.id}" rel="bookmark">${item.title}</a></h1>
+        <h1 class="entry-title"><a href="${config.get('global', 'url_base')}blog/${item.id}" rel="bookmark">${item.title}</a></h1>
 
         <div class="date published">${item.publication_date.strftime(str('%-1d %b %Y'))}</div>
 
@@ -25,16 +25,16 @@ from viewutils import tag_list
             ${item.body}
         </div>
 
-        <py:if test="template_config.get('disqus_user') is not None and template_config.get('disqus_user') != ''">
+        <py:if test="config.get('disqus', 'site')">
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           (function() {
            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-           dsq.src = 'http://${template_config.get("disqus_user")}.disqus.com/embed.js';
+           dsq.src = 'http://${config.get("disqus", "site")}.disqus.com/embed.js';
            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
           })();
         </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=${template_config.get('disqus_user')}">comments powered by Disqus.</a></noscript>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=${config.get('disqus', 'site')}">comments powered by Disqus.</a></noscript>
         </py:if>
 
     </div>

@@ -11,13 +11,13 @@ from viewutils import markdown, mini_markdown, tag_list, idify
 </span>
 
 <head>
-    <title>Reading log</title>
+    <title>${config.get('reading', 'title')}</title>
     <link rel="alternate" type="application/atom+xml" title="Atom feed" href="reading.atom" />
 </head>
 
 <body>
 
-    <h1>Reading log</h1>
+    <h1>${config.get('reading', 'title')}</h1>
 
     <py:for each="item in sorted(items, key=lambda e: e.publication_date, reverse=True)">
         <div class="item reading-log-entry">

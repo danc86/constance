@@ -9,10 +9,10 @@ import constance
 import viewutils
 
 template_loader = genshi.template.TemplateLoader(
-        os.path.join(os.path.dirname(__file__), 'templates', 'tags'), 
+        os.path.join(os.path.realpath(os.path.dirname(__file__)), 'templates', 'tags'), 
         variable_lookup='strict')
 
-def generate(dir, xslt, blog_entries, template_config):
+def generate(dir, xslt, blog_entries, config):
     tag_freqs = {}
     for entry in blog_entries:
         for tag in entry.tags:
@@ -25,6 +25,6 @@ def generate(dir, xslt, blog_entries, template_config):
         constance.output(os.path.join(dir, tag.encode('utf8') + '.html'), transformed)
 
     rendered = template_loader.load('index.html').generate(tag_freqs=tag_freqs,
-            template_config=template_config).render('xhtml')
+            config=config).render('xhtml')
     transformed = str(xslt(lxml.etree.fromstring(rendered)))
     constance.output(os.path.join(dir, 'index.html'), transformed)

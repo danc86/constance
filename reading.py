@@ -10,7 +10,7 @@ import constance
 import viewutils
 
 template_loader = genshi.template.TemplateLoader(
-        os.path.join(os.path.dirname(__file__), 'templates', 'reading'), 
+        os.path.join(os.path.realpath(os.path.dirname(__file__)), 'templates', 'reading'), 
         variable_lookup='strict')
 
 class ReadingLogEntry(object):
@@ -25,9 +25,9 @@ class ReadingLogEntry(object):
         self.tags = frozenset()
         self.guid = yaml_dict['GUID']
 
-    def generate_atom(self, template_config):
+    def generate_atom(self, config):
         return template_loader.load('entry.atom').generate(item=self,
-                template_config=template_config)
+                config=config)
 
 class ReadingLogEntrySet(object):
 
@@ -43,17 +43,17 @@ class ReadingLogEntrySet(object):
     def __len__(self):
         return len(self.entries)
 
-def generate(filename, xslt, template_config):
+def generate(filename, xslt, config):
     entries = ReadingLogEntrySet(filename)
 
     rendered = template_loader.load('reading.html').generate(items=entries,
-            template_config=template_config).render('xhtml')
+            config=config).render('xhtml')
     transformed = str(xslt(lxml.etree.fromstring(rendered)))
     constance.output(os.path.join(os.path.dirname(filename), 'reading.html'), transformed)
 
     # feed
     rendered = template_loader.load('reading.atom').generate(items=entries,
-            template_config=template_config).render('xml')
+            config=config).render('xml')
     constance.output(os.path.join(os.path.dirname(filename), 'reading.atom'), rendered)
 
     return entries

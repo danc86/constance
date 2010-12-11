@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 # vim:encoding=utf-8
 
 import os, sys
@@ -10,6 +10,7 @@ import re
 import datetime
 import time
 import urllib
+import codecs
 import optparse
 import genshi.template
 import lxml.etree
@@ -39,39 +40,35 @@ def main():
     # populate config from default location (which would have been
     # overidden by --config above, if given)
     config = SafeConfigParser()
-    with open(os.path.expanduser(options.config), 'r') as fp:
+    with codecs.open(os.path.expanduser(options.config), 'r', 'utf8') as fp:
         config.readfp(fp)
-    template_config = dict(config.items('template'))
 
-    # strip trailing slash if it was given
-    website = config.get('template', 'website')
-    if website[-1] == '/':
-        website = website[:-1]
+    if config.get('global', 'root'):
+        os.chdir(config.get('global', 'root'))
 
-    xslt = lxml.etree.XSLT(lxml.etree.parse(config.get('paths', 'xslt')))
+    xslt = lxml.etree.XSLT(lxml.etree.parse(config.get('global', 'xslt')))
 
-    blog_entries = blog.generate(config.get('paths', 'blog'), xslt,
-            template_config=template_config)
+    if config.get('blog', 'enabled'):
+        blog_entries = blog.generate('blog', xslt, config)
+    else:
+        blog_entries = []
 
-    rl_path = config.get('paths', 'reading_log')
-    if rl_path is not None and rl_path != '':
-        reading_entries = reading.generate(rl_path, xslt, 
-                template_config=template_config)
+    if config.get('reading', 'enabled'):
+        reading_entries = reading.generate('reading_log.yaml', xslt, config)
     else:
         reading_entries = []
 
-    tags.generate(config.get('paths', 'tags'), xslt, blog_entries, 
-            template_config=template_config)
+    if config.get('tags', 'enabled'):
+        tags.generate('tags', xslt, blog_entries, config)
 
-    for filename in os.listdir(config.get('paths', 'root')):
+    for filename in os.listdir('.'):
         if filename.endswith('.html.in'):
-            src = os.path.join(config.get('paths', 'root'), filename)
-            dest = src[:-3]
-            transformed = str(xslt(lxml.etree.parse(src)))
-            output(dest, transformed)
+            transformed = str(xslt(lxml.etree.parse(filename)))
+            output(filename[:-3], transformed)
 
-    homepage.generate(config.get('paths', 'root'), xslt, blog_entries, 
-            reading_entries, template_config=template_config)
+    if config.get('homepage', 'enabled'):
+        homepage.generate('', xslt, blog_entries, 
+                reading_entries, config)
 
 if __name__ == '__main__':
     main()

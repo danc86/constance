@@ -1,12 +1,33 @@
 [paths]
 root = ./htdocs
-blog = %(root)s/blog
-tags = %(root)s/tags
-reading_log =
-xslt = ./sample.xsl
+xslt = ../sample.xsl
 
-[template]
-website = http://localhost
+# Base for absolute URLs
+url_base = http://localhost/
+
+# These are used in Atom feeds
 name = Joe Bloggs
 email = user@domain.com
-disqus_user = 
+
+[disqus]
+site = 
+
+[homepage]
+enabled = True
+title = Joe Bloggs’ homepage
+firehose_title = Joe Bloggs’ firehose
+icbm = 38.897686,-77.036514
+openid_server = 
+openid_delegate = 
+xrds = 
+
+[blog]
+enabled = True
+title = Joe Bloggs’ blog
+
+[tags]
+enabled = True
+
+[reading]
+enabled = True
+title Joe Bloggs’ reading log

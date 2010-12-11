@@ -9,6 +9,17 @@ from viewutils import markdown, mini_markdown, tag_list
 
 <head>
     <link rel="alternate" type="application/atom+xml" title="Atom feed" href="firehose.atom" />
+    <title>${config.get('homepage', 'title')}</title>
+    <meta py:if="config.get('homepage', 'icbm')" name="ICBM" content="${config.get('homepage', 'icbm')}" />
+    <py:if test="config.get('homepage', 'openid_delegate')">
+        <link rel="openid.delegate" href="${config.get('homepage', 'openid_delegate')}" />
+        <link rel="openid2.local_id" href="${config.get('homepage', 'openid_delegate')}" />
+    </py:if>
+    <py:if test="config.get('homepage', 'openid_server')">
+        <link rel="openid.server" href="${config.get('homepage', 'openid_server')}" />
+        <link rel="openid2.provider" href="${config.get('homepage', 'openid_server')}" />
+    </py:if>
+    <meta py:if="config.get('homepage', 'xrds')" http-equiv="X-XRDS-Location" content="${config.get('homepage', 'xrds')}" />
 </head>
 
 <body>

@@ -8,13 +8,13 @@ from viewutils import markdown, mini_markdown, tag_list
 ?>
 
 <head>
-    <title>Blog archive</title>
+    <title>${config.get('blog', 'title')}</title>
     <link rel="alternate" type="application/atom+xml" title="Atom feed" href="index.atom" />
 </head>
 
 <body>
 
-    <h1>Blog archive</h1>
+    <h1>${config.get('blog', 'title')}</h1>
 
     <py:for each="year, items in groupby(sorted(items, key=lambda e: e.publication_date, reverse=True), key=lambda e: e.publication_date.year)">
         <h2>${year}</h2>

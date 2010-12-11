@@ -12,7 +12,7 @@ import constance
 import viewutils
 
 template_loader = genshi.template.TemplateLoader(
-        os.path.join(os.path.dirname(__file__), 'templates', 'blog'), 
+        os.path.join(os.path.realpath(os.path.dirname(__file__)), 'templates', 'blog'), 
         variable_lookup='strict')
 
 def cleanup_metadata(header_items):
@@ -49,9 +49,9 @@ class BlogEntry(object):
         self.guid = self.metadata['guid']
         self.language = self.metadata.get('language', None)
 
-    def generate_atom(self, template_config):
+    def generate_atom(self, config):
         return template_loader.load('entry.atom').generate(item=self,
-                template_config=template_config)
+                config=config)
 
 class BlogEntrySet(object):
 
@@ -69,24 +69,24 @@ class BlogEntrySet(object):
     def __len__(self):
         return len(self.entries)
 
-def generate(dir, xslt, template_config):
+def generate(dir, xslt, config):
     entries = BlogEntrySet(dir)
     
     for entry in entries:
         rendered = template_loader.load('entry.html').generate(item=entry,
-                template_config=template_config).render('xhtml')
+                config=config).render('xhtml')
         transformed = str(xslt(lxml.etree.fromstring(rendered)))
         constance.output(os.path.join(dir, entry.id.encode('utf8') + '.html'), transformed)
     
     # index
     rendered = template_loader.load('index.html').generate(items=entries,
-            template_config=template_config).render('xhtml')
+            config=config).render('xhtml')
     transformed = str(xslt(lxml.etree.fromstring(rendered)))
     constance.output(os.path.join(dir, 'index.html'), transformed)
 
     # feed
     rendered = template_loader.load('index.atom').generate(items=entries,
-            template_config=template_config).render('xml')
+            config=config).render('xml')
     constance.output(os.path.join(dir, 'index.atom'), rendered)
 
     return entries
