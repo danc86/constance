@@ -1,4 +1,4 @@
-[paths]
+[global]
 root = ./htdocs
 xslt = ../sample.xsl
 
