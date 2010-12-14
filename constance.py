@@ -48,17 +48,17 @@ def main():
 
     xslt = lxml.etree.XSLT(lxml.etree.parse(config.get('global', 'xslt')))
 
-    if config.get('blog', 'enabled'):
+    if config.getboolean('blog', 'enabled'):
         blog_entries = blog.generate('blog', xslt, config)
     else:
         blog_entries = []
 
-    if config.get('reading', 'enabled'):
+    if config.getboolean('reading', 'enabled'):
         reading_entries = reading.generate('reading_log.yaml', xslt, config)
     else:
         reading_entries = []
 
-    if config.get('tags', 'enabled'):
+    if config.getboolean('tags', 'enabled'):
         tags.generate('tags', xslt, blog_entries, config)
 
     for filename in os.listdir('.'):
@@ -66,7 +66,7 @@ def main():
             transformed = str(xslt(lxml.etree.parse(filename)))
             output(filename[:-3], transformed)
 
-    if config.get('homepage', 'enabled'):
+    if config.getboolean('homepage', 'enabled'):
         homepage.generate('', xslt, blog_entries, 
                 reading_entries, config)
 
